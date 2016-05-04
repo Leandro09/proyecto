@@ -1,17 +1,7 @@
-﻿using System.Collections;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace Proyecto
+﻿namespace Proyecto
 {
     partial class Form1
     {
-
-     
-
         /// <summary>
         /// Variable del diseñador requerida.
         /// </summary>
@@ -66,11 +56,6 @@ namespace Proyecto
         #endregion
 
         private System.Windows.Forms.Button button1;
-
-
-
-
-
     }
 }
 
