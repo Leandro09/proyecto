@@ -189,6 +189,95 @@ namespace Proyecto
 
         }
 
+        public bool falloCache(int procesador, int direccion)
+        {
+            int bloque = direccion / 16;
+            int posicion = bloque % 4;
+            int direccionMemNoComp = bloque * 16 - 128;
+
+            switch (procesador)
+            {
+                case 1:
+                    enCache1[posicion] = bloque;
+                    posicion = posicion * 4;
+                    for (int i = 0; i < 16; ++i)
+                    {
+                        cache1[posicion + i] = procesador1[direccionMemNoComp + i];
+                    }
+                    Console.WriteLine("Case 1");
+                    return true;
+                case 2:
+                    enCache2[posicion] = bloque;
+                    posicion = posicion * 4;
+                    for (int i = 0; i < 16; ++i)
+                    {
+                        cache2[posicion + i] = procesador2[direccionMemNoComp + i];
+                    }
+                    Console.WriteLine("Case 2");
+                    return true;
+                case 3:
+                    enCache3[posicion] = bloque;
+                    posicion = posicion * 4;
+                    for (int i = 0; i < 16; ++i)
+                    {
+                        cache3[posicion + i] = procesador3[direccionMemNoComp + i];
+                    }
+                    Console.WriteLine("Case 3");
+                    return true;
+            }
+            return false;
+        }
+        public int[] consultarCache(int procesador, int PC)
+        {
+            int bloque = PC / 16;
+            int posicion = bloque % 4;
+            int[] retorna = new int[4];
+
+            switch (procesador)
+            {
+                case 1:
+                    if (!(enCache1[posicion] == bloque))
+                    {
+                        falloCache(procesador, PC);
+                    }
+                    //enCache1[posicion] = bloque;
+                    posicion = posicion * 4;
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        retorna[i] = cache1[posicion + i];
+                    }
+                    Console.WriteLine("Case 1");
+                    break;
+                //return true;
+                case 2:
+                    if (!(enCache2[posicion] == bloque))
+                    {
+                        falloCache(procesador, PC);
+                    }
+                    //enCache1[posicion] = bloque;
+                    posicion = posicion * 4;
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        retorna[i] = cache2[posicion + i];
+                    }
+                    Console.WriteLine("Case 2");
+                    break;
+                case 3:
+                    if (!(enCache3[posicion] == bloque))
+                    {
+                        falloCache(procesador, PC);
+                    }
+                    //enCache1[posicion] = bloque;
+                    posicion = posicion * 4;
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        retorna[i] = cache3[posicion + i];
+                    }
+                    break;
+            }
+            return retorna;
+        }
+
 
     }
 }
