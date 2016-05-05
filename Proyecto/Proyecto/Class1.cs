@@ -171,6 +171,22 @@ namespace Proyecto
         public void realizarOperacion(int[] instruccion)
         {
             //realizar operaciones
+            int codigo = instruccion[0];
+
+
+            // aca se puede ver el hilo que entra
+            switch(codigo){
+
+               // case 8:
+               //      
+               //      ;
+                default:
+                    break;
+
+            }
+
+            
+
         }
 
 
