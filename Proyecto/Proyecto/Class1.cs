@@ -219,7 +219,7 @@ namespace Proyecto
                     primerRegistro=procesador2[primerRegistro];
                     segundoRegistro=procesador2[segundoRegistro];
                     break;
-            }            // aca se puede ver el hilo que entra
+            }            
 
 
             switch(codigo){
