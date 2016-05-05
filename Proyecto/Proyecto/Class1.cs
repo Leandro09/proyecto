@@ -193,23 +193,57 @@ namespace Proyecto
 
 
         // realizar operaciones
-        public void realizarOperacion(int[] instruccion)
+        public void realizarOperacion(int[] instruccion, int procesador)
         {
             //realizar operaciones
+            int pos = 3;
             int codigo = instruccion[0];
+            int primerRegistro = instruccion[1];
+            int segundoRegistro = instruccion[2];
+            int ultimaParte= instruccion[3];
+
+            switch (procesador)
+            {
+                case 1:
+                    primerRegistro=procesador1[primerRegistro];
+                    segundoRegistro=procesador1[segundoRegistro];
+                
+                    break;
+                //return true;
+                case 2:
+                    primerRegistro=procesador2[primerRegistro];
+                    segundoRegistro=procesador2[segundoRegistro];
+                    break;
+                case 3:
+                    primerRegistro=procesador2[primerRegistro];
+                    segundoRegistro=procesador2[segundoRegistro];
+                    break;
+            }            // aca se puede ver el hilo que entra
 
 
-
-            // aca se puede ver el hilo que entra
             switch(codigo){
 
-               // case 8:
+                case 8:
+                    break;
+                case 32:
+                    break;
+                case 34:
+                    break;
+                case 12:
+                    break;
+                case 14:
+                    break;
                //      
                //      ;
+
                 default:
                     break;
 
             }
+
+            
+
+        }
 
             
 
