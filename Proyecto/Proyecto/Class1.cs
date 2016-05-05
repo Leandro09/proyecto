@@ -253,7 +253,7 @@ namespace Proyecto
 
             
 
-        }
+        
 
         public bool falloCache(int procesador, int direccion)
         {
