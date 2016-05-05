@@ -23,7 +23,7 @@ namespace Proyecto
         int cant_memComp = 128;
         int cant_memNoComp = 256;
         int limite = 128;
-        int id_hilo = 0;
+
 
         int[] cache1 = new int[64];
         int[] enCache1 = new int[4];//Cual es el bloque que esta en la cache en esa posicion
@@ -103,7 +103,9 @@ namespace Proyecto
 
         }
 
-        public int[] leerInstruccion()
+
+        //lectura de instrucciones 
+        public int[] leerInstruccion(int id_hilo)
         {
             int indicador = 0;
             inicializarEstructuras();
@@ -115,51 +117,71 @@ namespace Proyecto
             int bloque = PC / cant_bytes_bloque;
             int indice = bloque % cant_bytes_palabra;
             int palabra = bloque / cant_bytes_palabra;
+
            
             if(id_hilo==0){
-                if(enCache1[indice]!=-1){
+                if(enCache1[indice]!=-1 && bloque == enCache1[indice]){
                     indicador = palabra * cant_bytes_palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i )
                     {
-                        instruccion[i] = indicador;
+                        instruccion[i] = cache1[indicador];
                         indicador = indicador + cant_bytes_palabra;
                     }
                 }
                 else
                 {
-                    //en caso de fallo de cache
+                    falloCache(id_hilo, PC );
+                    indicador = palabra * cant_bytes_palabra;
+                    for (int i = 0; i < cant_bytes_palabra; ++i)
+                    {
+                        instruccion[i] = cache1[indicador];
+                        indicador = indicador + cant_bytes_palabra;
+                    }
+
                 }
             }
             else if (id_hilo == 1)
             {
-                if (enCache2[indice] != -1)
+                if (enCache2[indice] != -1 && bloque == enCache2[indice])
                 {
                     indicador = palabra * cant_bytes_palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = indicador;
+                        instruccion[i] = cache2[indicador];
                         indicador = indicador + cant_bytes_palabra;
                     }
                 }
                 else
                 {
-                    //en caso de fallo de cache
+                    falloCache(id_hilo, PC);
+                    indicador = palabra * cant_bytes_palabra;
+                    for (int i = 0; i < cant_bytes_palabra; ++i)
+                    {
+                        instruccion[i] = cache2[indicador];
+                        indicador = indicador + cant_bytes_palabra;
+                    }
                 }
             }
             else {
 
-                if (enCache3[indice] != -1)
+                if (enCache3[indice] != -1 && bloque == enCache3[indice])
                 {
                     indicador = palabra * cant_bytes_palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = indicador;
+                        instruccion[i] = cache3[indicador];
                         indicador = indicador + cant_bytes_palabra;
                     }
                 }
                 else
                 {
-                    //en caso de fallo de cache
+                    falloCache(id_hilo, PC);
+                    indicador = palabra * cant_bytes_palabra;
+                    for (int i = 0; i < cant_bytes_palabra; ++i)
+                    {
+                        instruccion[i] = cache3[indicador];
+                        indicador = indicador + cant_bytes_palabra;
+                    }
                 }
 
             }
@@ -168,10 +190,15 @@ namespace Proyecto
             return contexto;
         }
 
+
+
+        // realizar operaciones
         public void realizarOperacion(int[] instruccion)
         {
             //realizar operaciones
             int codigo = instruccion[0];
+
+
 
 
             // aca se puede ver el hilo que entra
