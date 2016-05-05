@@ -202,6 +202,7 @@ namespace Proyecto
             int segundoRegistro = instruccion[2];
             int ultimaParte= instruccion[3];
 
+            int guardarEn=33;
             switch (procesador)
             {
                 case 1:
@@ -224,14 +225,19 @@ namespace Proyecto
             switch(codigo){
 
                 case 8:
+                    guardarEn=instruccion[2];
                     break;
                 case 32:
+                    guardarEn=instruccion[2];
                     break;
                 case 34:
+                    guardarEn=instruccion[2];
                     break;
                 case 12:
+                    guardarEn=instruccion[2];
                     break;
                 case 14:
+                    guardarEn=instruccion[2];
                     break;
                //      
                //      ;
