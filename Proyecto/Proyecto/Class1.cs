@@ -201,50 +201,75 @@ namespace Proyecto
             int primerRegistro = instruccion[1];
             int segundoRegistro = instruccion[2];
             int ultimaParte= instruccion[3];
-
-            int guardarEn=33;
+            int resultado = 0;
+            int guardarEn=0;
             switch (procesador)
             {
                 case 1:
                     primerRegistro=procesador1[primerRegistro];
-                    segundoRegistro=procesador1[segundoRegistro];
-                
+                    if(codigo!=8){
+                        segundoRegistro=procesador1[segundoRegistro];
+                    }
                     break;
                 //return true;
                 case 2:
                     primerRegistro=procesador2[primerRegistro];
-                    segundoRegistro=procesador2[segundoRegistro];
+                    if (codigo != 8)
+                    {
+                        segundoRegistro = procesador2[segundoRegistro];
+                    }
                     break;
                 case 3:
-                    primerRegistro=procesador2[primerRegistro];
-                    segundoRegistro=procesador2[segundoRegistro];
+                    primerRegistro=procesador3[primerRegistro];
+                    if (codigo != 8)
+                    {
+                        segundoRegistro = procesador3[segundoRegistro];
+                    }
                     break;
-            }            
+            }
 
 
-            switch(codigo){
+            // aca se puede ver el hilo que entra
+            switch (codigo)
+            {
 
                 case 8:
-                    guardarEn=instruccion[2];
+                    resultado = primerRegistro + ultimaParte;
+                    guardarEn = segundoRegistro;
                     break;
                 case 32:
-                    guardarEn=instruccion[2];
+                    resultado = primerRegistro + segundoRegistro;
+                    guardarEn = ultimaParte;
                     break;
                 case 34:
-                    guardarEn=instruccion[2];
+                    resultado = primerRegistro - segundoRegistro;
+                    guardarEn = ultimaParte;
                     break;
                 case 12:
-                    guardarEn=instruccion[2];
+                    resultado = primerRegistro * segundoRegistro;
+                    guardarEn = ultimaParte;
                     break;
                 case 14:
-                    guardarEn=instruccion[2];
+                    resultado = primerRegistro / segundoRegistro;
+                    guardarEn = ultimaParte;
                     break;
-               //      
-               //      ;
 
                 default:
                     break;
 
+            }
+            switch (procesador)
+            {
+                case 1:
+                    procesador1[guardarEn] = resultado;
+                    break;
+                //return true;
+                case 2:
+                    procesador1[guardarEn] = resultado;
+                    break;
+                case 3:
+                    procesador1[guardarEn] = resultado;
+                    break;
             }
 
             
