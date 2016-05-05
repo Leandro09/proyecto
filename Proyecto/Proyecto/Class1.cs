@@ -197,20 +197,59 @@ namespace Proyecto
         {
             //realizar operaciones
             int codigo = instruccion[0];
-
-
-
-
+            int instruc1 = instruccion[1];
+            int instruc2 = instruccion[2];
+            int instruc3 = instruccion[3];
+            int procesador = 1;
+            switch (procesador)
+            {
+                case 1:
+                    instruc1=procesador1[instruc1];
+                    instruc2=procesador1[instruc2];
+                    if(instruc3<32){
+                        instruc3=procesador1[instruc3];
+                    }
+                    break;
+                //return true;
+                case 2:
+                    instruc1=procesador2[instruc1];
+                    instruc2=procesador2[instruc2];
+                    if(instruc3<32){
+                        instruc3=procesador2[instruc3];
+                    }
+                    break;
+                case 3:
+                    instruc1=procesador3[instruc1];
+                    instruc2=procesador3[instruc2];
+                    if(instruc3<32){
+                        instruc3=procesador3[instruc3];
+                    }
+                    break;
+            }
             // aca se puede ver el hilo que entra
             switch(codigo){
 
-               // case 8:
+                case 8:
+                    break;
+                case 32:
+                    break;
+                case 34:
+                    break;
+                case 12:
+                    break;
+                case 14:
+                    break;
                //      
                //      ;
+
                 default:
                     break;
 
             }
+
+            
+
+        }
 
             
 
