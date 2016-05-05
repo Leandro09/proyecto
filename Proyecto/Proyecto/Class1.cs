@@ -14,8 +14,23 @@ namespace Proyecto
         /// </summary>
         /// 
 
-        int[] cache = new int[64];
-        int[] enCache = new int[4];//Cual es el bloque que esta en la cache en esa posicion
+        int cant_bytes_palabra = 4;
+        int cant_bytes_bloque = 16;
+        int pos_pc = 32;
+        int cant_campos = 37;
+        int cant_cache = 64;
+        int cant_encache = 4;
+        int cant_memComp = 128;
+        int cant_memNoComp = 256;
+        int limite = 128;
+        int id_hilo = 0;
+
+        int[] cache1 = new int[64];
+        int[] enCache1 = new int[4];//Cual es el bloque que esta en la cache en esa posicion
+        int[] cache2 = new int[64];
+        int[] enCache2 = new int[4];//Cual es el bloque que esta en la cache en esa posicion
+        int[] cache3 = new int[64];
+        int[] enCache3 = new int[4];//Cual es el bloque que esta en la cache en esa posicion
         int[] memComp = new int[128];
         int[] memNoComp1 = new int[256];
         int[] memNoComp2 = new int[256];
@@ -38,14 +53,28 @@ namespace Proyecto
 
 
 
-        public void Probando()
+        //inicializar estructuras
+        public void inicializarEstructuras()
         {
-            int[] prueba = new int[37];
-            for (int i = 0; i < 37; ++i)
+            for (int i = 0; i < cant_cache; ++i )
+            {
+                cache1[i] = 0;
+                cache2[i] = 0;
+                cache2[i] = 0;
+            }
+
+            for(int i = 0; i < cant_encache; ++i){
+                enCache1[i] = -1;
+                enCache2[i] = -1;
+                enCache3[i] = -1;
+            }
+
+            int[] prueba = new int[cant_campos];
+            for (int i = 0; i < cant_campos; ++i)
             {
                 prueba[i] = 0;
             }
-            prueba[32] = 128;
+            prueba[pos_pc] = 128;
             contextoProcesador1.Enqueue(prueba);
         }
         //int[] pertenece = new int[12];
@@ -76,11 +105,75 @@ namespace Proyecto
 
         public int[] leerInstruccion()
         {
-            Probando();
+            int indicador = 0;
+            inicializarEstructuras();
+            int [] instruccion = new int[cant_bytes_palabra]; 
             int[] contexto = (int[])contextoProcesador1.Dequeue();
-            int PC = contexto[32];
-            Console.WriteLine("PC " + PC);
+            int PC = contexto[pos_pc];
+            contexto[pos_pc] = PC + 4;
+            PC = PC - limite;
+            int bloque = PC / cant_bytes_bloque;
+            int indice = bloque % cant_bytes_palabra;
+            int palabra = bloque / cant_bytes_palabra;
+           
+            if(id_hilo==0){
+                if(enCache1[indice]!=-1){
+                    indicador = palabra * cant_bytes_palabra;
+                    for (int i = 0; i < cant_bytes_palabra; ++i )
+                    {
+                        instruccion[i] = indicador;
+                        indicador = indicador + cant_bytes_palabra;
+                    }
+                }
+                else
+                {
+                    //en caso de fallo de cache
+                }
+            }
+            else if (id_hilo == 1)
+            {
+                if (enCache2[indice] != -1)
+                {
+                    indicador = palabra * cant_bytes_palabra;
+                    for (int i = 0; i < cant_bytes_palabra; ++i)
+                    {
+                        instruccion[i] = indicador;
+                        indicador = indicador + cant_bytes_palabra;
+                    }
+                }
+                else
+                {
+                    //en caso de fallo de cache
+                }
+            }
+            else {
+
+                if (enCache3[indice] != -1)
+                {
+                    indicador = palabra * cant_bytes_palabra;
+                    for (int i = 0; i < cant_bytes_palabra; ++i)
+                    {
+                        instruccion[i] = indicador;
+                        indicador = indicador + cant_bytes_palabra;
+                    }
+                }
+                else
+                {
+                    //en caso de fallo de cache
+                }
+
+            }
+
+
             return contexto;
         }
+
+        public void realizarOperacion(int[] instruccion)
+        {
+            //realizar operaciones
+        }
+
+
     }
 }
+
