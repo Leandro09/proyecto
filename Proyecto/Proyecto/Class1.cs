@@ -200,7 +200,6 @@ namespace Proyecto
 
 
 
-
             // aca se puede ver el hilo que entra
             switch(codigo){
 
