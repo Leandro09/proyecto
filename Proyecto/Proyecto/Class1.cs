@@ -201,6 +201,7 @@ namespace Proyecto
             int instruc2 = instruccion[2];
             int instruc3 = instruccion[3];
             int procesador = 1;
+            int guardarEn=33;
             switch (procesador)
             {
                 case 1:
@@ -230,14 +231,19 @@ namespace Proyecto
             switch(codigo){
 
                 case 8:
+                    guardarEn=instruccion[2];
                     break;
                 case 32:
+                    guardarEn=instruccion[2];
                     break;
                 case 34:
+                    guardarEn=instruccion[2];
                     break;
                 case 12:
+                    guardarEn=instruccion[2];
                     break;
                 case 14:
+                    guardarEn=instruccion[2];
                     break;
                //      
                //      ;
