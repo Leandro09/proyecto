@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Proyecto
 {
@@ -23,14 +24,18 @@ namespace Proyecto
         int cant_memComp = 128;
         int cant_memNoComp = 256;
         int limite = 128;
-
+        //Almacena la cantidad de hilillos que se correrán en sistema.
+        int hilillos = 0;
 
         int[] cache1 = new int[64];
-        int[] enCache1 = new int[4];//Cual es el bloque que esta en la cache en esa posicion
+        //Cual es el bloque que esta en la cache en esa posicion
+        int[] enCache1 = new int[4];
         int[] cache2 = new int[64];
-        int[] enCache2 = new int[4];//Cual es el bloque que esta en la cache en esa posicion
+        //Cual es el bloque que esta en la cache en esa posicion
+        int[] enCache2 = new int[4];
         int[] cache3 = new int[64];
-        int[] enCache3 = new int[4];//Cual es el bloque que esta en la cache en esa posicion
+        //Cual es el bloque que esta en la cache en esa posicion
+        int[] enCache3 = new int[4];
         int[] memComp = new int[128];
         int[] memNoComp1 = new int[256];
         int[] memNoComp2 = new int[256];
@@ -51,6 +56,14 @@ namespace Proyecto
         Queue terminadosProcesador2 = new Queue();
         Queue terminadosProcesador3 = new Queue();
 
+        //Delegados de cada proceso 
+        static ThreadStart delegado_proceso_1 = new ThreadStart(funcionPrincipal);
+        static ThreadStart delegado_proceso_2 = new ThreadStart(funcionPrincipal);
+        static ThreadStart delegado_proceso_3 = new ThreadStart(funcionPrincipal);
+        //Los hilos que simularán los procesos en cuestión 
+        Thread proceso_1 = new Thread(delegado_proceso_1);
+        Thread proceso_2 = new Thread(delegado_proceso_2);
+        Thread proceso_3 = new Thread(delegado_proceso_3);
 
 
         //inicializar estructuras
@@ -367,6 +380,20 @@ namespace Proyecto
                     break;
             }
             return retorna;
+        }
+        /// <summary>
+        /// Presenta la función principal del programa.
+        /// </summary>
+        public static void funcionPrincipal()
+        {
+
+        }
+        /// <summary>
+        /// Recibe un integer "a" y coloca el valor en la variable hilillos.
+        /// </summary>
+        public void setHilillos(int a)
+        {
+            hilillos = a;
         }
 
 
