@@ -395,7 +395,145 @@ namespace Proyecto
         {
             hilillos = a;
         }
+        /// <summary>
+        /// Encargado de leer y almacenar las instrucciones a ejecutar en memoria.
+        /// </summary>
+        public void leeArchivos()
+        {
+            //Obtiene como dirección: ...\bin\Debug\
+            string directorio_raiz = AppDomain.CurrentDomain.BaseDirectory;
+            //Almacena la ruta en donde se encuentran los archivos a leer.
+            string directorio_archivo;
+            
+            string line;
+            //Índice para conocer en cuál memoria del procesador se introducirá el hilillo.
+            int contador = 1;
+            //Se utilizan para conocer la última posición de memoria en donde se agregaron datos.
+            int index_memoria1 = 0;
+            int index_memoria2 = 0;
+            int index_memoria3 = 0;
+            //Almacena temporalmente el número leído
+            string temporal = "";
+            //Recorre cada linea del archivo
+            int a = 0;
+            //El índice i será utilizado para el nombre de los archivos.
+            for (int i = 0; i< hilillos; ++i)
+            {
+                //Ruta del archivo que será leído.
+                directorio_archivo = directorio_raiz + (i+1) + ".txt";
 
+
+                //Procede a leer el archivo linea a linea
+                System.IO.StreamReader file =
+                    new System.IO.StreamReader(@directorio_archivo);
+                while ((line = file.ReadLine()) != null)
+                {
+                    line = line + '\n';
+                    if (contador == 1)
+                    {
+                        while (line[a] != '\n')
+                        {
+                            if(line[a] != ' ')
+                            { 
+                                //Guarda el número en cuestión en una string
+                                while(line[a] != ' ')
+                                {
+                                    if (line[a] != '\n')
+                                    {
+                                        temporal = temporal + line[a];
+                                        ++a;
+                                    }
+                                    else
+                                        line = line.Substring(0, line.Length - 1) + " ";
+                                }
+                                //Agrega a memoria la primera instrucción
+                                memNoComp1[index_memoria1] = Int32.Parse(temporal);
+                                ++index_memoria1;
+                                temporal = "";
+                            }
+                            if (a < line.Length-1)
+                                ++a;
+                            else
+                                line = line.Substring(0, line.Length - 1) + '\n';
+                        }
+                        a = 0;
+                        temporal = "";
+
+                    }
+                    else if (contador == 2)
+                    {
+                        while (line[a] != '\n')
+                        {
+                            if (line[a] != ' ')
+                            {
+                                //Guarda el número en cuestión en una string
+                                while (line[a] != ' ')
+                                {
+                                    if (line[a] != '\n')
+                                    {
+                                        temporal = temporal + line[a];
+                                        ++a;
+                                    }
+                                    else
+                                        line = line.Substring(0, line.Length - 1) + " ";
+                                }
+                                //Agrega a memoria la primera instrucción
+                                memNoComp2[index_memoria2] = Int32.Parse(temporal);
+                                ++index_memoria2;
+                                temporal = "";
+                            }
+                            if (a < line.Length - 1)
+                                ++a;
+                            else
+                                line = line.Substring(0, line.Length - 1) + '\n';
+                        }
+                        a = 0;
+                        temporal = "";
+
+                    }
+                    else
+                    {
+                        while (line[a] != '\n')
+                        {
+                            if (line[a] != ' ')
+                            {
+                                //Guarda el número en cuestión en una string
+                                while (line[a] != ' ')
+                                {
+                                    if (line[a] != '\n')
+                                    {
+                                        temporal = temporal + line[a];
+                                        ++a;
+                                    }
+                                    else
+                                        line = line.Substring(0, line.Length - 1) + " ";
+                                }
+                                //Agrega a memoria la primera instrucción
+                                memNoComp3[index_memoria3] = Int32.Parse(temporal);
+                                ++index_memoria3;
+                                temporal = "";
+                            }
+                            if (a < line.Length - 1)
+                                ++a;
+                            else
+                                line = line.Substring(0, line.Length - 1) + '\n';
+                        }
+                        a = 0;
+                        temporal = "";
+                    }
+                }
+
+                file.Close();
+                //Cambia la memoria del procesador para el siguiente hilillo.
+                if (contador == 3)
+                    contador = 1;
+                else
+                    ++contador;
+                // Suspend the screen.
+                System.Console.ReadLine();
+                directorio_archivo = "";
+            }
+        }
 
     }
 }

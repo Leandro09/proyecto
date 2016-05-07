@@ -22,11 +22,20 @@ namespace Proyecto
             tarea prueba = new tarea();
             //Variable y cast para obtener el número de hilillos.
             int numero_hilillos;
+            if (textBox1.Text != null && !string.IsNullOrWhiteSpace(textBox1.Text))
+            { 
             numero_hilillos = Convert.ToInt32(textBox1.Text);
             //numero_hilillos = int.Parse(textBox1.Text);
 
             prueba.setHilillos(numero_hilillos);
-            prueba.leerInstruccion();
+            prueba.leeArchivos();
+                int a = 0;
+            }
+            else
+            {
+                MessageBox.Show("Por favor introduzca un número de hilillos entre 1 y 12", "Error",
+                MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
