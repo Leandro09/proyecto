@@ -26,6 +26,8 @@ namespace Proyecto
         int limite = 128;
         //Almacena la cantidad de hilillos que se correrán en sistema.
         int hilillos = 0;
+        //Almacena el quantum ingresado por el usuario.
+        int quantum = 0;
 
         int[] cache1 = new int[64];
         //Cual es el bloque que esta en la cache en esa posicion
@@ -395,6 +397,12 @@ namespace Proyecto
         {
             hilillos = a;
         }
+
+        public void setQuantum(int q)
+        {
+            quantum = q;
+        }
+
         /// <summary>
         /// Encargado de leer y almacenar las instrucciones a ejecutar en memoria.
         /// </summary>
