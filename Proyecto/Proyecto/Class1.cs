@@ -125,7 +125,7 @@ namespace Proyecto
             int indicador = 0;
             inicializarEstructuras();
             int [] instruccion = new int[cant_bytes_palabra]; 
-            int[] contexto = (int[])contextoProcesador1.Dequeue();
+            int[] contexto = (int[])contextoProcesador1.Peek();
             int PC = contexto[pos_pc];
             contexto[pos_pc] = PC + 4;
             PC = PC - limite;
@@ -201,6 +201,7 @@ namespace Proyecto
 
             }
 
+            realizarOperacion(instruccion, id_hilo, PC);
 
             return contexto;
         }
@@ -208,20 +209,22 @@ namespace Proyecto
 
 
         // realizar operaciones
-        public void realizarOperacion(int[] instruccion, int procesador)
+        public void realizarOperacion(int[] instruccion, int procesador, int PC)
         {
             //realizar operaciones
-            int pos = 3;
+
             int codigo = instruccion[0];
             int primerRegistro = instruccion[1];
             int segundoRegistro = instruccion[2];
             int ultimaParte= instruccion[3];
             int resultado = 0;
             int guardarEn=0;
+
             switch (procesador)
             {
                 case 1:
                     primerRegistro=procesador1[primerRegistro];
+                    procesador1[pos_pc] = PC;
                     if(codigo!=8){
                         segundoRegistro=procesador1[segundoRegistro];
                     }
@@ -229,6 +232,7 @@ namespace Proyecto
                 //return true;
                 case 2:
                     primerRegistro=procesador2[primerRegistro];
+                    procesador2[pos_pc] = PC;
                     if (codigo != 8)
                     {
                         segundoRegistro = procesador2[segundoRegistro];
@@ -236,6 +240,7 @@ namespace Proyecto
                     break;
                 case 3:
                     primerRegistro=procesador3[primerRegistro];
+                    procesador3[pos_pc] = PC;
                     if (codigo != 8)
                     {
                         segundoRegistro = procesador3[segundoRegistro];
@@ -268,7 +273,28 @@ namespace Proyecto
                     resultado = primerRegistro / segundoRegistro;
                     guardarEn = ultimaParte;
                     break;
+                case 4:
 
+                    if(primerRegistro == 0){
+                        resultado = PC + ultimaParte * 4;
+                        guardarEn = pos_pc;
+                    }
+                    break;
+                case 5:
+                    if (primerRegistro != 0)
+                    {
+                        resultado = PC + ultimaParte * 4;
+                        guardarEn = pos_pc; 
+                    }
+                    break;
+                case 3:
+                    resultado = PC + ultimaParte;
+                    guardarEn = pos_pc;
+                    break;
+                case 2:
+                    resultado = primerRegistro;
+                    guardarEn = pos_pc;
+                    break;
                 default:
                     break;
 
@@ -278,7 +304,6 @@ namespace Proyecto
                 case 1:
                     procesador1[guardarEn] = resultado;
                     break;
-                //return true;
                 case 2:
                     procesador1[guardarEn] = resultado;
                     break;
