@@ -84,6 +84,13 @@ namespace Proyecto
                 enCache3[i] = -1;
             }
 
+            for (int i = 0; i < cant_campos; ++i)
+            {
+                procesador1[i] = 0;
+                procesador2[i] = 0;
+                procesador3[i] = 0; 
+            }
+
             int[] prueba = new int[cant_campos];
             for (int i = 0; i < cant_campos; ++i)
             {
@@ -422,6 +429,13 @@ namespace Proyecto
         /// </summary>
         public static void funcionPrincipal()
         {
+            // leer archivos
+            // iniciar hilos
+            // barrera de sincronizacion
+            // nhay que definir como determinar que hilo esta corriendo
+           
+
+
 
         }
         /// <summary>
