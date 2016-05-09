@@ -118,22 +118,27 @@ namespace Proyecto
 
 
         //lectura de instrucciones 
+        // id_hilo es el numero de procesador
         public int[] leerInstruccion(int id_hilo)
         {
             int indicador = 0;
             inicializarEstructuras();
             int [] instruccion = new int[cant_bytes_palabra]; 
             int[] contexto = (int[])contextoProcesador1.Peek();
+
+
+            // switch para leer pc de procesador 
+
             int PC = contexto[pos_pc];
             contexto[pos_pc] = PC + 4;
-            PC = PC - limite;
             int bloque = PC / cant_bytes_bloque;
             int indice = bloque % cant_bytes_palabra;
             int palabra = bloque / cant_bytes_palabra;
-
+            PC = PC - limite;
            
             if(id_hilo==0){
-                if(enCache1[indice]!=-1 && bloque == enCache1[indice]){
+                if (enCache1[indice] != -1 && bloque == enCache1[indice])
+                {
                     indicador = palabra * cant_bytes_palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i )
                     {
@@ -297,6 +302,7 @@ namespace Proyecto
                     break;
 
             }
+
             switch (procesador)
             {
                 case 1:
@@ -356,6 +362,9 @@ namespace Proyecto
             }
             return false;
         }
+
+
+
         public int[] consultarCache(int procesador, int PC)
         {
             int bloque = PC / 16;
