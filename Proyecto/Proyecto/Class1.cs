@@ -98,6 +98,9 @@ namespace Proyecto
             }
             prueba[pos_pc] = 128;
             contextoProcesador1.Enqueue(prueba);
+            proceso_1.Start();
+            proceso_2.Start();
+            proceso_3.Start();
         }
         //int[] pertenece = new int[12];
         String[] path = new String[12];
@@ -422,6 +425,7 @@ namespace Proyecto
                     }
                     break;
             }
+            
             return retorna;
         }
         /// <summary>
@@ -433,7 +437,8 @@ namespace Proyecto
             // iniciar hilos
             // barrera de sincronizacion
             // nhay que definir como determinar que hilo esta corriendo
-           
+            int managedThreadId = Thread.CurrentThread.ManagedThreadId;
+            Console.WriteLine("ManagedThreadId = " + managedThreadId);
 
 
 
@@ -444,6 +449,7 @@ namespace Proyecto
         public void setHilillos(int a)
         {
             hilillos = a;
+            
         }
 
         public void setQuantum(int q)
