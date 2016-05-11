@@ -44,7 +44,7 @@ namespace Proyecto
         int[] memNoComp3 = new int[256];
 
         /// estructuras para observar los recursos del procesador
-        int[] procesador1 = new int[37];
+        int[] procesador1 = new int[37];        //En la posición 32 se encuentra el PC
         int[] procesador2 = new int[37];
         int[] procesador3 = new int[37];
 
@@ -67,6 +67,22 @@ namespace Proyecto
         Thread proceso_2 = new Thread(delegado_proceso_2);
         Thread proceso_3 = new Thread(delegado_proceso_3);
 
+        //Thread.CurrentThread.Name = "MainThread";
+
+        //Maneja las principales funciones del procesador y sus hilos.
+        public void administradorDeEjecucion()
+        {
+            inicializarEstructuras();
+            //Lee y acomoda en memoria las instrucciones de los hilillos.
+            leeArchivos();
+            proceso_1.Start();
+            proceso_2.Start();
+            proceso_3.Start();
+
+            funcionPrincipal();
+
+            //Agregar método para desplegar resultados.
+        }
 
         //inicializar estructuras
         public void inicializarEstructuras()
@@ -90,19 +106,7 @@ namespace Proyecto
                 procesador2[i] = 0;
                 procesador3[i] = 0; 
             }
-
-            int[] prueba = new int[cant_campos];
-            for (int i = 0; i < cant_campos; ++i)
-            {
-                prueba[i] = 0;
-            }
-            prueba[pos_pc] = 128;
-            contextoProcesador1.Enqueue(prueba);
-            proceso_1.Start();
-            proceso_2.Start();
-            proceso_3.Start();
-
-            funcionPrincipal();
+            
         }
         //int[] pertenece = new int[12];
         String[] path = new String[12];
@@ -432,7 +436,7 @@ namespace Proyecto
             return retorna;
         }
         /// <summary>
-        /// Presenta la función principal del programa.
+        /// Presenta la función principal del programa (lo que hace el procesador).
         /// </summary>
         public static void funcionPrincipal()
         {
@@ -481,6 +485,8 @@ namespace Proyecto
             string temporal = "";
             //Recorre cada linea del archivo
             int a = 0;
+            //Bandera utilizada para conocer si es el inicio de un código en memoria (PC).
+            bool es_pc = true;
             //El índice i será utilizado para el nombre de los archivos.
             for (int i = 0; i< hilillos; ++i)
             {
@@ -513,6 +519,14 @@ namespace Proyecto
                                 }
                                 //Agrega a memoria la primera instrucción
                                 memNoComp1[index_memoria1] = Int32.Parse(temporal);
+                                //Si es la primera instrucción del inicio del programa, entonces se agrega el pc al contexto y este se encola
+                                if (es_pc)
+                                {
+                                    procesador1[pos_pc] = index_memoria1;
+                                    contextoProcesador1.Enqueue(procesador1);
+                                    es_pc = false;
+                                }
+
                                 ++index_memoria1;
                                 temporal = "";
                             }
@@ -544,6 +558,13 @@ namespace Proyecto
                                 }
                                 //Agrega a memoria la primera instrucción
                                 memNoComp2[index_memoria2] = Int32.Parse(temporal);
+                                //Si es la primera instrucción del inicio del programa, entonces se agrega el pc al contexto y este se encola
+                                if (es_pc)
+                                {
+                                    procesador2[pos_pc] = index_memoria2;
+                                    contextoProcesador2.Enqueue(procesador2);
+                                    es_pc = false;
+                                }
                                 ++index_memoria2;
                                 temporal = "";
                             }
@@ -575,6 +596,13 @@ namespace Proyecto
                                 }
                                 //Agrega a memoria la primera instrucción
                                 memNoComp3[index_memoria3] = Int32.Parse(temporal);
+                                //Si es la primera instrucción del inicio del programa, entonces se agrega el pc al contexto y este se encola
+                                if (es_pc)
+                                {
+                                    procesador3[pos_pc] = index_memoria3;
+                                    contextoProcesador3.Enqueue(procesador3);
+                                    es_pc = false;
+                                }
                                 ++index_memoria3;
                                 temporal = "";
                             }
@@ -589,6 +617,7 @@ namespace Proyecto
                 }
 
                 file.Close();
+                es_pc = true;
                 //Cambia la memoria del procesador para el siguiente hilillo.
                 if (contador == 3)
                     contador = 1;
