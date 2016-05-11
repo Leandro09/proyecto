@@ -101,12 +101,15 @@ namespace Proyecto
             proceso_1.Start();
             proceso_2.Start();
             proceso_3.Start();
+
+            funcionPrincipal();
         }
         //int[] pertenece = new int[12];
         String[] path = new String[12];
 
         public int pedirQuantum()
         {
+            
             return 100;
         }
 
