@@ -33,9 +33,9 @@ namespace Proyecto
 
                     prueba.setHilillos(numero_hilillos);
                     prueba.setQuantum(quantum);
-                    prueba.inicializarEstructuras();
-                    prueba.leeArchivos();
-                    
+                    prueba.administradorDeEjecucion();
+
+
                 }
                 else
                 {

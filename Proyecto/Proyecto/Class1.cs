@@ -24,6 +24,7 @@ namespace Proyecto
         int cant_memComp = 128;
         int cant_memNoComp = 256;
         int limite = 128;
+        int reloj = 0;
         //Almacena la cantidad de hilillos que se correrán en sistema.
         int hilillos = 0;
         //Almacena el quantum ingresado por el usuario.
@@ -59,15 +60,13 @@ namespace Proyecto
         Queue terminadosProcesador3 = new Queue();
 
         //Delegados de cada proceso 
-        static ThreadStart delegado_proceso_1 = new ThreadStart(funcionPrincipal);
-        static ThreadStart delegado_proceso_2 = new ThreadStart(funcionPrincipal);
-        static ThreadStart delegado_proceso_3 = new ThreadStart(funcionPrincipal);
+        static ThreadStart delegado_proceso_1 = new ThreadStart(nombrarHilo1);
+        static ThreadStart delegado_proceso_2 = new ThreadStart(nombrarHilo2);
+        static ThreadStart delegado_proceso_3 = new ThreadStart(nombrarHilo3);
         //Los hilos que simularán los procesos en cuestión 
         Thread proceso_1 = new Thread(delegado_proceso_1);
         Thread proceso_2 = new Thread(delegado_proceso_2);
         Thread proceso_3 = new Thread(delegado_proceso_3);
-
-        //Thread.CurrentThread.Name = "MainThread";
 
         //Maneja las principales funciones del procesador y sus hilos.
         public void administradorDeEjecucion()
@@ -82,6 +81,25 @@ namespace Proyecto
             funcionPrincipal();
 
             //Agregar método para desplegar resultados.
+        }
+
+        //Métodos para cambiar los nombres de los hilos a 1, 2 y 3 respectivamente.
+        public static void nombrarHilo1()
+        {
+            Thread.CurrentThread.Name = "1";
+            funcionPrincipal();
+        }
+
+        public static void nombrarHilo2()
+        {
+            Thread.CurrentThread.Name = "2";
+            funcionPrincipal();
+        }
+
+        public static void nombrarHilo3()
+        {
+            Thread.CurrentThread.Name = "3";
+            funcionPrincipal();
         }
 
         //inicializar estructuras
@@ -444,8 +462,25 @@ namespace Proyecto
             // iniciar hilos
             // barrera de sincronizacion
             // nhay que definir como determinar que hilo esta corriendo
-            int managedThreadId = Thread.CurrentThread.ManagedThreadId;
+            string managedThreadId = Thread.CurrentThread.Name;
             Console.WriteLine("ManagedThreadId = " + managedThreadId);
+
+            if (Thread.CurrentThread.Name == "1")
+            {
+                //Funciones del procesador 1.
+            }
+            else if (Thread.CurrentThread.Name == "2")
+            {
+                //Funciones del procesador 2.
+            }
+            else if (Thread.CurrentThread.Name == "3")
+            {
+                //Funciones del procesador 3.
+            }
+            else
+            {
+                //Funciones del procesador principal.
+            }
 
 
 
