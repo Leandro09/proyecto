@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-
+using System.Data;
 namespace Proyecto
 {
     class tarea
@@ -25,6 +25,7 @@ namespace Proyecto
         int cant_memNoComp = 256;
         int limite = 128;
         int reloj = 0;
+        static int hilosCorriendo = 4;
         //Almacena la cantidad de hilillos que se correrán en sistema.
         int hilillos = 0;
         //Almacena el quantum ingresado por el usuario.
@@ -482,12 +483,59 @@ namespace Proyecto
             }
             else
             {
+                hiloPrincipal();
                 //Funciones del procesador principal.
             }
-            miBarrerita.SignalAndWait();
+            //miBarrerita.SignalAndWait();
 
 
         }
+        public static void hiloPrincipal()
+        {
+            while (hilosCorriendo>1)
+            {
+                miBarrerita.SignalAndWait();
+            }
+            DataTable dt = new DataTable();
+            DataTable req = new DataTable();
+            //DataTable dt = new DataTable();
+
+            dt.Columns.Add("Id");
+            for(int i = 0; i < 32; ++i)
+            {
+                string s = "R";
+                s = s + i.ToString();
+                dt.Columns.Add(s);
+            }
+            dt.Columns.Add("Cant. de Ciclos");
+            dt.Columns.Add("T inicial");
+            dt.Columns.Add("T final");
+            dt.Columns.Add("Procesador en que corrio");
+
+            Object[] datos = new Object[38];
+            /*
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    datos[0] = dr[0].ToString();
+                    datos[1] = dr[1];
+                    req.Rows.Add(datos);
+
+                }
+            }
+
+            else
+            {
+
+                Object[] datos1 = new Object[2];
+                datos1[0] = "-";
+                datos1[1] = "-";
+                req.Rows.Add(datos);
+            }*/
+        }
+
+
         /// <summary>
         /// Recibe un integer "a" y coloca el valor en la variable hilillos.
         /// </summary>
