@@ -505,11 +505,11 @@ namespace Proyecto
                     Console.Write(procesador1[i]);
                 }
             }
-            else if (Thread.CurrentThread.Name == "2")
+            else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("2") == true)
             {
                 //Funciones del procesador 2.
             }
-            else if (Thread.CurrentThread.Name == "3")
+            else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("3") == true)
             {
                 //Funciones del procesador 3.
             }
