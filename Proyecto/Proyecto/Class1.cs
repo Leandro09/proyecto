@@ -67,7 +67,7 @@ namespace Proyecto
         Thread proceso_1 = new Thread(delegado_proceso_1);
         Thread proceso_2 = new Thread(delegado_proceso_2);
         Thread proceso_3 = new Thread(delegado_proceso_3);
-
+        static Barrier miBarrerita;
         //Maneja las principales funciones del procesador y sus hilos.
         public void administradorDeEjecucion()
         {
@@ -77,7 +77,7 @@ namespace Proyecto
             proceso_1.Start();
             proceso_2.Start();
             proceso_3.Start();
-
+            miBarrerita = new Barrier(4);
             funcionPrincipal();
 
             //Agregar método para desplegar resultados.
@@ -252,7 +252,7 @@ namespace Proyecto
         public void realizarOperacion(int[] instruccion, int procesador, int PC)
         {
             //realizar operaciones
-
+            miBarrerita.SignalAndWait();
             int codigo = instruccion[0];
             int primerRegistro = instruccion[1];
             int segundoRegistro = instruccion[2];
@@ -366,7 +366,10 @@ namespace Proyecto
             int bloque = direccion / 16;
             int posicion = bloque % 4;
             int direccionMemNoComp = bloque * 16 - 128;
-
+            for (int i = 0; i < 16; ++i)
+            {
+                miBarrerita.SignalAndWait();
+            }
             switch (procesador)
             {
                 case 1:
@@ -481,7 +484,7 @@ namespace Proyecto
             {
                 //Funciones del procesador principal.
             }
-
+            miBarrerita.SignalAndWait();
 
 
         }
