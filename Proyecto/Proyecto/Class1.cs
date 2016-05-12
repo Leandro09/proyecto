@@ -40,10 +40,10 @@ namespace Proyecto
         static int[] cache3 = new int[64];
         //Cual es el bloque que esta en la cache en esa posicion
         static int[] enCache3 = new int[4];
-        int[] memComp = new int[128];
-        int[] memNoComp1 = new int[256];
-        int[] memNoComp2 = new int[256];
-        int[] memNoComp3 = new int[256];
+        static int[] memComp = new int[128];
+        static int[] memNoComp1 = new int[256];
+        static int[] memNoComp2 = new int[256];
+        static int[] memNoComp3 = new int[256];
 
         /// estructuras para observar los recursos del procesador
         static int[] procesador1 = new int[37];        //En la posición 32 se encuentra el PC
@@ -53,12 +53,12 @@ namespace Proyecto
 
         /// colas para los contextos de los hilillos
         static Queue contextoProcesador1 = new Queue();
-        Queue contextoProcesador2 = new Queue();
-        Queue contextoProcesador3 = new Queue();
+        static Queue contextoProcesador2 = new Queue();
+        static Queue contextoProcesador3 = new Queue();
 
-        Queue terminadosProcesador1 = new Queue();
-        Queue terminadosProcesador2 = new Queue();
-        Queue terminadosProcesador3 = new Queue();
+        static Queue terminadosProcesador1 = new Queue();
+        static Queue terminadosProcesador2 = new Queue();
+        static Queue terminadosProcesador3 = new Queue();
 
         //Delegados de cada proceso 
         static ThreadStart delegado_proceso_1 = new ThreadStart(nombrarHilo1);
@@ -68,17 +68,19 @@ namespace Proyecto
         Thread proceso_1 = new Thread(delegado_proceso_1);
         Thread proceso_2 = new Thread(delegado_proceso_2);
         Thread proceso_3 = new Thread(delegado_proceso_3);
-        static Barrier miBarrerita;
+        //Barrera utilizada para sincronizar los hilos (procesos).
+        static Barrier miBarrerita = new Barrier(4);
         //Maneja las principales funciones del procesador y sus hilos.
         public void administradorDeEjecucion()
         {
             inicializarEstructuras();
             //Lee y acomoda en memoria las instrucciones de los hilillos.
             leeArchivos();
+            Thread.CurrentThread.Name = "0";
             proceso_1.Start();
             proceso_2.Start();
             proceso_3.Start();
-            miBarrerita = new Barrier(4);
+
             funcionPrincipal();
 
             //Agregar método para desplegar resultados.
@@ -164,7 +166,7 @@ namespace Proyecto
         {
             int indicador = 0;
             //inicializarEstructuras();
-            int [] instruccion = new int[cant_bytes_palabra]; 
+            int [] instruccion = new int[cant_bytes_palabra];
            
             // switch para leer pc de procesador 
 
@@ -522,6 +524,7 @@ namespace Proyecto
 
 
         }
+
         public static void hiloPrincipal()
         {
             while (hilosCorriendo>1)
@@ -542,7 +545,7 @@ namespace Proyecto
             dt.Columns.Add("Cant. de Ciclos");
             dt.Columns.Add("T inicial");
             dt.Columns.Add("T final");
-            dt.Columns.Add("Procesador en que corrio");
+            dt.Columns.Add("Procesador en que corrío");
 
             Object[] datos = new Object[38];
             /*
@@ -576,7 +579,9 @@ namespace Proyecto
             hilillos = a;
             
         }
-
+        /// <summary>
+        /// Recibe un integer "a" y coloca el valor en la variable quantum.
+        /// </summary>
         public void setQuantum(int q)
         {
             quantum = q;
