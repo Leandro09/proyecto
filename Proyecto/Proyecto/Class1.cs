@@ -15,44 +15,44 @@ namespace Proyecto
         /// </summary>
         /// 
 
-        int cant_bytes_palabra = 4;
-        int cant_bytes_bloque = 16;
-        int pos_pc = 32;
-        int cant_campos = 37;
-        int cant_cache = 64;
-        int cant_encache = 4;
-        int cant_memComp = 128;
-        int cant_memNoComp = 256;
-        int limite = 128;
-        int reloj = 0;
+        static int cant_bytes_palabra = 4;
+        static int cant_bytes_bloque = 16;
+        static int pos_pc = 32;
+        static int cant_campos = 37;
+        static int cant_cache = 64;
+        static int cant_encache = 4;
+        static int cant_memComp = 128;
+        static int cant_memNoComp = 256;
+        static int limite = 128;
+        static int reloj = 0;
         static int hilosCorriendo = 4;
         //Almacena la cantidad de hilillos que se correrán en sistema.
-        int hilillos = 0;
+        static int hilillos = 0;
         //Almacena el quantum ingresado por el usuario.
-        int quantum = 0;
+        static int quantum = 0;
 
-        int[] cache1 = new int[64];
+        static int[] cache1 = new int[64];
         //Cual es el bloque que esta en la cache en esa posicion
-        int[] enCache1 = new int[4];
-        int[] cache2 = new int[64];
+        static int[] enCache1 = new int[4];
+        static int[] cache2 = new int[64];
         //Cual es el bloque que esta en la cache en esa posicion
-        int[] enCache2 = new int[4];
-        int[] cache3 = new int[64];
+        static int[] enCache2 = new int[4];
+        static int[] cache3 = new int[64];
         //Cual es el bloque que esta en la cache en esa posicion
-        int[] enCache3 = new int[4];
+        static int[] enCache3 = new int[4];
         int[] memComp = new int[128];
         int[] memNoComp1 = new int[256];
         int[] memNoComp2 = new int[256];
         int[] memNoComp3 = new int[256];
 
         /// estructuras para observar los recursos del procesador
-        int[] procesador1 = new int[37];        //En la posición 32 se encuentra el PC
-        int[] procesador2 = new int[37];
-        int[] procesador3 = new int[37];
+        static int[] procesador1 = new int[37];        //En la posición 32 se encuentra el PC
+        static int[] procesador2 = new int[37];
+        static int[] procesador3 = new int[37];
 
 
         /// colas para los contextos de los hilillos
-        Queue contextoProcesador1 = new Queue();
+        static Queue contextoProcesador1 = new Queue();
         Queue contextoProcesador2 = new Queue();
         Queue contextoProcesador3 = new Queue();
 
@@ -88,18 +88,21 @@ namespace Proyecto
         public static void nombrarHilo1()
         {
             Thread.CurrentThread.Name = "1";
+            miBarrerita.AddParticipant();
             funcionPrincipal();
         }
 
         public static void nombrarHilo2()
         {
             Thread.CurrentThread.Name = "2";
+            miBarrerita.AddParticipant();
             funcionPrincipal();
         }
 
         public static void nombrarHilo3()
         {
             Thread.CurrentThread.Name = "3";
+            miBarrerita.AddParticipant();
             funcionPrincipal();
         }
 
@@ -157,18 +160,34 @@ namespace Proyecto
 
         //lectura de instrucciones 
         // id_hilo es el numero de procesador
-        public int[] leerInstruccion(int id_hilo)
+        public static void leerInstruccion(int id_hilo)
         {
             int indicador = 0;
-            inicializarEstructuras();
+            //inicializarEstructuras();
             int [] instruccion = new int[cant_bytes_palabra]; 
-            int[] contexto = (int[])contextoProcesador1.Peek();
-
-
+           
             // switch para leer pc de procesador 
 
-            int PC = contexto[pos_pc];
-            contexto[pos_pc] = PC + 4;
+            int PC;
+            
+            switch(id_hilo){
+                case 1:
+                    PC  = procesador1[pos_pc];
+                    procesador1[pos_pc] = PC + 4;
+                    break;
+                case 2:
+                    PC = procesador2[pos_pc];
+                    procesador2[pos_pc] = PC + 4;
+                    break;
+                default:
+                    PC = procesador3[pos_pc];
+                    procesador3[pos_pc] = PC + 4;
+                    break;
+                
+            }
+
+
+
             int bloque = PC / cant_bytes_bloque;
             int indice = bloque % cant_bytes_palabra;
             int palabra = bloque / cant_bytes_palabra;
@@ -244,13 +263,13 @@ namespace Proyecto
 
             realizarOperacion(instruccion, id_hilo, PC);
 
-            return contexto;
+            
         }
 
 
 
         // realizar operaciones
-        public void realizarOperacion(int[] instruccion, int procesador, int PC)
+        public static void realizarOperacion(int[] instruccion, int procesador, int PC)
         {
             //realizar operaciones
             miBarrerita.SignalAndWait();
@@ -358,11 +377,11 @@ namespace Proyecto
 
         }
 
-            
 
-        
 
-        public bool falloCache(int procesador, int direccion)
+
+
+        public static bool falloCache(int procesador, int direccion)
         {
             int bloque = direccion / 16;
             int posicion = bloque % 4;
@@ -467,11 +486,22 @@ namespace Proyecto
             // barrera de sincronizacion
             // nhay que definir como determinar que hilo esta corriendo
             string managedThreadId = Thread.CurrentThread.Name;
-            Console.WriteLine("ManagedThreadId = " + managedThreadId);
+            Console.WriteLine("ManagedThreadIdzz = " + managedThreadId);
 
-            if (Thread.CurrentThread.Name == "1")
+            if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("1")==true)
             {
+                Console.Write("aca");
                 //Funciones del procesador 1.
+                int[] contexto = (int[])contextoProcesador1.Dequeue();
+                for (int i = 0; i < cant_campos; ++i )
+                {
+                    procesador1[i] = contexto[i];
+                }
+                leerInstruccion(1);
+                for (int i = 0; i < cant_campos; ++i )
+                {
+                    Console.Write(procesador1[i]);
+                }
             }
             else if (Thread.CurrentThread.Name == "2")
             {
@@ -486,6 +516,8 @@ namespace Proyecto
                 hiloPrincipal();
                 //Funciones del procesador principal.
             }
+
+            
             //miBarrerita.SignalAndWait();
 
 
