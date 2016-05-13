@@ -23,6 +23,7 @@ namespace Proyecto
             //Variable y cast para obtener el número de hilillos y el quantum.
             int numero_hilillos;
             int quantum;
+            GridResultados.Visible = false;
             if (hillillosBox1.Text != null && !string.IsNullOrWhiteSpace(hillillosBox1.Text))
             {
                 if (quantumBox.Text != null && !string.IsNullOrWhiteSpace(quantumBox.Text))
@@ -34,8 +35,10 @@ namespace Proyecto
                     prueba.setHilillos(numero_hilillos);
                     prueba.setQuantum(quantum);
                     prueba.administradorDeEjecucion();
-
-
+                    //DataTable dt=prueba.resultadosHilillos(); 
+                    //se deberia volver verdadero despues de que le hace un bind con el dataTable de resultadosHilillos
+                    
+                    GridResultados.Visible = true;
                 }
                 else
                 {

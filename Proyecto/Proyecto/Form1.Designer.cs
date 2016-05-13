@@ -33,11 +33,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.quantumBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.GridResultados = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.GridResultados)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(35, 97);
+            this.button1.Location = new System.Drawing.Point(201, 91);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(100, 23);
             this.button1.TabIndex = 0;
@@ -47,7 +49,7 @@
             // 
             // hillillosBox1
             // 
-            this.hillillosBox1.Location = new System.Drawing.Point(35, 27);
+            this.hillillosBox1.Location = new System.Drawing.Point(164, 25);
             this.hillillosBox1.Name = "hillillosBox1";
             this.hillillosBox1.Size = new System.Drawing.Size(100, 20);
             this.hillillosBox1.TabIndex = 1;
@@ -56,7 +58,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(141, 30);
+            this.label1.Location = new System.Drawing.Point(270, 28);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(83, 13);
             this.label1.TabIndex = 3;
@@ -65,7 +67,7 @@
             // 
             // quantumBox
             // 
-            this.quantumBox.Location = new System.Drawing.Point(35, 53);
+            this.quantumBox.Location = new System.Drawing.Point(164, 51);
             this.quantumBox.Name = "quantumBox";
             this.quantumBox.Size = new System.Drawing.Size(100, 20);
             this.quantumBox.TabIndex = 4;
@@ -73,18 +75,27 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(141, 56);
+            this.label2.Location = new System.Drawing.Point(270, 54);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(50, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "Quantum";
             this.label2.Click += new System.EventHandler(this.label2_Click_1);
             // 
+            // GridResultados
+            // 
+            this.GridResultados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.GridResultados.Location = new System.Drawing.Point(130, 131);
+            this.GridResultados.Name = "GridResultados";
+            this.GridResultados.Size = new System.Drawing.Size(240, 150);
+            this.GridResultados.TabIndex = 6;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(302, 176);
+            this.ClientSize = new System.Drawing.Size(495, 350);
+            this.Controls.Add(this.GridResultados);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.quantumBox);
             this.Controls.Add(this.label1);
@@ -92,6 +103,7 @@
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Proyecto Arquitectura";
+            ((System.ComponentModel.ISupportInitialize)(this.GridResultados)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -104,6 +116,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox quantumBox;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.DataGridView GridResultados;
     }
 }
 
