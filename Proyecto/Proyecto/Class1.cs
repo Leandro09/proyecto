@@ -601,17 +601,16 @@ namespace Proyecto
             {
                 if (contextoProcesador1.Count != 0)//Necesario porque si intenta desencolar algo y la cola esta vacia se cae
                 {
-                     //Funciones del procesador 1.
+                    //Funciones del procesador 1.
                     bool indicador = true;
                     procesador1 = (int[])contextoProcesador1.Dequeue();
                     contadorProcesador1 = 0;
                     if (procesador1[pos_tiempo_inicial] == 0)
-                    {                     
+                    {
                         procesador1[pos_tiempo_inicial] = reloj;
                     }
                     while (contadorProcesador1 <= quantum && indicador == true)
                     {
-                        
                         indicador = leerInstruccion(1);
                     }
 
@@ -629,19 +628,29 @@ namespace Proyecto
             }
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("2") == true)
             {
-               if (contextoProcesador2.Count != 0)
+                if (contextoProcesador2.Count != 0)
                 {
-                    //Funciones del procesador 2.
+
+                    bool indicador = true;
                     procesador2 = (int[])contextoProcesador2.Dequeue();
-                    //Esto era lo que habiamos hablado de que cada vez que se saca un hilillo de la cola, lo ibamos a poner en 0 con el fin de que nos ayude con lo del quantum
-                    //Si alguien cree que debe ir en otro lugar sientanse libres de cambiarlo
                     contadorProcesador2 = 0;
                     if (procesador2[pos_tiempo_inicial] == 0)
                     {
                         procesador2[pos_tiempo_inicial] = reloj;
                     }
-                    Console.WriteLine("HILO 2");
-                    miBarrerita.SignalAndWait();
+                    while (contadorProcesador2 <= quantum && indicador == true)
+                    {
+                        indicador = leerInstruccion(2);
+                    }
+
+
+                    for (int i = 0; i < cant_campos; ++i)
+                    {
+                        Console.WriteLine("CAMPOOOOOOOO " + procesador2[i]);
+                    }
+
+
+
                 }
                 else
                 {//Este solo se va a usar cuando se lee solo un hilillo
@@ -652,33 +661,42 @@ namespace Proyecto
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("3") == true)
             {
                 //Funciones del procesador 3.
-              if (contextoProcesador3.Count != 0)
+                if (contextoProcesador3.Count != 0)
                 {
+
+                    bool indicador = true;
                     procesador3 = (int[])contextoProcesador3.Dequeue();
                     contadorProcesador3 = 0;
                     if (procesador3[pos_tiempo_inicial] == 0)
                     {
                         procesador3[pos_tiempo_inicial] = reloj;
-                        
-
                     }
-                    Console.WriteLine("HILO 3");
-                    miBarrerita.SignalAndWait();
+                    while (contadorProcesador3 <= quantum && indicador == true)
+                    {
+                        indicador = leerInstruccion(3);
+                    }
+
+
+                    for (int i = 0; i < cant_campos; ++i)
+                    {
+                        Console.WriteLine("CAMPOOOOOOOO " + procesador3[i]);
+                    }
+
 
                 }
                 else
-                {//Este solo se va a usar cuando se lee solo uno o dos hilillo
+                {//Este solo se va a usar cuando se lee solo un hilillo
                     Thread.CurrentThread.Abort();
                     miBarrerita.RemoveParticipant();
-                }            }
+                }
+                //miBarrerita.SignalAndWait();
+            }
             else
             {
                 hiloPrincipal();
                 //Funciones del procesador principal.
             }
 
-            
-            //miBarrerita.SignalAndWait();
         }
 
         
