@@ -28,6 +28,7 @@ namespace Proyecto
         static int hilosCorriendo = 4;
         static int pos_tiempo_inicial = 34;
         static int pos_tiempo_final = 35;
+
         //Almacena la cantidad de hilillos que se correrán en sistema.
         static int hilillos = 0;
         //Almacena el quantum ingresado por el usuario.
@@ -52,15 +53,18 @@ namespace Proyecto
         static int[] memNoComp3 = new int[256];
 
         /// estructuras para observar los recursos del procesador
+
         static int[] procesador1 = new int[38];        //En la posición 32 se encuentra el PC
         static int[] procesador2 = new int[38];
-        static int[] procesador3 = new int[38];//En la posicion 37 va el nombre del HILILLO al que pertenece este contexto
+        static int[] procesador3 = new int[38];         //En la posicion 37 va el nombre del HILILLO al que pertenece este contexto
+
 
 
         /// colas para los contextos de los hilillos
         static Queue contextoProcesador1 = new Queue();
         static Queue contextoProcesador2 = new Queue();
         static Queue contextoProcesador3 = new Queue();
+
 
         //colas para resultados de los hilillos
         static Queue terminadosProcesador1 = new Queue();
@@ -235,6 +239,7 @@ namespace Proyecto
 
         //lectura de instrucciones 
         // id_hilo es el numero de procesador
+
         public static bool leerInstruccion(int id_hilo)
         {
             int indicador = 0;
@@ -349,6 +354,7 @@ namespace Proyecto
             //realizar operaciones
             miBarrerita.SignalAndWait();
             //carga los valores de la instruccion en variables para poder hacer uso y modificar estas con mas facilidad
+
             int codigo = instruccion[0];
             int primerRegistro = instruccion[1];
             int segundoRegistro = instruccion[2];
@@ -478,6 +484,7 @@ namespace Proyecto
 
 
 
+
         //Se encarga de poner el bloque al que pertence la instruccion solicitada a la cache
         public static bool falloCache(int procesador, int direccion)
         {
@@ -485,11 +492,11 @@ namespace Proyecto
             int posicion = bloque % 4;//calcula la posicion en que se debe almacenar la instruccion en la cache
             int direccionMemNoComp = bloque * 16 - 128;//calcula la direccion en que se ubica dentro de la memoria no compartida
             //para sincronizar el ciclo de reloj
+
             for (int i = 0; i < 16; ++i)
             {
                 miBarrerita.SignalAndWait();
             }
-            
             switch (procesador)
             {
                 case 1:
@@ -588,7 +595,6 @@ namespace Proyecto
             // nhay que definir como determinar que hilo esta corriendo
             string managedThreadId = Thread.CurrentThread.Name;
             Console.WriteLine("ManagedThreadIdzz = " + managedThreadId);
-
             if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("1") == true)
             {
                 if (contextoProcesador1.Count != 0)//Necesario porque si intenta desencolar algo y la cola esta vacia se cae
@@ -606,6 +612,7 @@ namespace Proyecto
                     Thread.CurrentThread.Abort();
                     miBarrerita.RemoveParticipant();
                 }
+
 
             }
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("2") == true)
@@ -654,8 +661,6 @@ namespace Proyecto
 
             
             //miBarrerita.SignalAndWait();
-
-
         }
 
         public static void hiloPrincipal()
@@ -736,6 +741,51 @@ namespace Proyecto
                 dt.Rows.Add(datos);
             }
             return dt;
+        }
+
+        public static void hiloPrincipal()
+        {
+            while (hilosCorriendo>1)
+            {
+                miBarrerita.SignalAndWait();
+            }
+            DataTable dt = new DataTable();
+            DataTable req = new DataTable();
+            //DataTable dt = new DataTable();
+
+            dt.Columns.Add("Id");
+            for(int i = 0; i < 32; ++i)
+            {
+                string s = "R";
+                s = s + i.ToString();
+                dt.Columns.Add(s);
+            }
+            dt.Columns.Add("Cant. de Ciclos");
+            dt.Columns.Add("T inicial");
+            dt.Columns.Add("T final");
+            dt.Columns.Add("Procesador en que corrío");
+
+            Object[] datos = new Object[38];
+            /*
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    datos[0] = dr[0].ToString();
+                    datos[1] = dr[1];
+                    req.Rows.Add(datos);
+
+                }
+            }
+
+            else
+            {
+
+                Object[] datos1 = new Object[2];
+                datos1[0] = "-";
+                datos1[1] = "-";
+                req.Rows.Add(datos);
+            }*/
         }
 
         /// <summary>
