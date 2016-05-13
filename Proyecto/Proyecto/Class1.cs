@@ -497,8 +497,6 @@ namespace Proyecto
                 
             }
 
-            
-
             switch (procesador)
             {
                 case 1:
@@ -726,9 +724,9 @@ namespace Proyecto
                 datos[37] = 2;
                 dt.Rows.Add(datos);
             }
-            while (terminadosProcesador2.Count != 0)
+            while (terminadosProcesador3.Count != 0)
             {
-                int[] cont = (int[])terminadosProcesador1.Dequeue();
+                int[] cont = (int[])terminadosProcesador3.Dequeue();
                 Object[] datos = new Object[38];
                 datos[0] = cont[37];
                 for (int j = 0; j < 36; ++j)
