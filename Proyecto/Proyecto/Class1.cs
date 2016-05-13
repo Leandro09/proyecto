@@ -242,6 +242,7 @@ namespace Proyecto
             int indicador = 0;
             //inicializarEstructuras();
             // switch para leer pc de procesador 
+            int[] instruccion = new int[cant_bytes_palabra];
 
             int PC;
             
@@ -596,6 +597,9 @@ namespace Proyecto
             // nhay que definir como determinar que hilo esta corriendo
             string managedThreadId = Thread.CurrentThread.Name;
             Console.WriteLine("ManagedThreadIdzz = " + managedThreadId);
+
+
+            if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("1") == true)
             {
                 if (contextoProcesador1.Count != 0)//Necesario porque si intenta desencolar algo y la cola esta vacia se cae
                 {
@@ -619,6 +623,7 @@ namespace Proyecto
                         Console.WriteLine("CAMPOOOOOOOO " + procesador1[i]);
                     }
                 }
+                else
                 {//Este solo se va a usar cuando se lee solo un hilillo
                     Thread.CurrentThread.Abort();
                     miBarrerita.RemoveParticipant();
@@ -678,107 +683,7 @@ namespace Proyecto
             //miBarrerita.SignalAndWait();
         }
 
-        public static void hiloPrincipal()
-        {
-            while (hilosCorriendo>1)
-            {
-                //sincronizacion de los ciclos de reloj con barreras y sumandole 1 al reloj
-                miBarrerita.SignalAndWait();
-                reloj = reloj + 1;
-
-
-              //Esto era lo que habiamos hablado de ir viendo y controlar mejor lo que le queda de quantum a 
-              //cada procesador. Hay que recordar ponerlo en 0 cada vez que sacamos un hilillo de la cola
-              //Si a alguien le parece que va en otro lado solo lo quita y lo pone donde crea que se debe poner.
-                contadorProcesador1 = contadorProcesador1 + 1;
-                contadorProcesador2 = contadorProcesador2 + 1;
-                contadorProcesador3 = contadorProcesador3 + 1;
-            }
-
-            //Esto es lo que debemos imprimir al final en los resultados
-            //Esto no estoy segura si va aqui asi que si creen que queda mejor en otro lado, cambienlo mejor
-            //DataTable dt = resultadosHilillos();
-
-        }
- public static DataTable resultadosHilillos()
-        {
-            DataTable dt = new DataTable();
-            //DataTable req = new DataTable();
-            //DataTable dt = new DataTable();
-
-            dt.Columns.Add("Id");
-            for (int i = 0; i < 32; ++i)
-            {
-                string s = "R";
-                s = s + i.ToString();
-                dt.Columns.Add(s);
-            }
-            dt.Columns.Add("Cant. de Ciclos");
-            dt.Columns.Add("T inicial");
-            dt.Columns.Add("T final");
-            dt.Columns.Add("Procesador en que corrío");
-
-            while (terminadosProcesador1.Count != 0)
-            {
-                int[] cont = (int[])terminadosProcesador1.Dequeue();
-                Object[] datos = new Object[38];
-                datos[0] = cont[37];
-                for (int j = 0; j < 36; ++j)
-                {
-                    datos[1 + j] = cont[j];
-                }
-                datos[37] = 1;
-                dt.Rows.Add(datos);
-            }
-            while (terminadosProcesador2.Count != 0)
-            {
-                int[] cont = (int[])terminadosProcesador2.Dequeue();
-                Object[] datos = new Object[38];
-                datos[0] = cont[37];
-                for (int j = 0; j < 36; ++j)
-                {
-                    datos[1 + j] = cont[j];
-                }
-                datos[37] = 2;
-                dt.Rows.Add(datos);
-            }
-            while (terminadosProcesador2.Count != 0)
-            {
-                int[] cont = (int[])terminadosProcesador1.Dequeue();
-                Object[] datos = new Object[38];
-                datos[0] = cont[37];
-                for (int j = 0; j < 36; ++j)
-                {
-                    datos[1 + j] = cont[j];
-                }
-                datos[37] = 3;
-                dt.Rows.Add(datos);
-            }
-            return dt;
-        }
-        public static void hiloPrincipal()
-        {
-            while (hilosCorriendo>1)
-            {
-                //sincronizacion de los ciclos de reloj con barreras y sumandole 1 al reloj
-                miBarrerita.SignalAndWait();
-                reloj = reloj + 1;
-
-
-              //Esto era lo que habiamos hablado de ir viendo y controlar mejor lo que le queda de quantum a 
-              //cada procesador. Hay que recordar ponerlo en 0 cada vez que sacamos un hilillo de la cola
-              //Si a alguien le parece que va en otro lado solo lo quita y lo pone donde crea que se debe poner.
-                contadorProcesador1 = contadorProcesador1 + 1;
-                contadorProcesador2 = contadorProcesador2 + 1;
-                contadorProcesador3 = contadorProcesador3 + 1;
-            }
-
-            //Esto es lo que debemos imprimir al final en los resultados
-            //Esto no estoy segura si va aqui asi que si creen que queda mejor en otro lado, cambienlo mejor
-            //DataTable dt = resultadosHilillos();
-
-        }
-
+        
         public static DataTable resultadosHilillos()
         {
             DataTable dt = new DataTable();
@@ -835,7 +740,31 @@ namespace Proyecto
             }
             return dt;
         }
+        public static void hiloPrincipal()
+        {
+            while (hilosCorriendo>1)
+            {
+                //sincronizacion de los ciclos de reloj con barreras y sumandole 1 al reloj
+                miBarrerita.SignalAndWait();
+                reloj = reloj + 1;
 
+
+              //Esto era lo que habiamos hablado de ir viendo y controlar mejor lo que le queda de quantum a 
+              //cada procesador. Hay que recordar ponerlo en 0 cada vez que sacamos un hilillo de la cola
+              //Si a alguien le parece que va en otro lado solo lo quita y lo pone donde crea que se debe poner.
+                contadorProcesador1 = contadorProcesador1 + 1;
+                contadorProcesador2 = contadorProcesador2 + 1;
+                contadorProcesador3 = contadorProcesador3 + 1;
+            }
+
+            //Esto es lo que debemos imprimir al final en los resultados
+            //Esto no estoy segura si va aqui asi que si creen que queda mejor en otro lado, cambienlo mejor
+            //DataTable dt = 
+
+
+        }
+
+        
         /// <summary>
         /// Recibe un integer "a" y coloca el valor en la variable hilillos.
         /// </summary>
