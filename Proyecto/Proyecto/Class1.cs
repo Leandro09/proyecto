@@ -27,8 +27,7 @@ namespace Proyecto
         static int reloj = 1;
         static int hilosCorriendo = 4;
         static int pos_tiempo_inicial = 34;
-        static int pos_tiempo_final = 35;
-        //Almacena la cantidad de hilillos que se correrán en sistema.
+        static int pos_tiempo_final = 35;        //Almacena la cantidad de hilillos que se correrán en sistema.
         static int hilillos = 0;
         //Almacena el quantum ingresado por el usuario.
         static int quantum = 0;
@@ -52,15 +51,18 @@ namespace Proyecto
         static int[] memNoComp3 = new int[256];
 
         /// estructuras para observar los recursos del procesador
+
         static int[] procesador1 = new int[38];        //En la posición 32 se encuentra el PC
         static int[] procesador2 = new int[38];
-        static int[] procesador3 = new int[38];//En la posicion 37 va el nombre del HILILLO al que pertenece este contexto
+        static int[] procesador3 = new int[38];         //En la posicion 37 va el nombre del HILILLO al que pertenece este contexto
+
 
 
         /// colas para los contextos de los hilillos
         static Queue contextoProcesador1 = new Queue();
         static Queue contextoProcesador2 = new Queue();
         static Queue contextoProcesador3 = new Queue();
+
 
         //colas para resultados de los hilillos
         static Queue terminadosProcesador1 = new Queue();
@@ -239,8 +241,6 @@ namespace Proyecto
         {
             int indicador = 0;
             //inicializarEstructuras();
-            int [] instruccion = new int[cant_bytes_palabra];
-            
             // switch para leer pc de procesador 
 
             int PC;
@@ -351,7 +351,6 @@ namespace Proyecto
         {
             //realizar operaciones
             miBarrerita.SignalAndWait();
-            //carga los valores de la instruccion en variables para poder hacer uso y modificar estas con mas facilidad
             int codigo = instruccion[0];
             int primerRegistro = instruccion[1];
             int segundoRegistro = instruccion[2];
@@ -482,6 +481,7 @@ namespace Proyecto
 
 
         //Se encarga de poner el bloque al que pertence la instruccion solicitada a la cache
+        //Se encarga de poner el bloque al que pertence la instruccion solicitada a la cache
         public static bool falloCache(int procesador, int direccion)
         {
             int bloque = direccion / 16;//calcula el bloque
@@ -596,13 +596,10 @@ namespace Proyecto
             // nhay que definir como determinar que hilo esta corriendo
             string managedThreadId = Thread.CurrentThread.Name;
             Console.WriteLine("ManagedThreadIdzz = " + managedThreadId);
-
-            if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("1") == true)
             {
                 if (contextoProcesador1.Count != 0)//Necesario porque si intenta desencolar algo y la cola esta vacia se cae
                 {
-                    
-                    //Funciones del procesador 1.
+                     //Funciones del procesador 1.
                     bool indicador = true;
                     procesador1 = (int[])contextoProcesador1.Dequeue();
                     contadorProcesador1 = 0;
@@ -626,11 +623,10 @@ namespace Proyecto
                     Thread.CurrentThread.Abort();
                     miBarrerita.RemoveParticipant();
                 }
-
             }
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("2") == true)
             {
-                if (contextoProcesador2.Count != 0)
+               if (contextoProcesador2.Count != 0)
                 {
                     //Funciones del procesador 2.
                     procesador2 = (int[])contextoProcesador2.Dequeue();
@@ -653,7 +649,7 @@ namespace Proyecto
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("3") == true)
             {
                 //Funciones del procesador 3.
-                if (contextoProcesador3.Count != 0)
+              if (contextoProcesador3.Count != 0)
                 {
                     procesador3 = (int[])contextoProcesador3.Dequeue();
                     contadorProcesador3 = 0;
@@ -671,8 +667,7 @@ namespace Proyecto
                 {//Este solo se va a usar cuando se lee solo uno o dos hilillo
                     Thread.CurrentThread.Abort();
                     miBarrerita.RemoveParticipant();
-                }
-            }
+                }            }
             else
             {
                 hiloPrincipal();
@@ -681,10 +676,86 @@ namespace Proyecto
 
             
             //miBarrerita.SignalAndWait();
-
-
         }
 
+        public static void hiloPrincipal()
+        {
+            while (hilosCorriendo>1)
+            {
+                //sincronizacion de los ciclos de reloj con barreras y sumandole 1 al reloj
+                miBarrerita.SignalAndWait();
+                reloj = reloj + 1;
+
+
+              //Esto era lo que habiamos hablado de ir viendo y controlar mejor lo que le queda de quantum a 
+              //cada procesador. Hay que recordar ponerlo en 0 cada vez que sacamos un hilillo de la cola
+              //Si a alguien le parece que va en otro lado solo lo quita y lo pone donde crea que se debe poner.
+                contadorProcesador1 = contadorProcesador1 + 1;
+                contadorProcesador2 = contadorProcesador2 + 1;
+                contadorProcesador3 = contadorProcesador3 + 1;
+            }
+
+            //Esto es lo que debemos imprimir al final en los resultados
+            //Esto no estoy segura si va aqui asi que si creen que queda mejor en otro lado, cambienlo mejor
+            //DataTable dt = resultadosHilillos();
+
+        }
+ public static DataTable resultadosHilillos()
+        {
+            DataTable dt = new DataTable();
+            //DataTable req = new DataTable();
+            //DataTable dt = new DataTable();
+
+            dt.Columns.Add("Id");
+            for (int i = 0; i < 32; ++i)
+            {
+                string s = "R";
+                s = s + i.ToString();
+                dt.Columns.Add(s);
+            }
+            dt.Columns.Add("Cant. de Ciclos");
+            dt.Columns.Add("T inicial");
+            dt.Columns.Add("T final");
+            dt.Columns.Add("Procesador en que corrío");
+
+            while (terminadosProcesador1.Count != 0)
+            {
+                int[] cont = (int[])terminadosProcesador1.Dequeue();
+                Object[] datos = new Object[38];
+                datos[0] = cont[37];
+                for (int j = 0; j < 36; ++j)
+                {
+                    datos[1 + j] = cont[j];
+                }
+                datos[37] = 1;
+                dt.Rows.Add(datos);
+            }
+            while (terminadosProcesador2.Count != 0)
+            {
+                int[] cont = (int[])terminadosProcesador2.Dequeue();
+                Object[] datos = new Object[38];
+                datos[0] = cont[37];
+                for (int j = 0; j < 36; ++j)
+                {
+                    datos[1 + j] = cont[j];
+                }
+                datos[37] = 2;
+                dt.Rows.Add(datos);
+            }
+            while (terminadosProcesador2.Count != 0)
+            {
+                int[] cont = (int[])terminadosProcesador1.Dequeue();
+                Object[] datos = new Object[38];
+                datos[0] = cont[37];
+                for (int j = 0; j < 36; ++j)
+                {
+                    datos[1 + j] = cont[j];
+                }
+                datos[37] = 3;
+                dt.Rows.Add(datos);
+            }
+            return dt;
+        }
         public static void hiloPrincipal()
         {
             while (hilosCorriendo>1)
@@ -839,8 +910,7 @@ namespace Proyecto
                                 if (es_pc)
                                 {
                                     procesador1[pos_pc] = 128;
-                                    procesador1[pos_tiempo_inicial] = 0;
-                                    contextoProcesador1.Enqueue(procesador1);
+                                    procesador1[pos_tiempo_inicial] = 0;                                    contextoProcesador1.Enqueue(procesador1);
                                     es_pc = false;
                                 }
 
