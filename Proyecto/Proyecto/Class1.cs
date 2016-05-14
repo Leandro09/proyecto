@@ -658,7 +658,7 @@ namespace Proyecto
                     {
                         Console.WriteLine("Procesador2 " + procesador2[i]);
                     }
-
+                    //comentario
 
 
                 }
