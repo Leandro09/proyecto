@@ -266,7 +266,8 @@ namespace Proyecto
 
             int bloque = PC / cant_bytes_bloque;
             int indice = bloque % cant_bytes_palabra;
-            int palabra = bloque / cant_bytes_palabra;
+            int cantidad_bytes = PC % cant_bytes_bloque;
+            int palabra = cantidad_bytes / cant_bytes_palabra;
 
             //PC = PC - limite;
            
@@ -278,8 +279,8 @@ namespace Proyecto
                     
                     for (int i = 0; i < cant_bytes_palabra; ++i )
                     {
-                        instruccion[i] = cache1[indicador];
-                        indicador = indicador + cant_bytes_palabra;
+                        instruccion[i] = cache1[indicador+i];
+                        //indicador = indicador + cant_bytes_palabra;
                     }
                 }
                 else
@@ -288,8 +289,8 @@ namespace Proyecto
                     indicador = palabra * cant_bytes_palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache1[indicador];
-                        indicador = indicador + cant_bytes_palabra;
+                        instruccion[i] = cache1[indicador+i];
+                        //indicador = indicador + cant_bytes_palabra;
                     }
 
                 }
@@ -301,8 +302,8 @@ namespace Proyecto
                     indicador = palabra * cant_bytes_palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache2[indicador];
-                        indicador = indicador + cant_bytes_palabra;
+                        instruccion[i] = cache2[indicador+i];
+                        //indicador = indicador + cant_bytes_palabra;
                     }
                 }
                 else
@@ -311,8 +312,8 @@ namespace Proyecto
                     indicador = palabra * cant_bytes_palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache2[indicador];
-                        indicador = indicador + cant_bytes_palabra;
+                        instruccion[i] = cache2[indicador+i];
+                        //indicador = indicador + cant_bytes_palabra;
                     }
                 }
             }
@@ -323,8 +324,8 @@ namespace Proyecto
                     indicador = palabra * cant_bytes_palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache3[indicador];
-                        indicador = indicador + cant_bytes_palabra;
+                        instruccion[i] = cache3[indicador+i];
+                        //indicador = indicador + cant_bytes_palabra;
                     }
                 }
                 else
@@ -333,8 +334,8 @@ namespace Proyecto
                     indicador = palabra * cant_bytes_palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache3[indicador];
-                        indicador = indicador + cant_bytes_palabra;
+                        instruccion[i] = cache3[indicador+i];
+                       // indicador = indicador + cant_bytes_palabra;
                     }
                 }
 
@@ -486,6 +487,7 @@ namespace Proyecto
         public static bool falloCache(int procesador, int direccion)
         {//Acuerdense que la direccion de es por palablas, no por ints de como lo estamos trabajando
             //Una instruccion tiene 1 palabra de MIPS y 4 ints de como lo estamos trabajando
+            string name = Thread.CurrentThread.Name;
             int bloque = direccion / 16;//calcula el bloque
             int posicion = bloque % 4;//calcula la posicion en que se debe almacenar la instruccion en la cache
             int direccionMemNoComp = bloque * 16 - 128;//calcula la direccion en que se ubica dentro de la memoria no compartida
@@ -502,28 +504,32 @@ namespace Proyecto
             {
                 case 1:
                     enCache1[posicion] = bloque;
-                    posicion = posicion * 4;
+                    posicion = posicion * 16;
                     for (int i = 0; i < 16; ++i)
                     {//pasa las 4 palabras MIPS a la cache 
-                        cache1[posicion + i] = procesador1[direccionMemNoComp + i];
+                        Console.WriteLine("dir1"+direccionMemNoComp + i);
+                        cache1[posicion + i] = memNoComp1[direccionMemNoComp + i];
                     }
+                    
                     Console.WriteLine("Case 1");
                     return true;
                 case 2:
                     enCache2[posicion] = bloque;
-                    posicion = posicion * 4;
+                    posicion = posicion * 16;
                     for (int i = 0; i < 16; ++i)
                     {
-                        cache2[posicion + i] = procesador2[direccionMemNoComp + i];
+                        Console.WriteLine("dir2" + direccionMemNoComp + i);
+                        cache2[posicion + i] = memNoComp2[direccionMemNoComp + i];
                     }
                     Console.WriteLine("Case 2");
                     return true;
                 case 3:
                     enCache3[posicion] = bloque;
-                    posicion = posicion * 4;
+                    posicion = posicion * 16;
                     for (int i = 0; i < 16; ++i)
                     {
-                        cache3[posicion + i] = procesador3[direccionMemNoComp + i];
+                        Console.WriteLine("dir3" + direccionMemNoComp + i);
+                        cache3[posicion + i] = memNoComp3[direccionMemNoComp + i];
                     }
                     Console.WriteLine("Case 3");
                     return true;
@@ -618,7 +624,7 @@ namespace Proyecto
 
                     for (int i = 0; i < cant_campos; ++i)
                     {
-                        Console.WriteLine("CAMPOOOOOOOO " + procesador1[i]);
+                        Console.WriteLine("procesador1 " + procesador1[i]);
                     }
                 }
                 else
@@ -647,7 +653,7 @@ namespace Proyecto
 
                     for (int i = 0; i < cant_campos; ++i)
                     {
-                        Console.WriteLine("CAMPOOOOOOOO " + procesador2[i]);
+                        Console.WriteLine("Procesador2 " + procesador2[i]);
                     }
 
 
@@ -680,7 +686,7 @@ namespace Proyecto
 
                     for (int i = 0; i < cant_campos; ++i)
                     {
-                        Console.WriteLine("CAMPOOOOOOOO " + procesador3[i]);
+                        Console.WriteLine("procesador3 " + procesador3[i]);
                     }
 
 
@@ -802,11 +808,11 @@ namespace Proyecto
         /// </summary>
         public void leeArchivos()
         {
+
             //Obtiene como dirección: ...\bin\Debug\
             string directorio_raiz = AppDomain.CurrentDomain.BaseDirectory;
             //Almacena la ruta en donde se encuentran los archivos a leer.
             string directorio_archivo;
-            
             string line;
             //Índice para conocer en cuál memoria del procesador se introducirá el hilillo.
             int contador = 1;
@@ -855,8 +861,9 @@ namespace Proyecto
                                 //Si es la primera instrucción del inicio del programa, entonces se agrega el pc al contexto y este se encola
                                 if (es_pc)
                                 {
-                                    procesador1[pos_pc] = 128;
-                                    procesador1[pos_tiempo_inicial] = 0;                                    contextoProcesador1.Enqueue(procesador1);
+                                    procesador1[pos_pc] = (index_memoria1)+128;
+                                    procesador1[pos_tiempo_inicial] = 0;   
+                                    contextoProcesador1.Enqueue(procesador1);
                                     es_pc = false;
                                 }
 
@@ -894,7 +901,7 @@ namespace Proyecto
                                 //Si es la primera instrucción del inicio del programa, entonces se agrega el pc al contexto y este se encola
                                 if (es_pc)
                                 {
-                                    procesador2[pos_pc] = index_memoria2;
+                                    procesador2[pos_pc] = (index_memoria2) + 128;
                                     contextoProcesador2.Enqueue(procesador2);
                                     es_pc = false;
                                 }
@@ -932,7 +939,7 @@ namespace Proyecto
                                 //Si es la primera instrucción del inicio del programa, entonces se agrega el pc al contexto y este se encola
                                 if (es_pc)
                                 {
-                                    procesador3[pos_pc] = index_memoria3;
+                                    procesador3[pos_pc] = (index_memoria3) + 128;
                                     contextoProcesador3.Enqueue(procesador3);
                                     es_pc = false;
                                 }
