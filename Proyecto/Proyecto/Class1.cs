@@ -84,7 +84,9 @@ namespace Proyecto
         {
             inicializarEstructuras();
             //Lee y acomoda en memoria las instrucciones de los hilillos.
+            contextoProcesador1.TrimToSize();
             leeArchivos();
+            
             Thread.CurrentThread.Name = "0";
             //se crean loc hilos que van a actuar como procesadores en esta simulacion
             proceso_1.Start();
@@ -602,7 +604,7 @@ namespace Proyecto
             // nhay que definir como determinar que hilo esta corriendo
             string managedThreadId = Thread.CurrentThread.Name;
             Console.WriteLine("ManagedThreadIdzz = " + managedThreadId);
-
+           
 
             if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("1") == true)
             {
@@ -610,7 +612,8 @@ namespace Proyecto
                 {
                     //Funciones del procesador 1.
                     bool indicador = true;
-                    procesador1 = (int[])contextoProcesador1.Dequeue();
+                    procesador1 = (int[])contextoProcesador1.Peek();
+                    Console.WriteLine("PC "+ procesador1[pos_pc] );
                     contadorProcesador1 = 0;
                     if (procesador1[pos_tiempo_inicial] == 0)
                     {
@@ -655,7 +658,7 @@ namespace Proyecto
                     {
                         Console.WriteLine("Procesador2 " + procesador2[i]);
                     }
-
+                    //comentario
 
 
                 }
@@ -861,9 +864,10 @@ namespace Proyecto
                                 //Si es la primera instrucción del inicio del programa, entonces se agrega el pc al contexto y este se encola
                                 if (es_pc)
                                 {
-                                    procesador1[pos_pc] = (index_memoria1)+128;
-                                    procesador1[pos_tiempo_inicial] = 0;   
-                                    contextoProcesador1.Enqueue(procesador1);
+                                    int[] contenedor = new int[cant_campos];
+                                    contenedor[pos_pc] = (index_memoria1)+128;
+                                    contenedor[pos_tiempo_inicial] = 0;  
+                                    contextoProcesador1.Enqueue(contenedor);
                                     es_pc = false;
                                 }
 
@@ -901,8 +905,10 @@ namespace Proyecto
                                 //Si es la primera instrucción del inicio del programa, entonces se agrega el pc al contexto y este se encola
                                 if (es_pc)
                                 {
-                                    procesador2[pos_pc] = (index_memoria2) + 128;
-                                    contextoProcesador2.Enqueue(procesador2);
+                                    int[] contenedor = new int[cant_campos];
+                                    contenedor[pos_pc] = (index_memoria2) + 128;
+                                    contenedor[pos_tiempo_inicial] = 0;
+                                    contextoProcesador2.Enqueue(contenedor);
                                     es_pc = false;
                                 }
                                 ++index_memoria2;
@@ -939,8 +945,10 @@ namespace Proyecto
                                 //Si es la primera instrucción del inicio del programa, entonces se agrega el pc al contexto y este se encola
                                 if (es_pc)
                                 {
-                                    procesador3[pos_pc] = (index_memoria3) + 128;
-                                    contextoProcesador3.Enqueue(procesador3);
+                                    int[] contenedor = new int[cant_campos];
+                                    contenedor[pos_pc] = (index_memoria3) + 128;
+                                    contenedor[pos_tiempo_inicial] = 0;
+                                    contextoProcesador3.Enqueue(contenedor);
                                     es_pc = false;
                                 }
                                 ++index_memoria3;
