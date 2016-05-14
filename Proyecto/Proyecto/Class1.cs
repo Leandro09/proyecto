@@ -484,7 +484,8 @@ namespace Proyecto
         //Se encarga de poner el bloque al que pertence la instruccion solicitada a la cache
         //Se encarga de poner el bloque al que pertence la instruccion solicitada a la cache
         public static bool falloCache(int procesador, int direccion)
-        {
+        {//Acuerdense que la direccion de es por palablas, no por ints de como lo estamos trabajando
+            //Una instruccion tiene 1 palabra de MIPS y 4 ints de como lo estamos trabajando
             int bloque = direccion / 16;//calcula el bloque
             int posicion = bloque % 4;//calcula la posicion en que se debe almacenar la instruccion en la cache
             int direccionMemNoComp = bloque * 16 - 128;//calcula la direccion en que se ubica dentro de la memoria no compartida
@@ -503,7 +504,7 @@ namespace Proyecto
                     enCache1[posicion] = bloque;
                     posicion = posicion * 4;
                     for (int i = 0; i < 16; ++i)
-                    {
+                    {//pasa las 4 palabras MIPS a la cache 
                         cache1[posicion + i] = procesador1[direccionMemNoComp + i];
                     }
                     Console.WriteLine("Case 1");
