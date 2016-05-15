@@ -88,7 +88,7 @@ namespace Proyecto
             //Lee y acomoda en memoria las instrucciones de los hilillos.
             contextoProcesador1.TrimToSize();
             leeArchivos();
-            
+
             Thread.CurrentThread.Name = "0";
             //se crean loc hilos que van a actuar como procesadores en esta simulacion
             proceso_1.Start();
@@ -110,23 +110,34 @@ namespace Proyecto
                     //Thread.CurrentThread.Abort();
                     //si hay un fin, este sea o no el ultimo hilillo ejecutandose en este procesador
                     //debemos guardar sus resultados
-                   
+
                     //Es solo temporal porque lo que hace es lanzar una excepcion que acaba con el hilo
-                    
+                    miBarrerita.RemoveParticipant();
                     procesador1[35] = reloj;
                     terminadosProcesador1.Enqueue(procesador1);
                     procesador1[pos_pc] = 0;
                     Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
-                    miBarrerita.RemoveParticipant();
 
                 }
                 else
                 {
 
                     procesador1[35] = reloj;
-                    terminadosProcesador1.Enqueue(procesador1);
+                    int[] contenedor = new int[cant_campos];
+                    for (int i = 0; i < cant_campos; ++i)
+                    {
+                        contenedor[i] = procesador1[i];
+                        procesador1[i] = 0;
+                    }
+
+
+                    terminadosProcesador1.Enqueue(contenedor);
+                    /*for (int i = 0; i < cant_campos; ++i)
+                    {
+                        procesador1[i] = 0;
+                    }*/
                     //procesador1 = null;
-                   // procesador1 = (int[]) contextoProcesador1.Dequeue();
+                    // procesador1 = (int[]) contextoProcesador1.Dequeue();
 
                 }
             }
@@ -136,20 +147,26 @@ namespace Proyecto
                 {
                     //finalizar el hilo
                     //Thread.CurrentThread.Abort();
-                   
+
                     //Es solo temporal porque lo que hace es lanzar una excepcion que acaba con el hilo
-                    
+                    miBarrerita.RemoveParticipant();
                     procesador2[35] = reloj;
                     terminadosProcesador2.Enqueue(procesador2);
                     // procesador2[pos_pc] = 0;
-                    miBarrerita.RemoveParticipant();
                     Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
                 }
                 else
                 {
                     procesador2[35] = reloj;
-                    terminadosProcesador2.Enqueue(procesador2);
-                    //procesador2 = (int[])contextoProcesador2.Dequeue();
+                    int[] contenedor = new int[cant_campos];
+                    for (int i = 0; i < cant_campos; ++i)
+                    {
+                        contenedor[i] = procesador2[i];
+                        procesador2[i] = 0;
+                    }
+
+
+                    terminadosProcesador2.Enqueue(contenedor);
                 }
             }
             else if (id_hilo == 3)
@@ -157,22 +174,28 @@ namespace Proyecto
                 {
                     if (contextoProcesador3.Count == 0)
                     {
-                        
+
                         //Es solo temporal porque lo que hace es lanzar una excepcion que acaba con el hilo
-                        
+                        miBarrerita.RemoveParticipant();
                         //finalizar el hilo
                         //Thread.CurrentThread.Abort();
                         procesador3[35] = reloj;
                         terminadosProcesador3.Enqueue(procesador3);
-                       // procesador3[pos_pc] = 0;
+                        // procesador3[pos_pc] = 0;
                         Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
-                        miBarrerita.RemoveParticipant();
                     }
                     else
                     {
                         procesador3[35] = reloj;
-                        terminadosProcesador3.Enqueue(procesador3);
-                      //  procesador3 = (int[])contextoProcesador3.Dequeue();
+                        int[] contenedor = new int[cant_campos];
+                        for (int i = 0; i < cant_campos; ++i)
+                        {
+                            contenedor[i] = procesador3[i];
+                            procesador3[i] = 0;
+                        }
+
+
+                        terminadosProcesador2.Enqueue(contenedor);
                     }
                 }
             }
@@ -185,29 +208,52 @@ namespace Proyecto
                 case 1:
                     if (contadorProcesador1 >= quantum)
                     {
-                        contextoProcesador1.Enqueue(procesador1);
-                        //Console.WriteLine("pc"+procesador1[pos_pc]);
-                        
-                       // procesador1 = (int [])contextoProcesador1.Dequeue();
+                        int[] contenedor = new int[cant_campos];
+                        for (int i = 0; i < cant_campos; ++i)
+                        {
+                            contenedor[i] = procesador1[i];
+                            procesador1[i] = 0;
+                        }
+
+                        contextoProcesador1.Enqueue(contenedor);
+                        Console.WriteLine("pc" + procesador1[pos_pc]);
+
+                        // procesador1 = (int [])contextoProcesador1.Dequeue();
+                        /* for (int i = 0; i < cant_campos; ++i)
+                         {
+                             procesador1[i] = 0;
+                         }*/
                     }
                     break;
                 case 2:
                     if (contadorProcesador2 >= quantum)
                     {
-                        contextoProcesador2.Enqueue(procesador2);
-                       // Console.WriteLine("pc" + procesador2[pos_pc]);
-                        // procesador2 = (int[])contextoProcesador2.Dequeue();
-                        
+                        int[] contenedor = new int[cant_campos];
+                        for (int i = 0; i < cant_campos; ++i)
+                        {
+                            contenedor[i] = procesador2[i];
+                            procesador2[i] = 0;
+                        }
+
+                        contextoProcesador2.Enqueue(contenedor);
+
+
+
                     }
 
                     break;
                 case 3:
                     if (contadorProcesador3 >= quantum)
                     {
-                        contextoProcesador3.Enqueue(procesador3);
-                       // Console.WriteLine("pc" + procesador3[pos_pc]);
-                        //  procesador3 = (int[])contextoProcesador3.Dequeue();
-                        
+                        int[] contenedor = new int[cant_campos];
+                        for (int i = 0; i < cant_campos; ++i)
+                        {
+                            contenedor[i] = procesador3[i];
+                            procesador3[i] = 0;
+                        }
+
+                        contextoProcesador3.Enqueue(contenedor);
+
                     }
 
                     break;
@@ -218,35 +264,36 @@ namespace Proyecto
         public static void nombrarHilo1()
         {
             Thread.CurrentThread.Name = "1";
-           // miBarrerita.AddParticipant();
+            // miBarrerita.AddParticipant();
             funcionPrincipal();
         }
 
         public static void nombrarHilo2()
         {
             Thread.CurrentThread.Name = "2";
-          //  miBarrerita.AddParticipant();
+            //  miBarrerita.AddParticipant();
             funcionPrincipal();
         }
 
         public static void nombrarHilo3()
         {
             Thread.CurrentThread.Name = "3";
-          //  miBarrerita.AddParticipant();
+            //  miBarrerita.AddParticipant();
             funcionPrincipal();
         }
 
         //inicializar estructuras
         public void inicializarEstructuras()
         {
-            for (int i = 0; i < cant_cache; ++i )
+            for (int i = 0; i < cant_cache; ++i)
             {
                 cache1[i] = 0;
                 cache2[i] = 0;
                 cache2[i] = 0;
             }
 
-            for(int i = 0; i < cant_encache; ++i){
+            for (int i = 0; i < cant_encache; ++i)
+            {
                 enCache1[i] = -1;
                 enCache2[i] = -1;
                 enCache3[i] = -1;
@@ -256,9 +303,9 @@ namespace Proyecto
             {
                 procesador1[i] = 0;
                 procesador2[i] = 0;
-                procesador3[i] = 0; 
+                procesador3[i] = 0;
             }
-            
+
         }
         //int[] pertenece = new int[12];
         String[] path = new String[12];
@@ -296,11 +343,12 @@ namespace Proyecto
             // switch para leer pc de procesador 
             int[] instruccion = new int[cant_bytes_palabra];
 
-            int PC=0;
-            
-            switch(id_hilo){
+            int PC = 0;
+
+            switch (id_hilo)
+            {
                 case 1:
-                    PC  = procesador1[pos_pc];
+                    PC = procesador1[pos_pc];
                     procesador1[pos_pc] = PC + 4;
                     break;
                 case 2:
@@ -311,33 +359,34 @@ namespace Proyecto
                     PC = procesador3[pos_pc];
                     procesador3[pos_pc] = PC + 4;
                     break;
-                
+
             }
             int bloque = PC / cant_bytes_bloque;
             int indice = bloque % cant_bytes_palabra;
             int cantidad_bytes = PC % cant_bytes_bloque;
             int palabra = cantidad_bytes / cant_bytes_palabra;
-  
-            if(id_hilo==1){
 
-                
+            if (id_hilo == 1)
+            {
+
+
                 if (enCache1[indice] != -1 && bloque == enCache1[indice])
                 {
-                    indicador = indice * cant_bytes_bloque + cant_bytes_palabra *palabra ;
-                    
-                    for (int i = 0; i < cant_bytes_palabra; ++i )
+                    indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
+
+                    for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache1[indicador+i];
+                        instruccion[i] = cache1[indicador + i];
                         //indicador = indicador + cant_bytes_palabra;
                     }
                 }
                 else
                 {
-                    falloCache(id_hilo, PC );
+                    falloCache(id_hilo, PC);
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache1[indicador+i];
+                        instruccion[i] = cache1[indicador + i];
                         //indicador = indicador + cant_bytes_palabra;
                     }
 
@@ -350,7 +399,7 @@ namespace Proyecto
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache2[indicador+i];
+                        instruccion[i] = cache2[indicador + i];
                         //indicador = indicador + cant_bytes_palabra;
                     }
                 }
@@ -360,19 +409,20 @@ namespace Proyecto
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache2[indicador+i];
+                        instruccion[i] = cache2[indicador + i];
                         //indicador = indicador + cant_bytes_palabra;
                     }
                 }
             }
-            else {
+            else
+            {
 
                 if (enCache3[indice] != -1 && bloque == enCache3[indice])
                 {
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache3[indicador+i];
+                        instruccion[i] = cache3[indicador + i];
                         //indicador = indicador + cant_bytes_palabra;
                     }
                 }
@@ -382,16 +432,16 @@ namespace Proyecto
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache3[indicador+i];
-                       // indicador = indicador + cant_bytes_palabra;
+                        instruccion[i] = cache3[indicador + i];
+                        // indicador = indicador + cant_bytes_palabra;
                     }
                 }
 
             }
 
-           return realizarOperacion(instruccion, id_hilo, PC+4);
+            return realizarOperacion(instruccion, id_hilo, PC + 4);
 
-            
+
         }
 
 
@@ -402,40 +452,41 @@ namespace Proyecto
             //realizar operaciones
             miBarrerita.SignalAndWait();
             int codigo = instruccion[0];
-            int primerRegistro = instruccion[1]; 
-            int segundoRegistro = instruccion[2]; 
-            int ultimaParte= instruccion[3];
+            int primerRegistro = instruccion[1];
+            int segundoRegistro = instruccion[2];
+            int ultimaParte = instruccion[3];
 
-           // Console.WriteLine("SOY INSTRUCCION " + codigo + " " + primerRegistro + " " + segundoRegistro + " " + ultimaParte + " Procesador " + procesador + " PC " + (PC-4) + "  " );
-           // Console.WriteLine("");
+            Console.WriteLine("SOY INSTRUCCION " + codigo + " " + primerRegistro + " " + segundoRegistro + " " + ultimaParte + " Procesador " + procesador + " PC " + (PC - 4) + "  ");
+            Console.WriteLine("");
 
             //Dice cual es el resultado de la operacion
             int resultado = 0;
 
             //Dice en que registro debemos guardar el resultado de la operacion
-            int guardarEn=0;
+            int guardarEn = 0;
             bool resultadoFinal = true;
 
             switch (procesador)
             {
                 case 1:
-                    primerRegistro=procesador1[primerRegistro];
+                    primerRegistro = procesador1[primerRegistro];
                     //procesador1[pos_pc] = PC;
-                    if(codigo!=8){
-                        segundoRegistro=procesador1[segundoRegistro];
+                    if (codigo != 8)
+                    {
+                        segundoRegistro = procesador1[segundoRegistro];
                     }
                     break;
                 case 2:
-                    primerRegistro=procesador2[primerRegistro];
+                    primerRegistro = procesador2[primerRegistro];
                     //procesador2[pos_pc] = PC;
                     if (codigo != 8)
                     {
                         segundoRegistro = procesador2[segundoRegistro];
                     }
                     break;
-                
+
                 case 3:
-                    primerRegistro=procesador3[primerRegistro];
+                    primerRegistro = procesador3[primerRegistro];
                     //procesador3[pos_pc] = PC;
                     if (codigo != 8)
                     {
@@ -443,7 +494,7 @@ namespace Proyecto
                     }
                     break;
             }
-            Console.WriteLine("=" + procesador3[4]);
+
             /*
                 Operación   Operandos     Acción       1                2           3           4
                                                     Cód.Operación     Rf1      Rf2 ó Rd   Rd ó inmediato
@@ -483,7 +534,8 @@ namespace Proyecto
                     guardarEn = ultimaParte;
                     break;
                 case 4:
-                    if(primerRegistro == 0){
+                    if (primerRegistro == 0)
+                    {
                         resultado = PC + ultimaParte * 4;
                         guardarEn = pos_pc;
                     }
@@ -492,9 +544,8 @@ namespace Proyecto
                     if (primerRegistro != 0)
                     {
                         resultado = PC + ultimaParte * 4;
-                        guardarEn = pos_pc; 
+                        guardarEn = pos_pc;
                     }
-                    
                     break;
                 case 3:
                     resultado = PC + ultimaParte;
@@ -502,10 +553,12 @@ namespace Proyecto
                     if (procesador == 1)
                     {
                         procesador1[31] = resultado;
-                    }else if (procesador==2)
+                    }
+                    else if (procesador == 2)
                     {
                         procesador2[31] = resultado;
-                    }else
+                    }
+                    else
                     {
                         procesador3[31] = resultado;
                     }
@@ -518,12 +571,13 @@ namespace Proyecto
                     resultadoFinal = false;
                     break;
                 default:
-                   // resultadoFinal = false;
+                    // resultadoFinal = false;
                     break;
 
             }
             //para guardar los resultados en el registro que corresponde
-            if (codigo != 63) {
+            if (codigo != 63)
+            {
                 switch (procesador)
                 {
                     case 1:
@@ -539,8 +593,8 @@ namespace Proyecto
                 }
             }
 
-           // Console.WriteLine("SOY INSTRUCCION " + codigo +  " "+primerRegistro+ " " + segundoRegistro+ " " + ultimaParte + " Procesador " + procesador + " PC " + PC + "  ");
-           // Console.WriteLine("");
+            // Console.WriteLine("SOY INSTRUCCION " + codigo +  " "+primerRegistro+ " " + segundoRegistro+ " " + ultimaParte + " Procesador " + procesador + " PC " + PC + "  ");
+            // Console.WriteLine("");
             return resultadoFinal;
         }
 
@@ -562,7 +616,7 @@ namespace Proyecto
             {
                 //Console.WriteLine("CAMPOOOOOOOO1 " + miBarrerita.ParticipantCount);
                 miBarrerita.SignalAndWait();
-                
+
             }
 
             switch (procesador)
@@ -572,34 +626,34 @@ namespace Proyecto
                     posicion = posicion * 16;
                     for (int i = 0; i < 16; ++i)
                     {//pasa las 4 palabras MIPS a la cache 
-                        
+
                         cache1[posicion + i] = memNoComp1[direccionMemNoComp + i];
                         //Console.Write("Cache1: " + cache1[posicion + i]);
                     }
-                    
-                    //Console.WriteLine("Case 1");
+
+                    Console.WriteLine("Case 1");
                     return true;
                 case 2:
                     enCache2[posicion] = bloque;
                     posicion = posicion * 16;
                     for (int i = 0; i < 16; ++i)
                     {
-                        
+
                         cache2[posicion + i] = memNoComp2[direccionMemNoComp + i];
-                       // Console.Write("Cache2: " + cache2[posicion + i]);
+                        // Console.Write("Cache2: " + cache2[posicion + i]);
                     }
-                   // Console.WriteLine("Case 2");
+                    // Console.WriteLine("Case 2");
                     return true;
                 case 3:
                     enCache3[posicion] = bloque;
                     posicion = posicion * 16;
                     for (int i = 0; i < 16; ++i)
                     {
-                        
+
                         cache3[posicion + i] = memNoComp3[direccionMemNoComp + i];
-                       // Console.Write("Cache3: " + cache3[posicion + i]);
+                        // Console.Write("Cache3: " + cache3[posicion + i]);
                     }
-                    //Console.WriteLine("Case 3");
+                    Console.WriteLine("Case 3");
                     return true;
             }
             return false;
@@ -627,7 +681,7 @@ namespace Proyecto
                     {
                         retorna[i] = cache1[posicion + i];
                     }
-                    //Console.WriteLine("Case 1");
+                    Console.WriteLine("Case 1");
                     break;
                 //return true;
                 case 2:
@@ -641,7 +695,7 @@ namespace Proyecto
                     {
                         retorna[i] = cache2[posicion + i];
                     }
-                    //Console.WriteLine("Case 2");
+                    Console.WriteLine("Case 2");
                     break;
                 case 3:
                     if (!(enCache3[posicion] == bloque))
@@ -656,7 +710,7 @@ namespace Proyecto
                     }
                     break;
             }
-            
+
             return retorna;
         }
         /// <summary>
@@ -669,12 +723,12 @@ namespace Proyecto
             // barrera de sincronizacion
             // nhay que definir como determinar que hilo esta corriendo
             string managedThreadId = Thread.CurrentThread.Name;
-            //Console.WriteLine("ManagedThreadIdzz = " + managedThreadId);
+            Console.WriteLine("ManagedThreadIdzz = " + managedThreadId);
 
 
             if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("1") == true)
             {
-                
+
                 while (terminadosProcesador1.Count < 2)//Necesario porque si intenta desencolar algo y la cola esta vacia se cae
                 {
                     //Funciones del procesador 1.
@@ -690,10 +744,15 @@ namespace Proyecto
 
                     while (contadorProcesador1 < quantum && indicador == true)
                     {
-                        
+
                         indicador = leerInstruccion(1);
+                        for (int i = 0; i < cant_campos; ++i)
+                        {
+                            Console.Write(procesador1[i]);
+                        }
 
                     }
+
 
                     Console.WriteLine(contadorProcesador1);
                     int p = procesador1[pos_pc];
@@ -712,12 +771,12 @@ namespace Proyecto
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
                 //Thread.CurrentThread.Abort();
-                //miBarrerita.RemoveParticipant();
+                miBarrerita.RemoveParticipant();
 
             }
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("2") == true)
             {
-                
+
                 while (terminadosProcesador2.Count < 2)
                 {
 
@@ -733,7 +792,15 @@ namespace Proyecto
                     while (contadorProcesador2 < quantum && indicador == true)
                     {
                         indicador = leerInstruccion(2);
+                        for (int i = 0; i < cant_campos; ++i)
+                        {
+                            Console.Write(procesador2[i]);
+                        }
                     }
+
+
+
+
                     Console.WriteLine(contadorProcesador2);
                     Console.WriteLine("SOY PROCESO 2");
                     Console.WriteLine(contadorProcesador1);
@@ -753,11 +820,11 @@ namespace Proyecto
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
                 //Thread.CurrentThread.Abort();
-                //miBarrerita.RemoveParticipant();
+                miBarrerita.RemoveParticipant();
             }
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("3") == true)
             {
-                
+
                 //Funciones del procesador 3.
                 while (terminadosProcesador2.Count < 2)
                 {
@@ -774,7 +841,15 @@ namespace Proyecto
                     while (contadorProcesador3 < quantum && indicador == true)
                     {
                         indicador = leerInstruccion(3);
+                        for (int i = 0; i < cant_campos; ++i)
+                        {
+                            Console.Write(procesador3[i]);
+                        }
                     }
+
+
+
+
                     Console.WriteLine(contadorProcesador3);
                     Console.WriteLine("SOY PROCESO 3");
                     Console.WriteLine(contadorProcesador3);
@@ -794,8 +869,8 @@ namespace Proyecto
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
                 //Thread.CurrentThread.Abort();
-                //miBarrerita.RemoveParticipant();
-               // miBarrerita.SignalAndWait();
+                miBarrerita.RemoveParticipant();
+                // miBarrerita.SignalAndWait();
             }
             else
             {
@@ -805,7 +880,7 @@ namespace Proyecto
 
         }
 
-        
+
         public static DataTable resultadosHilillos()
         {
             DataTable dt = new DataTable();
@@ -865,16 +940,16 @@ namespace Proyecto
         }
         public static void hiloPrincipal()
         {
-            while (hilosCorriendo>1)
+            while (hilosCorriendo > 1)
             {
                 //sincronizacion de los ciclos de reloj con barreras y sumandole 1 al reloj
                 miBarrerita.SignalAndWait();
                 reloj = reloj + 1;
 
 
-              //Esto era lo que habiamos hablado de ir viendo y controlar mejor lo que le queda de quantum a 
-              //cada procesador. Hay que recordar ponerlo en 0 cada vez que sacamos un hilillo de la cola
-              //Si a alguien le parece que va en otro lado solo lo quita y lo pone donde crea que se debe poner.
+                //Esto era lo que habiamos hablado de ir viendo y controlar mejor lo que le queda de quantum a 
+                //cada procesador. Hay que recordar ponerlo en 0 cada vez que sacamos un hilillo de la cola
+                //Si a alguien le parece que va en otro lado solo lo quita y lo pone donde crea que se debe poner.
                 contadorProcesador1 = contadorProcesador1 + 1;
                 contadorProcesador2 = contadorProcesador2 + 1;
                 contadorProcesador3 = contadorProcesador3 + 1;
@@ -887,7 +962,7 @@ namespace Proyecto
 
         }
 
-        
+
         /// <summary>
         /// Recibe un integer "a" y coloca el valor en la variable hilillos.
         /// </summary>
@@ -931,10 +1006,10 @@ namespace Proyecto
             int nombre_hilillo2 = 0;
             int nombre_hilillo3 = 0;
             //El índice i será utilizado para el nombre de los archivos.
-            for (int i = 0; i< hilillos; ++i)
+            for (int i = 0; i < hilillos; ++i)
             {
                 //Ruta del archivo que será leído.
-                directorio_archivo = directorio_raiz + (i+1) + ".txt";
+                directorio_archivo = directorio_raiz + (i + 1) + ".txt";
 
 
                 //Procede a leer el archivo linea a linea
@@ -947,10 +1022,10 @@ namespace Proyecto
                     {
                         while (line[a] != '\n')
                         {
-                            if(line[a] != ' ')
-                            { 
+                            if (line[a] != ' ')
+                            {
                                 //Guarda el número en cuestión en una string
-                                while(line[a] != ' ')
+                                while (line[a] != ' ')
                                 {
                                     if (line[a] != '\n')
                                     {
@@ -972,7 +1047,7 @@ namespace Proyecto
                                     ++nombre_hilillo1;
                                     //Para conocer en cuál procesador está corriendo.
                                     contenedor[pos_nombre_procesador] = 1;
-                                    contenedor[pos_pc] = (index_memoria1)+128;
+                                    contenedor[pos_pc] = (index_memoria1) + 128;
                                     contenedor[pos_tiempo_inicial] = 0;
                                     contextoProcesador1.Enqueue(contenedor);
                                     es_pc = false;
@@ -981,7 +1056,7 @@ namespace Proyecto
                                 ++index_memoria1;
                                 temporal = "";
                             }
-                            if (a < line.Length-1)
+                            if (a < line.Length - 1)
                                 ++a;
                             else
                                 line = line.Substring(0, line.Length - 1) + '\n';
@@ -1102,4 +1177,3 @@ namespace Proyecto
         }
     }
 }
-
