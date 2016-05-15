@@ -110,20 +110,22 @@ namespace Proyecto
                     //Thread.CurrentThread.Abort();
                     //si hay un fin, este sea o no el ultimo hilillo ejecutandose en este procesador
                     //debemos guardar sus resultados
-                    Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
+                   
                     //Es solo temporal porque lo que hace es lanzar una excepcion que acaba con el hilo
                     miBarrerita.RemoveParticipant();
                     procesador1[35] = reloj;
                     terminadosProcesador1.Enqueue(procesador1);
-                    
+                    procesador1[pos_pc] = 0;
+                    Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
+
                 }
                 else
                 {
 
                     procesador1[35] = reloj;
                     terminadosProcesador1.Enqueue(procesador1);
-                    procesador1 = null;
-                    procesador1 = (int[]) contextoProcesador1.Dequeue();
+                    //procesador1 = null;
+                   // procesador1 = (int[]) contextoProcesador1.Dequeue();
 
                 }
             }
@@ -133,17 +135,19 @@ namespace Proyecto
                 {
                     //finalizar el hilo
                     //Thread.CurrentThread.Abort();
-                    Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
+                   
                     //Es solo temporal porque lo que hace es lanzar una excepcion que acaba con el hilo
                     miBarrerita.RemoveParticipant();
                     procesador2[35] = reloj;
                     terminadosProcesador2.Enqueue(procesador2);
+                   // procesador2[pos_pc] = 0;
+                    Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
                 }
                 else
                 {
                     procesador2[35] = reloj;
                     terminadosProcesador2.Enqueue(procesador2);
-                    procesador2 = (int[])contextoProcesador2.Dequeue();
+                    //procesador2 = (int[])contextoProcesador2.Dequeue();
                 }
             }
             else if (id_hilo == 3)
@@ -151,19 +155,21 @@ namespace Proyecto
                 {
                     if (contextoProcesador3.Count == 0)
                     {
-                        Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
+                        
                         //Es solo temporal porque lo que hace es lanzar una excepcion que acaba con el hilo
                         miBarrerita.RemoveParticipant();
                         //finalizar el hilo
                         //Thread.CurrentThread.Abort();
                         procesador3[35] = reloj;
                         terminadosProcesador3.Enqueue(procesador3);
+                       // procesador3[pos_pc] = 0;
+                        Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
                     }
                     else
                     {
                         procesador3[35] = reloj;
                         terminadosProcesador3.Enqueue(procesador3);
-                        procesador3 = (int[])contextoProcesador3.Dequeue();
+                      //  procesador3 = (int[])contextoProcesador3.Dequeue();
                     }
                 }
             }
@@ -177,6 +183,8 @@ namespace Proyecto
                     if (contadorProcesador1 >= quantum)
                     {
                         contextoProcesador1.Enqueue(procesador1);
+                        Console.WriteLine("pc"+procesador1[pos_pc]);
+                        
                        // procesador1 = (int [])contextoProcesador1.Dequeue();
                     }
                     break;
@@ -184,7 +192,9 @@ namespace Proyecto
                     if (contadorProcesador2 >= quantum)
                     {
                         contextoProcesador2.Enqueue(procesador2);
-                       // procesador2 = (int[])contextoProcesador2.Dequeue();
+                        Console.WriteLine("pc" + procesador2[pos_pc]);
+                        // procesador2 = (int[])contextoProcesador2.Dequeue();
+                        
                     }
 
                     break;
@@ -192,7 +202,9 @@ namespace Proyecto
                     if (contadorProcesador3 >= quantum)
                     {
                         contextoProcesador3.Enqueue(procesador3);
-                      //  procesador3 = (int[])contextoProcesador3.Dequeue();
+                        Console.WriteLine("pc" + procesador3[pos_pc]);
+                        //  procesador3 = (int[])contextoProcesador3.Dequeue();
+                        
                     }
 
                     break;
@@ -507,18 +519,20 @@ namespace Proyecto
 
             }
             //para guardar los resultados en el registro que corresponde
-            switch (procesador)
-            {
-                case 1:
-                   
-                    procesador1[guardarEn] = resultado;
-                    break;
-                case 2:
-                    procesador2[guardarEn] = resultado;
-                    break;
-                case 3:
-                    procesador3[guardarEn] = resultado;
-                    break;
+            if (codigo != 63) {
+                switch (procesador)
+                {
+                    case 1:
+
+                        procesador1[guardarEn] = resultado;
+                        break;
+                    case 2:
+                        procesador2[guardarEn] = resultado;
+                        break;
+                    case 3:
+                        procesador3[guardarEn] = resultado;
+                        break;
+                }
             }
 
            // Console.WriteLine("SOY INSTRUCCION " + codigo +  " "+primerRegistro+ " " + segundoRegistro+ " " + ultimaParte + " Procesador " + procesador + " PC " + PC + "  ");
@@ -657,23 +671,30 @@ namespace Proyecto
             if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("1") == true)
             {
                 
-                while (contextoProcesador1.Count != 0)//Necesario porque si intenta desencolar algo y la cola esta vacia se cae
+                while (terminadosProcesador1.Count < 2)//Necesario porque si intenta desencolar algo y la cola esta vacia se cae
                 {
                     //Funciones del procesador 1.
                     bool indicador = true;
                     procesador1 = (int[])contextoProcesador1.Dequeue();
+                    int p1 = procesador1[pos_pc];
+                    int id1 = procesador1[1];
                     contadorProcesador1 = 0;
                     if (procesador1[pos_tiempo_inicial] == 0)
                     {
                         procesador1[pos_tiempo_inicial] = reloj;
                     }
 
-                    while (contadorProcesador1 <= quantum && indicador == true)
+                    while (contadorProcesador1 < quantum && indicador == true)
                     {
                         
                         indicador = leerInstruccion(1);
 
                     }
+
+                    Console.WriteLine(contadorProcesador1);
+                    int p = procesador1[pos_pc];
+                    int id = procesador1[1];
+
                     if (!indicador)
                     {
                         finalizarEjecucion(1);
@@ -682,8 +703,8 @@ namespace Proyecto
                     {
                         cambiar_hilillo_quantum(1);
                     }
+                    Console.WriteLine(contextoProcesador1.Count);
 
-                 
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
                 //Thread.CurrentThread.Abort();
@@ -693,20 +714,27 @@ namespace Proyecto
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("2") == true)
             {
                 
-                while (contextoProcesador2.Count != 0)
+                while (terminadosProcesador2.Count < 2)
                 {
 
                     bool indicador = true;
                     procesador2 = (int[])contextoProcesador2.Dequeue();
+                    int p1 = procesador2[pos_pc];
+                    int id1 = procesador2[1];
                     contadorProcesador2 = 0;
                     if (procesador2[pos_tiempo_inicial] == 0)
                     {
                         procesador2[pos_tiempo_inicial] = reloj;
                     }
-                    while (contadorProcesador2 <= quantum && indicador == true)
+                    while (contadorProcesador2 < quantum && indicador == true)
                     {
                         indicador = leerInstruccion(2);
                     }
+                    Console.WriteLine(contadorProcesador2);
+                    Console.WriteLine("SOY PROCESO 2");
+                    Console.WriteLine(contadorProcesador1);
+                    int p = procesador2[pos_pc];
+                    int id = procesador2[1];
                     if (!indicador)
                     {
                         finalizarEjecucion(2);
@@ -716,8 +744,8 @@ namespace Proyecto
                         cambiar_hilillo_quantum(2);
                     }
 
-                 
-                    
+                    Console.WriteLine(contextoProcesador2.Count);
+
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
                 //Thread.CurrentThread.Abort();
@@ -727,20 +755,27 @@ namespace Proyecto
             {
                 
                 //Funciones del procesador 3.
-                while (contextoProcesador3.Count != 0)
+                while (terminadosProcesador2.Count < 2)
                 {
 
                     bool indicador = true;
                     procesador3 = (int[])contextoProcesador3.Dequeue();
+                    int p1 = procesador3[pos_pc];
+                    int id1 = procesador3[1];
                     contadorProcesador3 = 0;
                     if (procesador3[pos_tiempo_inicial] == 0)
                     {
                         procesador3[pos_tiempo_inicial] = reloj;
                     }
-                    while (contadorProcesador3 <= quantum && indicador == true)
+                    while (contadorProcesador3 < quantum && indicador == true)
                     {
                         indicador = leerInstruccion(3);
                     }
+                    Console.WriteLine(contadorProcesador3);
+                    Console.WriteLine("SOY PROCESO 3");
+                    Console.WriteLine(contadorProcesador3);
+                    int p = procesador3[pos_pc];
+                    int id = procesador3[1];
                     if (!indicador)
                     {
                         finalizarEjecucion(3);
@@ -750,8 +785,8 @@ namespace Proyecto
                         cambiar_hilillo_quantum(3);
                     }
 
-                  
-                   
+                    Console.WriteLine(contextoProcesador3.Count);
+
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
                 //Thread.CurrentThread.Abort();
