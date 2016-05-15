@@ -152,7 +152,9 @@ namespace Proyecto
                     miBarrerita.RemoveParticipant();
                     procesador2[35] = reloj;
                     terminadosProcesador2.Enqueue(procesador2);
+
                     // procesador2[pos_pc] = 0;
+
                     Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
                 }
                 else
@@ -223,6 +225,12 @@ namespace Proyecto
                          {
                              procesador1[i] = 0;
                          }*/
+
+                       // contextoProcesador1.Enqueue(procesador1);
+                        Console.WriteLine("pc"+procesador1[pos_pc]);
+                        
+                       // procesador1 = (int [])contextoProcesador1.Dequeue();
+
                     }
                     break;
                 case 2:
@@ -236,8 +244,9 @@ namespace Proyecto
                         }
 
                         contextoProcesador2.Enqueue(contenedor);
-
-
+                        //contextoProcesador2.Enqueue(procesador2);
+                        Console.WriteLine("pc" + procesador2[pos_pc]);
+                        // procesador2 = (int[])contextoProcesador2.Dequeue();
 
                     }
 
@@ -253,6 +262,11 @@ namespace Proyecto
                         }
 
                         contextoProcesador3.Enqueue(contenedor);
+
+                       // contextoProcesador3.Enqueue(procesador3);
+                        Console.WriteLine("pc" + procesador3[pos_pc]);
+                        //  procesador3 = (int[])contextoProcesador3.Dequeue();
+                        
 
                     }
 
@@ -456,7 +470,9 @@ namespace Proyecto
             int segundoRegistro = instruccion[2];
             int ultimaParte = instruccion[3];
 
+
             Console.WriteLine("SOY INSTRUCCION " + codigo + " " + primerRegistro + " " + segundoRegistro + " " + ultimaParte + " Procesador " + procesador + " PC " + (PC - 4) + "  ");
+
             Console.WriteLine("");
 
             //Dice cual es el resultado de la operacion
@@ -495,6 +511,7 @@ namespace Proyecto
                     break;
             }
 
+
             /*
                 Operación   Operandos     Acción       1                2           3           4
                                                     Cód.Operación     Rf1      Rf2 ó Rd   Rd ó inmediato
@@ -509,6 +526,7 @@ namespace Proyecto
                 JR       RX             PC <-- (Rx)         2          X           0           0
                 FIN                 Detiene el programa     63         0           0           0
             */
+
             // aca se puede ver el hilo que entra
             switch (codigo)
             {
@@ -630,7 +648,6 @@ namespace Proyecto
                         cache1[posicion + i] = memNoComp1[direccionMemNoComp + i];
                         //Console.Write("Cache1: " + cache1[posicion + i]);
                     }
-
                     Console.WriteLine("Case 1");
                     return true;
                 case 2:
@@ -870,7 +887,9 @@ namespace Proyecto
                 //Este solo se va a usar cuando se lee solo un hilillo
                 //Thread.CurrentThread.Abort();
                 miBarrerita.RemoveParticipant();
+
                 // miBarrerita.SignalAndWait();
+
             }
             else
             {
