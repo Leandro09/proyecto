@@ -112,11 +112,12 @@ namespace Proyecto
                     //debemos guardar sus resultados
                    
                     //Es solo temporal porque lo que hace es lanzar una excepcion que acaba con el hilo
-                    miBarrerita.RemoveParticipant();
+                    
                     procesador1[35] = reloj;
                     terminadosProcesador1.Enqueue(procesador1);
                     procesador1[pos_pc] = 0;
                     Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
+                    miBarrerita.RemoveParticipant();
 
                 }
                 else
@@ -137,10 +138,11 @@ namespace Proyecto
                     //Thread.CurrentThread.Abort();
                    
                     //Es solo temporal porque lo que hace es lanzar una excepcion que acaba con el hilo
-                    miBarrerita.RemoveParticipant();
+                    
                     procesador2[35] = reloj;
                     terminadosProcesador2.Enqueue(procesador2);
-                   // procesador2[pos_pc] = 0;
+                    // procesador2[pos_pc] = 0;
+                    miBarrerita.RemoveParticipant();
                     Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
                 }
                 else
@@ -157,13 +159,14 @@ namespace Proyecto
                     {
                         
                         //Es solo temporal porque lo que hace es lanzar una excepcion que acaba con el hilo
-                        miBarrerita.RemoveParticipant();
+                        
                         //finalizar el hilo
                         //Thread.CurrentThread.Abort();
                         procesador3[35] = reloj;
                         terminadosProcesador3.Enqueue(procesador3);
                        // procesador3[pos_pc] = 0;
                         Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
+                        miBarrerita.RemoveParticipant();
                     }
                     else
                     {
@@ -183,7 +186,7 @@ namespace Proyecto
                     if (contadorProcesador1 >= quantum)
                     {
                         contextoProcesador1.Enqueue(procesador1);
-                        Console.WriteLine("pc"+procesador1[pos_pc]);
+                        //Console.WriteLine("pc"+procesador1[pos_pc]);
                         
                        // procesador1 = (int [])contextoProcesador1.Dequeue();
                     }
@@ -192,7 +195,7 @@ namespace Proyecto
                     if (contadorProcesador2 >= quantum)
                     {
                         contextoProcesador2.Enqueue(procesador2);
-                        Console.WriteLine("pc" + procesador2[pos_pc]);
+                       // Console.WriteLine("pc" + procesador2[pos_pc]);
                         // procesador2 = (int[])contextoProcesador2.Dequeue();
                         
                     }
@@ -202,7 +205,7 @@ namespace Proyecto
                     if (contadorProcesador3 >= quantum)
                     {
                         contextoProcesador3.Enqueue(procesador3);
-                        Console.WriteLine("pc" + procesador3[pos_pc]);
+                       // Console.WriteLine("pc" + procesador3[pos_pc]);
                         //  procesador3 = (int[])contextoProcesador3.Dequeue();
                         
                     }
@@ -403,8 +406,8 @@ namespace Proyecto
             int segundoRegistro = instruccion[2]; 
             int ultimaParte= instruccion[3];
 
-            Console.WriteLine("SOY INSTRUCCION " + codigo + " " + primerRegistro + " " + segundoRegistro + " " + ultimaParte + " Procesador " + procesador + " PC " + (PC-4) + "  " );
-            Console.WriteLine("");
+           // Console.WriteLine("SOY INSTRUCCION " + codigo + " " + primerRegistro + " " + segundoRegistro + " " + ultimaParte + " Procesador " + procesador + " PC " + (PC-4) + "  " );
+           // Console.WriteLine("");
 
             //Dice cual es el resultado de la operacion
             int resultado = 0;
@@ -440,21 +443,21 @@ namespace Proyecto
                     }
                     break;
             }
-
-/*
-    Operación   Operandos     Acción       1                2           3           4
-                                        Cód.Operación     Rf1      Rf2 ó Rd   Rd ó inmediato
-    DADDI    RX, RY, #n     Rx<--(Ry)+n        8           Y           X           n
-    DADD     RX, RY, RZ     Rx<--(Ry)+(Rz)     32          Y           Z           X
-    DSUB     RX, RY, RZ     Rx <-- (Ry) - (Rz) 34          Y           Z           X
-    DMUL     RX, RY, RZ     Rx <-- (Ry) * (Rz) 12          Y           Z           X
-    DDIV     RX, RY, RZ     Rx <-- (Ry) / (Rz) 14          Y           Z           X
-    BEQZ     RX, ETIQ     Si Rx = 0 SALTA       4          X           0           n
-    BNEZ     RX, ETIQ     Si Rx <> 0 SALTA      5          X           0           n
-    JAL      n R31<--PC,    PC<-- PC+n          3          0           0           n
-    JR       RX             PC <-- (Rx)         2          X           0           0
-    FIN                 Detiene el programa     63         0           0           0
-*/
+            Console.WriteLine("=" + procesador3[4]);
+            /*
+                Operación   Operandos     Acción       1                2           3           4
+                                                    Cód.Operación     Rf1      Rf2 ó Rd   Rd ó inmediato
+                DADDI    RX, RY, #n     Rx<--(Ry)+n        8           Y           X           n
+                DADD     RX, RY, RZ     Rx<--(Ry)+(Rz)     32          Y           Z           X
+                DSUB     RX, RY, RZ     Rx <-- (Ry) - (Rz) 34          Y           Z           X
+                DMUL     RX, RY, RZ     Rx <-- (Ry) * (Rz) 12          Y           Z           X
+                DDIV     RX, RY, RZ     Rx <-- (Ry) / (Rz) 14          Y           Z           X
+                BEQZ     RX, ETIQ     Si Rx = 0 SALTA       4          X           0           n
+                BNEZ     RX, ETIQ     Si Rx <> 0 SALTA      5          X           0           n
+                JAL      n R31<--PC,    PC<-- PC+n          3          0           0           n
+                JR       RX             PC <-- (Rx)         2          X           0           0
+                FIN                 Detiene el programa     63         0           0           0
+            */
             // aca se puede ver el hilo que entra
             switch (codigo)
             {
@@ -491,6 +494,7 @@ namespace Proyecto
                         resultado = PC + ultimaParte * 4;
                         guardarEn = pos_pc; 
                     }
+                    
                     break;
                 case 3:
                     resultado = PC + ultimaParte;
@@ -573,7 +577,7 @@ namespace Proyecto
                         //Console.Write("Cache1: " + cache1[posicion + i]);
                     }
                     
-                    Console.WriteLine("Case 1");
+                    //Console.WriteLine("Case 1");
                     return true;
                 case 2:
                     enCache2[posicion] = bloque;
@@ -595,7 +599,7 @@ namespace Proyecto
                         cache3[posicion + i] = memNoComp3[direccionMemNoComp + i];
                        // Console.Write("Cache3: " + cache3[posicion + i]);
                     }
-                    Console.WriteLine("Case 3");
+                    //Console.WriteLine("Case 3");
                     return true;
             }
             return false;
@@ -623,7 +627,7 @@ namespace Proyecto
                     {
                         retorna[i] = cache1[posicion + i];
                     }
-                    Console.WriteLine("Case 1");
+                    //Console.WriteLine("Case 1");
                     break;
                 //return true;
                 case 2:
@@ -637,7 +641,7 @@ namespace Proyecto
                     {
                         retorna[i] = cache2[posicion + i];
                     }
-                    Console.WriteLine("Case 2");
+                    //Console.WriteLine("Case 2");
                     break;
                 case 3:
                     if (!(enCache3[posicion] == bloque))
@@ -665,7 +669,7 @@ namespace Proyecto
             // barrera de sincronizacion
             // nhay que definir como determinar que hilo esta corriendo
             string managedThreadId = Thread.CurrentThread.Name;
-            Console.WriteLine("ManagedThreadIdzz = " + managedThreadId);
+            //Console.WriteLine("ManagedThreadIdzz = " + managedThreadId);
 
 
             if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("1") == true)
@@ -708,7 +712,7 @@ namespace Proyecto
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
                 //Thread.CurrentThread.Abort();
-                miBarrerita.RemoveParticipant();
+                //miBarrerita.RemoveParticipant();
 
             }
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("2") == true)
@@ -749,7 +753,7 @@ namespace Proyecto
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
                 //Thread.CurrentThread.Abort();
-                miBarrerita.RemoveParticipant();
+                //miBarrerita.RemoveParticipant();
             }
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("3") == true)
             {
@@ -790,7 +794,7 @@ namespace Proyecto
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
                 //Thread.CurrentThread.Abort();
-                miBarrerita.RemoveParticipant();
+                //miBarrerita.RemoveParticipant();
                // miBarrerita.SignalAndWait();
             }
             else
