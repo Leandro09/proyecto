@@ -815,6 +815,7 @@ namespace Proyecto
                 s = s + i.ToString();
                 dt.Columns.Add(s);
             }
+            dt.Columns.Add("PC final");
             dt.Columns.Add("Cant. de Ciclos");
             dt.Columns.Add("T inicial");
             dt.Columns.Add("T final");
