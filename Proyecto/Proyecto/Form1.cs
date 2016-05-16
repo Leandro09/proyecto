@@ -12,6 +12,7 @@ namespace Proyecto
 {
     public partial class Form1 : Form
     {
+ 
         public Form1()
         {
             InitializeComponent();
@@ -23,6 +24,7 @@ namespace Proyecto
             //Variable y cast para obtener el número de hilillos y el quantum.
             int numero_hilillos;
             int quantum;
+           
             GridResultados.Visible = false;
             if (hillillosBox1.Text != null && !string.IsNullOrWhiteSpace(hillillosBox1.Text))
             {
@@ -34,10 +36,18 @@ namespace Proyecto
 
                     prueba.setHilillos(numero_hilillos);
                     prueba.setQuantum(quantum);
+                   
                     prueba.administradorDeEjecucion();
+                    GridResultados.DataSource = prueba.resultadosHilillos();
+                    GridResultados.Show();
+                    GC.Collect(GC.MaxGeneration);
+                    GC.WaitForPendingFinalizers();
+                    button1.Enabled = false;
+
+
                     //DataTable dt=prueba.resultadosHilillos(); 
                     //se deberia volver verdadero despues de que le hace un bind con el dataTable de resultadosHilillos
-                    
+
                     GridResultados.Visible = true;
                 }
                 else

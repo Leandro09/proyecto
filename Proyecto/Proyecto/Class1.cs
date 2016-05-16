@@ -81,15 +81,16 @@ namespace Proyecto
         Thread proceso_3 = new Thread(delegado_proceso_3);
         //Barrera utilizada para sincronizar los hilos (procesos).
         static Barrier miBarrerita = new Barrier(4);
+
         //Maneja las principales funciones del procesador y sus hilos.
         public void administradorDeEjecucion()
         {
+ 
             inicializarEstructuras();
             //Lee y acomoda en memoria las instrucciones de los hilillos.
-            contextoProcesador1.TrimToSize();
             leeArchivos();
-
             Thread.CurrentThread.Name = "0";
+            //primera = true;
             //se crean loc hilos que van a actuar como procesadores en esta simulacion
             proceso_1.Start();
             proceso_2.Start();
@@ -116,6 +117,7 @@ namespace Proyecto
                     procesador1[35] = reloj;
                     terminadosProcesador1.Enqueue(procesador1);
                     procesador1[pos_pc] = 0;
+                    --hilosCorriendo;
                     Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
 
                 }
@@ -153,6 +155,7 @@ namespace Proyecto
                     procesador2[35] = reloj;
                     terminadosProcesador2.Enqueue(procesador2);
                     // procesador2[pos_pc] = 0;
+                    --hilosCorriendo;
                     Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
                 }
                 else
@@ -182,6 +185,7 @@ namespace Proyecto
                         procesador3[35] = reloj;
                         terminadosProcesador3.Enqueue(procesador3);
                         // procesador3[pos_pc] = 0;
+                        --hilosCorriendo;
                         Thread.CurrentThread.Abort();//Este es mientras descubrimos porque es que da error lo de finalize
                     }
                     else
@@ -195,7 +199,7 @@ namespace Proyecto
                         }
 
 
-                        terminadosProcesador2.Enqueue(contenedor);
+                        terminadosProcesador3.Enqueue(contenedor);
                     }
                 }
             }
@@ -313,24 +317,6 @@ namespace Proyecto
         public int pedirQuantum()
         {
             return 100;
-        }
-
-        public void distribucionHilillos()
-        {
-
-            string line = "";
-            System.IO.StreamReader file = new System.IO.StreamReader(@"c:\test.txt");
-            while ((line = file.ReadLine()) != null)
-            {
-                for (int indice = 0; indice < line.Count(); ++indice)
-                {
-                    if (line.Substring(indice, ++indice).Equals(' ') == true)
-                    {
-                        //procedimiento de almacenar en memoria no compartida desde la posicion de dicha memoria
-                    }
-                }
-            }
-
         }
 
 
@@ -569,6 +555,7 @@ namespace Proyecto
                     break;
                 case 63:
                     resultadoFinal = false;
+                    //--hilosCorriendo;
                     break;
                 default:
                     // resultadoFinal = false;
@@ -868,7 +855,7 @@ namespace Proyecto
         }
 
 
-        public static DataTable resultadosHilillos()
+        public DataTable resultadosHilillos()
         {
             DataTable dt = new DataTable();
             //DataTable req = new DataTable();
@@ -881,7 +868,7 @@ namespace Proyecto
                 s = s + i.ToString();
                 dt.Columns.Add(s);
             }
-            dt.Columns.Add("PC final");
+            //dt.Columns.Add("PC final");
             dt.Columns.Add("Cant. de Ciclos");
             dt.Columns.Add("T inicial");
             dt.Columns.Add("T final");
@@ -890,37 +877,52 @@ namespace Proyecto
             while (terminadosProcesador1.Count != 0)
             {
                 int[] cont = (int[])terminadosProcesador1.Dequeue();
-                Object[] datos = new Object[38];
-                datos[0] = cont[37];
-                for (int j = 0; j < 36; ++j)
+                Object[] datos = new Object[37];
+                datos[0] = cont[pos_nombre_hilillos];
+                cont[33] = cont[35] - cont[34];
+                for (int j = 0; j < 32; ++j)
                 {
                     datos[1 + j] = cont[j];
                 }
-                datos[37] = 1;
+                for (int j = 33; j < 36; ++j)
+                {
+                    datos[j] = cont[j];
+                }
+                datos[36] = 1;
                 dt.Rows.Add(datos);
             }
             while (terminadosProcesador2.Count != 0)
             {
                 int[] cont = (int[])terminadosProcesador2.Dequeue();
-                Object[] datos = new Object[38];
-                datos[0] = cont[37];
-                for (int j = 0; j < 36; ++j)
+                Object[] datos = new Object[37];
+                datos[0] = cont[pos_nombre_hilillos];
+                cont[33] = cont[35] - cont[34];
+                for (int j = 0; j < 32; ++j)
                 {
                     datos[1 + j] = cont[j];
                 }
-                datos[37] = 2;
+                for (int j = 33; j < 36; ++j)
+                {
+                    datos[ j] = cont[j];
+                }
+                datos[36] = 2;
                 dt.Rows.Add(datos);
             }
             while (terminadosProcesador3.Count != 0)
             {
                 int[] cont = (int[])terminadosProcesador3.Dequeue();
-                Object[] datos = new Object[38];
-                datos[0] = cont[37];
-                for (int j = 0; j < 36; ++j)
+                Object[] datos = new Object[37];
+                datos[0] = cont[pos_nombre_hilillos];
+                cont[33] = cont[35] - cont[34];
+                for (int j = 0; j < 32; ++j)
                 {
                     datos[1 + j] = cont[j];
                 }
-                datos[37] = 3;
+                for (int j = 33; j < 36; ++j)
+                {
+                    datos[j] = cont[j];
+                }
+                datos[36] = 3;
                 dt.Rows.Add(datos);
             }
             return dt;
@@ -989,9 +991,7 @@ namespace Proyecto
             //Bandera utilizada para conocer si es el inicio de un código en memoria (PC).
             bool es_pc = true;
             //Variable que controla cuál hilillo está leyendo.
-            int nombre_hilillo1 = 0;
-            int nombre_hilillo2 = 0;
-            int nombre_hilillo3 = 0;
+            int nombre_hilillo = 1;
             //El índice i será utilizado para el nombre de los archivos.
             for (int i = 0; i < hilillos; ++i)
             {
@@ -1030,8 +1030,8 @@ namespace Proyecto
                                     int[] contenedor = new int[cant_campos];
                                     for (int z = 0; z < cant_campos; ++z)
                                         contenedor[z] = 0;
-                                    contenedor[pos_nombre_hilillos] = nombre_hilillo1;
-                                    ++nombre_hilillo1;
+                                    contenedor[pos_nombre_hilillos] = nombre_hilillo;
+                                    ++nombre_hilillo;
                                     //Para conocer en cuál procesador está corriendo.
                                     contenedor[pos_nombre_procesador] = 1;
                                     contenedor[pos_pc] = (index_memoria1) + 128;
@@ -1077,8 +1077,8 @@ namespace Proyecto
                                     int[] contenedor = new int[cant_campos];
                                     for (int z = 0; z < cant_campos; ++z)
                                         contenedor[z] = 0;
-                                    contenedor[pos_nombre_hilillos] = nombre_hilillo2;
-                                    ++nombre_hilillo2;
+                                    contenedor[pos_nombre_hilillos] = nombre_hilillo;
+                                    ++nombre_hilillo;
                                     //Para conocer en cuál procesador está corriendo.
                                     contenedor[pos_nombre_procesador] = 2;
                                     contenedor[pos_pc] = (index_memoria2) + 128;
@@ -1123,8 +1123,8 @@ namespace Proyecto
                                     int[] contenedor = new int[cant_campos];
                                     for (int z = 0; z < cant_campos; ++z)
                                         contenedor[z] = 0;
-                                    contenedor[pos_nombre_hilillos] = nombre_hilillo3;
-                                    ++nombre_hilillo3;
+                                    contenedor[pos_nombre_hilillos] = nombre_hilillo;
+                                    ++nombre_hilillo;
                                     //Para conocer en cuál procesador está corriendo.
                                     contenedor[pos_nombre_procesador] = 3;
                                     contenedor[pos_pc] = (index_memoria3) + 128;
