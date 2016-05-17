@@ -704,7 +704,7 @@ namespace Proyecto
                     }
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
-                miBarrerita.RemoveParticipant();
+                //miBarrerita.RemoveParticipant();
 
             }
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("2") == true)
@@ -737,7 +737,7 @@ namespace Proyecto
                     }
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
-                miBarrerita.RemoveParticipant();
+                //miBarrerita.RemoveParticipant();
             }
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("3") == true)
             {
@@ -770,7 +770,7 @@ namespace Proyecto
                     }
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
-                miBarrerita.RemoveParticipant();
+                //miBarrerita.RemoveParticipant();
             }
             else
             {
