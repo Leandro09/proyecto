@@ -10,9 +10,7 @@ namespace Proyecto
 {
     class tarea
     {
-        /// <summary>
         /// Punto de entrada principal para la aplicación.
-        /// </summary>
         /// 
         //Enteros que son para recordar tanto posiciones, como tamaños, de modo que si se modifica alguno de estos valores
         //sera mas sencillo modificar el codigo
@@ -27,7 +25,7 @@ namespace Proyecto
         static int limite = 128;
         static int hilosCorriendo = 4;
         static int pos_tiempo_inicial = 34;
-        static int pos_tiempo_final = 35;        //Almacena la cantidad de hilillos que se correrán en sistema.
+        static int pos_tiempo_final = 35;       
         static int hilillos = 0;
         static int pos_nombre_hilillos = 36;
         static int pos_nombre_procesador = 37;
@@ -305,14 +303,7 @@ namespace Proyecto
         }
         //int[] pertenece = new int[12];
         String[] path = new String[12];
-        /*
-        public int pedirQuantum()
-        {
-            return 100;
-        }*/
-
-
-        //lectura de instrucciones 
+        // metodo para realizar la lectura de las instrucciones
         // id_hilo es el numero de procesador
         public static bool leerInstruccion(int id_hilo)
         {
@@ -338,13 +329,17 @@ namespace Proyecto
                     break;
 
             }
+
+            //variables para almacenar datos importantes con respecto al PC
             int bloque = PC / cant_bytes_bloque;
             int indice = bloque % cant_bytes_palabra;
             int cantidad_bytes = PC % cant_bytes_bloque;
             int palabra = cantidad_bytes / cant_bytes_palabra;
 
+            
             if (id_hilo == 1)
             {
+                //verificar si la intruccion que señala el PC se encuentra en la cache
                 if (enCache1[indice] != -1 && bloque == enCache1[indice])
                 {
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
@@ -354,7 +349,7 @@ namespace Proyecto
                         instruccion[i] = cache1[indicador + i];
                     }
                 }
-                else
+                else // encaso de que no este, realiza fallo de cache para traerla desde la memoria no compatida
                 {
                     falloCache(id_hilo, PC);
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
@@ -366,6 +361,7 @@ namespace Proyecto
             }
             else if (id_hilo == 2)
             {
+                //verificar si la intruccion que señala el PC se encuentra en la cache
                 if (enCache2[indice] != -1 && bloque == enCache2[indice])
                 {
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
@@ -374,7 +370,7 @@ namespace Proyecto
                         instruccion[i] = cache2[indicador + i];
                     }
                 }
-                else
+                else // encaso de que no este, realiza fallo de cache para traerla desde la memoria no compatida
                 {
                     falloCache(id_hilo, PC);
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
@@ -386,7 +382,7 @@ namespace Proyecto
             }
             else
             {
-
+                //verificar si la intruccion que señala el PC se encuentra en la cache
                 if (enCache3[indice] != -1 && bloque == enCache3[indice])
                 {
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
@@ -395,7 +391,7 @@ namespace Proyecto
                         instruccion[i] = cache3[indicador + i];
                     }
                 }
-                else
+                else // encaso de que no este, realiza fallo de cache para traerla desde la memoria no compatida
                 {
                     falloCache(id_hilo, PC);
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
@@ -406,6 +402,8 @@ namespace Proyecto
                 }
 
             }
+
+            // una vez encontrada la instruccion, se proceda a realizarla
             return realizarOperacion(instruccion, id_hilo, PC + 4);
         }
 
@@ -466,60 +464,45 @@ namespace Proyecto
                     break;
             }
 
-            /*
-                Operación   Operandos     Acción       1                2           3           4
-                                                    Cód.Operación     Rf1      Rf2 ó Rd   Rd ó inmediato
-                DADDI    RX, RY, #n     Rx<--(Ry)+n        8           Y           X           n
-                DADD     RX, RY, RZ     Rx<--(Ry)+(Rz)     32          Y           Z           X
-                DSUB     RX, RY, RZ     Rx <-- (Ry) - (Rz) 34          Y           Z           X
-                DMUL     RX, RY, RZ     Rx <-- (Ry) * (Rz) 12          Y           Z           X
-                DDIV     RX, RY, RZ     Rx <-- (Ry) / (Rz) 14          Y           Z           X
-                BEQZ     RX, ETIQ     Si Rx = 0 SALTA       4          X           0           n
-                BNEZ     RX, ETIQ     Si Rx <> 0 SALTA      5          X           0           n
-                JAL      n R31<--PC,    PC<-- PC+n          3          0           0           n
-                JR       RX             PC <-- (Rx)         2          X           0           0
-                FIN                 Detiene el programa     63         0           0           0
-            */
-            // aca se puede ver el hilo que entra
-            //Ejecuta la instruccion
+            //Ejecuta la instruccion de acuerdo al codigo de operacion correspondiente
             switch (codigo)
             {
 
-                case 8:
+                case 8: // DADDI
                     resultado = primerRegistro + ultimaParte;
                     guardarEn = segundoRegistro;
                     break;
-                case 32:
+                case 32: //DADD
                     resultado = primerRegistro + segundoRegistro;
                     guardarEn = ultimaParte;
                     break;
-                case 34:
+                case 34://DSUB
                     resultado = primerRegistro - segundoRegistro;
                     guardarEn = ultimaParte;
                     break;
-                case 12:
+                case 12: //DMUL
                     resultado = primerRegistro * segundoRegistro;
                     guardarEn = ultimaParte;
                     break;
-                case 14:
+                case 14: //DDIV
                     resultado = primerRegistro / segundoRegistro;
                     guardarEn = ultimaParte;
                     break;
-                case 4:
+                case 4: // BEQZ
                     if (primerRegistro == 0)
                     {
                         resultado = PC + ultimaParte * 4;
                         guardarEn = pos_pc;
                     }
                     break;
-                case 5:
+                case 5: //BNEZ
                     if (primerRegistro != 0)
                     {
                         resultado = PC + ultimaParte * 4;
                         guardarEn = pos_pc;
                     }
                     break;
-                case 3:
+                case 3: //JAL
                     resultado = PC + ultimaParte;
                     guardarEn = pos_pc;
                     if (procesador == 1)
@@ -535,20 +518,18 @@ namespace Proyecto
                         procesador3[31] = PC;
                     }
                     break;
-                case 2:
+                case 2: //JR
                     resultado = primerRegistro;
                     guardarEn = pos_pc;
                     break;
-                case 63:
+                case 63: //FIN
                     resultadoFinal = false;
-                    //--hilosCorriendo;
                     break;
                 default:
-                    // resultadoFinal = false;
                     break;
 
             }
-            //para guardar los resultados en el registro que corresponde
+            //para guardar los resultados en los registros del procesador que corresponde
             if (codigo != 63)
             {
                 switch (procesador)
@@ -707,7 +688,10 @@ namespace Proyecto
                         cambiar_hilillo_quantum(1);
                     }
                 }
-                //Este solo se va a usar cuando se lee solo un hilillo
+               
+                miBarrerita.RemoveParticipant();
+                --hilosCorriendo;//Hay un hilo menos que esta corriendo
+                Thread.CurrentThread.Abort();//Abortamos el hilo actual
             }
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("2") == true)
             {
@@ -738,7 +722,10 @@ namespace Proyecto
                         cambiar_hilillo_quantum(2);
                     }
                 }
-                //Este solo se va a usar cuando se lee solo un hilillo
+                
+                miBarrerita.RemoveParticipant();
+                --hilosCorriendo;//Hay un hilo menos que esta corriendo
+                Thread.CurrentThread.Abort();//Abortamos el hilo actual
             }
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("3") == true)
             {
@@ -770,7 +757,11 @@ namespace Proyecto
                         cambiar_hilillo_quantum(3);
                     }
                 }
-                //Este solo se va a usar cuando se lee solo un hilillo
+                
+                miBarrerita.RemoveParticipant();
+                --hilosCorriendo;//Hay un hilo menos que esta corriendo
+                Thread.CurrentThread.Abort();//Abortamos el hilo actual
+                miBarrerita.RemoveParticipant();
             }
             else
             {
@@ -1074,7 +1065,6 @@ namespace Proyecto
                 System.Console.ReadLine();
                 directorio_archivo = "";
             }
-            int yumba = 0;
         }
     }
 }
