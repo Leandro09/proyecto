@@ -576,8 +576,8 @@ namespace Proyecto
             int bloque = direccion / 16;//calcula el bloque
             int posicion = bloque % 4;//calcula la posicion en que se debe almacenar la instruccion en la cache
             int direccionMemNoComp = bloque * 16 - 128;//calcula la direccion en que se ubica dentro de la memoria no compartida
+            
             //para sincronizar el ciclo de reloj
-
             for (int i = 0; i < 16; ++i)
             {
                 miBarrerita.SignalAndWait();
@@ -586,6 +586,7 @@ namespace Proyecto
             switch (procesador)
             {
                 case 1:
+                    //pone el valor del bloque en el array del indice
                     enCache1[posicion] = bloque;
                     posicion = posicion * 16;
                     for (int i = 0; i < 16; ++i)
@@ -594,19 +595,22 @@ namespace Proyecto
                     }
                     return true;
                 case 2:
+                    //pone el valor del bloque en el array del indice
                     enCache2[posicion] = bloque;
                     posicion = posicion * 16;
                     for (int i = 0; i < 16; ++i)
                     {
+                        //pasa las 4 palabras MIPS a la cache
                         cache2[posicion + i] = memNoComp2[direccionMemNoComp + i];
                     }
                     return true;
                 case 3:
+                    //pone el valor del bloque en el array del indice
                     enCache3[posicion] = bloque;
                     posicion = posicion * 16;
                     for (int i = 0; i < 16; ++i)
                     {
-
+                        //pasa las 4 palabras MIPS a la cache
                         cache3[posicion + i] = memNoComp3[direccionMemNoComp + i];
                     }
                     return true;
@@ -704,8 +708,6 @@ namespace Proyecto
                     }
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
-                //miBarrerita.RemoveParticipant();
-
             }
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("2") == true)
             {
@@ -737,7 +739,6 @@ namespace Proyecto
                     }
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
-                //miBarrerita.RemoveParticipant();
             }
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("3") == true)
             {
@@ -770,7 +771,6 @@ namespace Proyecto
                     }
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
-                //miBarrerita.RemoveParticipant();
             }
             else
             {
