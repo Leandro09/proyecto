@@ -630,34 +630,28 @@ namespace Proyecto
                     {
                         falloCache(procesador, PC);
                     }
-                    //enCache1[posicion] = bloque;
                     posicion = posicion * 4;
                     for (int i = 0; i < 4; ++i)
                     {
                         retorna[i] = cache1[posicion + i];
                     }
-                   // Console.WriteLine("Case 1");
                     break;
-                //return true;
                 case 2:
                     if (!(enCache2[posicion] == bloque))
                     {
                         falloCache(procesador, PC);
                     }
-                    //enCache1[posicion] = bloque;
                     posicion = posicion * 4;
                     for (int i = 0; i < 4; ++i)
                     {
                         retorna[i] = cache2[posicion + i];
                     }
-                   // Console.WriteLine("Case 2");
                     break;
                 case 3:
                     if (!(enCache3[posicion] == bloque))
                     {
                         falloCache(procesador, PC);
                     }
-                    //enCache1[posicion] = bloque;
                     posicion = posicion * 4;
                     for (int i = 0; i < 4; ++i)
                     {
@@ -676,10 +670,7 @@ namespace Proyecto
             // leer archivos
             // iniciar hilos
             // barrera de sincronizacion
-            // nhay que definir como determinar que hilo esta corriendo
             string managedThreadId = Thread.CurrentThread.Name;
-          //  Console.WriteLine("ManagedThreadIdzz = " + managedThreadId);
-
 
             if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("1") == true)
             {
@@ -696,17 +687,10 @@ namespace Proyecto
                     {
                         procesador1[pos_tiempo_inicial] = reloj;
                     }
-
                     while (contadorProcesador1 < quantum && indicador == true)
                     {
-
                         indicador = leerInstruccion(1);
-                       
-
                     }
-
-
-           
                     int p = procesador1[pos_pc];
                     int id = procesador1[1];
 
@@ -718,11 +702,8 @@ namespace Proyecto
                     {
                         cambiar_hilillo_quantum(1);
                     }
-                  
-
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
-                //Thread.CurrentThread.Abort();
                 miBarrerita.RemoveParticipant();
 
             }
@@ -731,7 +712,6 @@ namespace Proyecto
 
                 while (contextoProcesador2.Count != 0)
                 {
-
                     bool indicador = true;
                     procesador2 = (int[])contextoProcesador2.Dequeue();
                     int p1 = procesador2[pos_pc];
@@ -744,13 +724,7 @@ namespace Proyecto
                     while (contadorProcesador2 < quantum && indicador == true)
                     {
                         indicador = leerInstruccion(2);
-                        
                     }
-
-                    
-
-
- 
                     int p = procesador2[pos_pc];
                     int id = procesador2[1];
                     if (!indicador)
@@ -761,12 +735,8 @@ namespace Proyecto
                     {
                         cambiar_hilillo_quantum(2);
                     }
-
-                   
-
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
-                //Thread.CurrentThread.Abort();
                 miBarrerita.RemoveParticipant();
             }
             else if (Thread.CurrentThread.IsAlive == true && Thread.CurrentThread.Name.Equals("3") == true)
@@ -775,7 +745,6 @@ namespace Proyecto
                 //Funciones del procesador 3.
                 while (contextoProcesador3.Count != 0)
                 {
-
                     bool indicador = true;
                     procesador3 = (int[])contextoProcesador3.Dequeue();
                     int p1 = procesador3[pos_pc];
@@ -788,13 +757,7 @@ namespace Proyecto
                     while (contadorProcesador3 < quantum && indicador == true)
                     {
                         indicador = leerInstruccion(3);
-
                     }
-
-                    
-
-
- 
                     int p = procesador3[pos_pc];
                     int id = procesador3[1];
                     if (!indicador)
@@ -805,30 +768,22 @@ namespace Proyecto
                     {
                         cambiar_hilillo_quantum(3);
                     }
-
-                   
-
                 }
                 //Este solo se va a usar cuando se lee solo un hilillo
-                //Thread.CurrentThread.Abort();
                 miBarrerita.RemoveParticipant();
-                // miBarrerita.SignalAndWait();
             }
             else
             {
-                hiloPrincipal();
+                hiloPrincipal();// barrera de sincronizacion
                 //Funciones del procesador principal.
             }
 
         }
 
-
+        //Este metodo se encarga de meter los resultados de los hilillos en un DataTable
         public DataTable resultadosHilillos()
         {
             DataTable dt = new DataTable();
-            //DataTable req = new DataTable();
-            //DataTable dt = new DataTable();
-
             dt.Columns.Add("Id");
             for (int i = 0; i < 32; ++i)
             {
@@ -836,12 +791,10 @@ namespace Proyecto
                 s = s + i.ToString();
                 dt.Columns.Add(s);
             }
-            //dt.Columns.Add("PC final");
             dt.Columns.Add("Cant. de Ciclos");
             dt.Columns.Add("T inicial");
             dt.Columns.Add("T final");
             dt.Columns.Add("Procesador en que corrío");
-
             while (terminadosProcesador1.Count != 0)
             {
                 int[] cont = (int[])terminadosProcesador1.Dequeue();
@@ -895,6 +848,7 @@ namespace Proyecto
             }
             return dt;
         }
+        //Se encarga de hacer la barrera de sincronizacion
         public static void hiloPrincipal()
         {
             while (hilosCorriendo > 1)
@@ -904,19 +858,11 @@ namespace Proyecto
                 reloj = reloj + 1;
 
 
-                //Esto era lo que habiamos hablado de ir viendo y controlar mejor lo que le queda de quantum a 
-                //cada procesador. Hay que recordar ponerlo en 0 cada vez que sacamos un hilillo de la cola
-                //Si a alguien le parece que va en otro lado solo lo quita y lo pone donde crea que se debe poner.
+                //Para ver y controlar mejor lo que le queda de quantum a cada procesador. 
                 contadorProcesador1 = contadorProcesador1 + 1;
                 contadorProcesador2 = contadorProcesador2 + 1;
                 contadorProcesador3 = contadorProcesador3 + 1;
             }
-
-            //Esto es lo que debemos imprimir al final en los resultados
-            //Esto no estoy segura si va aqui asi que si creen que queda mejor en otro lado, cambienlo mejor
-            //DataTable dt = 
-
-
         }
 
 
