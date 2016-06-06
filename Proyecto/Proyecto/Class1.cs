@@ -17,9 +17,9 @@ namespace Proyecto
         static int cant_bytes_palabra = 4;
         static int cant_bytes_bloque = 16;
         static int pos_pc = 32;
-        static int cant_campos = 38;
-        static int cant_cache = 64;
-        static int cant_encache = 4;
+        static int cant_campos = 39;
+        static int cant_cache_inst = 64;
+        static int cant_encache_inst = 4;
         static int cant_memComp = 128;
         static int cant_memNoComp = 256;
         static int limite = 128;
@@ -29,6 +29,11 @@ namespace Proyecto
         static int hilillos = 0;
         static int pos_nombre_hilillos = 36;
         static int pos_nombre_procesador = 37;
+        static int pos_rl = 38;
+        static int cant_cache_datos = 16;
+        static int cant_campos_directorio = 8;
+        static int cant_campos_ubicacion_directorio = 24;
+
 
         //Varibles indispensables para la implementacion de la simulacion debido a que son muy significativas
         //Varible que almacena el valor del reloj
@@ -43,17 +48,29 @@ namespace Proyecto
         static int contadorProcesador2 = 0;
         static int contadorProcesador3 = 0;
 
-        //Cache de instrucciones los procesadores
-        static int[] cache1 = new int[64];
-        static int[] cache2 = new int[64];
-        static int[] cache3 = new int[64];
-        //Cual es el bloque que esta en la cache en esa posicion
-        static int[] enCache1 = new int[4];
-        static int[] enCache2 = new int[4];
-        static int[] enCache3 = new int[4];
+        //Caché de instrucciones de los procesadores.
+        static int[] cache_inst1 = new int[64];
+        static int[] cache_inst2 = new int[64];
+        static int[] cache_inst3 = new int[64];
+
+        //Cual es el bloque que esta en la caché de instrucciones en esa posicion.
+        static int[] encache_inst1 = new int[4];
+        static int[] encache_inst2 = new int[4];
+        static int[] encache_inst3 = new int[4];
+
+        //Caché de instrucciones de los procesadores.
+        static int[] cache_datos1 = new int[16];
+        static int[] cache_datos2 = new int[16];
+        static int[] cache_datos3 = new int[16];
+        //Cual es el bloque que esta en la caché de instrucciones en esa posicion.
+        static int[] encache_datos1 = new int[4];
+        static int[] encache_datos2 = new int[4];
+        static int[] encache_datos3 = new int[4];
 
         //Memoria compartida
-        static int[] memComp = new int[128];
+        static int[] memComp1 = new int[128];
+        static int[] memComp2 = new int[128];
+        static int[] memComp3 = new int[128];
 
         //Memoria no compartida de cada procesador
         static int[] memNoComp1 = new int[256];
@@ -61,9 +78,9 @@ namespace Proyecto
         static int[] memNoComp3 = new int[256];
 
         /// estructuras para observar los recursos del procesador
-        static int[] procesador1 = new int[38];        //En la posición 32 se encuentra el PC
-        static int[] procesador2 = new int[38];
-        static int[] procesador3 = new int[38];         //En la posicion 37 va el nombre del HILILLO al que pertenece este contexto
+        static int[] procesador1 = new int[39];        //En la posición 32 se encuentra el PC
+        static int[] procesador2 = new int[39];
+        static int[] procesador3 = new int[39];         //En la posicion 37 va el nombre del HILILLO al que pertenece este contexto
 
 
 
@@ -90,6 +107,18 @@ namespace Proyecto
 
         //Barrera utilizada para sincronizar los hilos (procesos).
         static Barrier miBarrerita = new Barrier(4);
+
+        //Almacena los estados de los directorios
+        static char[] estado1 = new char[8];
+        static char[] estado2 = new char[8];
+        static char[] estado3 = new char[8]; 
+ 
+        //Contiene la ubicación de los bloques en las caché
+        static bool[] ubicacion1 = new bool[24];
+        static bool[] ubicacion2 = new bool[24];
+        static bool[] ubicacion3 = new bool[24];
+
+
 
         //Maneja las principales funciones del procesador y sus hilos.
         public void administradorDeEjecucion()
@@ -279,18 +308,18 @@ namespace Proyecto
         //inicializar estructuras
         public void inicializarEstructuras()
         {
-            for (int i = 0; i < cant_cache; ++i)
+            for (int i = 0; i < cant_cache_inst; ++i)
             {
-                cache1[i] = 0;
-                cache2[i] = 0;
-                cache2[i] = 0;
+                cache_inst1[i] = 0;
+                cache_inst2[i] = 0;
+                cache_inst2[i] = 0;
             }
 
-            for (int i = 0; i < cant_encache; ++i)
+            for (int i = 0; i < cant_encache_inst; ++i)
             {
-                enCache1[i] = -1;
-                enCache2[i] = -1;
-                enCache3[i] = -1;
+                encache_inst1[i] = -1;
+                encache_inst2[i] = -1;
+                encache_inst3[i] = -1;
             }
 
             for (int i = 0; i < cant_campos; ++i)
@@ -299,6 +328,42 @@ namespace Proyecto
                 procesador2[i] = 0;
                 procesador3[i] = 0;
             }
+
+            for (int i = 0; i < cant_cache_datos; ++i)
+            {
+                cache_datos1[i] = 0;
+                cache_datos2[i] = 0;
+                cache_datos2[i] = 0;
+            }
+
+            for (int i = 0; i < cant_encache_inst; ++i)
+            {
+                encache_datos1[i] = -1;
+                encache_datos2[i] = -1;
+                encache_datos3[i] = -1;
+            }
+
+            for (int i = 0; i < cant_memComp; ++i)
+            {
+                memComp1[i] = 1;
+                memComp2[i] = 1;
+                memComp3[i] = 1;
+            }
+
+            for (int i = 0; i < cant_campos_directorio; ++i)
+            {
+                   estado1[i] = 'U';
+                   estado2[i] = 'U';
+                   estado3[i] = 'U';
+            }
+
+            for (int i = 0; i < cant_campos_ubicacion_directorio; ++i)
+            {
+                ubicacion1[i] = false;
+                ubicacion2[i] = false;
+                ubicacion3[i] = false;
+            }
+
 
         }
         //int[] pertenece = new int[12];
@@ -339,65 +404,65 @@ namespace Proyecto
             
             if (id_hilo == 1)
             {
-                //verificar si la intruccion que señala el PC se encuentra en la cache
-                if (enCache1[indice] != -1 && bloque == enCache1[indice])
+                //verificar si la intruccion que señala el PC se encuentra en la cache_inst
+                if (encache_inst1[indice] != -1 && bloque == encache_inst1[indice])
                 {
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
 
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache1[indicador + i];
+                        instruccion[i] = cache_inst1[indicador + i];
                     }
                 }
-                else // encaso de que no este, realiza fallo de cache para traerla desde la memoria no compatida
+                else // encaso de que no este, realiza fallo de cache_inst para traerla desde la memoria no compatida
                 {
-                    falloCache(id_hilo, PC);
+                    fallocache_inst(id_hilo, PC);
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache1[indicador + i];
+                        instruccion[i] = cache_inst1[indicador + i];
                     }
                 }
             }
             else if (id_hilo == 2)
             {
-                //verificar si la intruccion que señala el PC se encuentra en la cache
-                if (enCache2[indice] != -1 && bloque == enCache2[indice])
+                //verificar si la intruccion que señala el PC se encuentra en la cache_inst
+                if (encache_inst2[indice] != -1 && bloque == encache_inst2[indice])
                 {
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache2[indicador + i];
+                        instruccion[i] = cache_inst2[indicador + i];
                     }
                 }
-                else // encaso de que no este, realiza fallo de cache para traerla desde la memoria no compatida
+                else // encaso de que no este, realiza fallo de cache_inst para traerla desde la memoria no compatida
                 {
-                    falloCache(id_hilo, PC);
+                    fallocache_inst(id_hilo, PC);
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache2[indicador + i];
+                        instruccion[i] = cache_inst2[indicador + i];
                     }
                 }
             }
             else
             {
-                //verificar si la intruccion que señala el PC se encuentra en la cache
-                if (enCache3[indice] != -1 && bloque == enCache3[indice])
+                //verificar si la intruccion que señala el PC se encuentra en la cache_inst
+                if (encache_inst3[indice] != -1 && bloque == encache_inst3[indice])
                 {
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache3[indicador + i];
+                        instruccion[i] = cache_inst3[indicador + i];
                     }
                 }
-                else // encaso de que no este, realiza fallo de cache para traerla desde la memoria no compatida
+                else // encaso de que no este, realiza fallo de cache_inst para traerla desde la memoria no compatida
                 {
-                    falloCache(id_hilo, PC);
+                    fallocache_inst(id_hilo, PC);
                     indicador = indice * cant_bytes_bloque + cant_bytes_palabra * palabra;
                     for (int i = 0; i < cant_bytes_palabra; ++i)
                     {
-                        instruccion[i] = cache3[indicador + i];
+                        instruccion[i] = cache_inst3[indicador + i];
                     }
                 }
 
@@ -549,13 +614,13 @@ namespace Proyecto
             return resultadoFinal;
         }
 
-        //Se encarga de poner el bloque al que pertence la instruccion solicitada a la cache
-        public static bool falloCache(int procesador, int direccion)
+        //Se encarga de poner el bloque al que pertence la instruccion solicitada a la cache_inst
+        public static bool fallocache_inst(int procesador, int direccion)
         {
             //Una instruccion tiene 1 palabra de MIPS y 4 ints de como lo estamos trabajando
             string name = Thread.CurrentThread.Name;
             int bloque = direccion / 16;//calcula el bloque
-            int posicion = bloque % 4;//calcula la posicion en que se debe almacenar la instruccion en la cache
+            int posicion = bloque % 4;//calcula la posicion en que se debe almacenar la instruccion en la cache_inst
             int direccionMemNoComp = bloque * 16 - 128;//calcula la direccion en que se ubica dentro de la memoria no compartida
             
             //para sincronizar el ciclo de reloj
@@ -568,31 +633,31 @@ namespace Proyecto
             {
                 case 1:
                     //pone el valor del bloque en el array del indice
-                    enCache1[posicion] = bloque;
+                    encache_inst1[posicion] = bloque;
                     posicion = posicion * 16;
                     for (int i = 0; i < 16; ++i)
-                    {//pasa las 4 palabras MIPS a la cache 
-                        cache1[posicion + i] = memNoComp1[direccionMemNoComp + i];
+                    {//pasa las 4 palabras MIPS a la cache_inst 
+                        cache_inst1[posicion + i] = memNoComp1[direccionMemNoComp + i];
                     }
                     return true;
                 case 2:
                     //pone el valor del bloque en el array del indice
-                    enCache2[posicion] = bloque;
+                    encache_inst2[posicion] = bloque;
                     posicion = posicion * 16;
                     for (int i = 0; i < 16; ++i)
                     {
-                        //pasa las 4 palabras MIPS a la cache
-                        cache2[posicion + i] = memNoComp2[direccionMemNoComp + i];
+                        //pasa las 4 palabras MIPS a la cache_inst
+                        cache_inst2[posicion + i] = memNoComp2[direccionMemNoComp + i];
                     }
                     return true;
                 case 3:
                     //pone el valor del bloque en el array del indice
-                    enCache3[posicion] = bloque;
+                    encache_inst3[posicion] = bloque;
                     posicion = posicion * 16;
                     for (int i = 0; i < 16; ++i)
                     {
-                        //pasa las 4 palabras MIPS a la cache
-                        cache3[posicion + i] = memNoComp3[direccionMemNoComp + i];
+                        //pasa las 4 palabras MIPS a la cache_inst
+                        cache_inst3[posicion + i] = memNoComp3[direccionMemNoComp + i];
                     }
                     return true;
             }
@@ -602,45 +667,45 @@ namespace Proyecto
 
         //En este metodo se consulta por la instruccion que se encuentra en el procesador actual 
         //(lo recibe como parametro) en la direccion que entra como parametro
-        public int[] consultarCache(int procesador, int PC)
+        public int[] consultarcache_inst(int procesador, int PC)
         {
             int bloque = PC / 16;
             int posicion = bloque % 4;
             int[] retorna = new int[4];
-            //Revisa si la instruccion consultada se encuentra en la cache y si no la pone en la cache y devuelve lo consultado
+            //Revisa si la instruccion consultada se encuentra en la cache_inst y si no la pone en la cache_inst y devuelve lo consultado
             switch (procesador)
             {
                 case 1:
-                    if (!(enCache1[posicion] == bloque))
+                    if (!(encache_inst1[posicion] == bloque))
                     {
-                        falloCache(procesador, PC);
+                        fallocache_inst(procesador, PC);
                     }
                     posicion = posicion * 4;
                     for (int i = 0; i < 4; ++i)
                     {
-                        retorna[i] = cache1[posicion + i];
+                        retorna[i] = cache_inst1[posicion + i];
                     }
                     break;
                 case 2:
-                    if (!(enCache2[posicion] == bloque))
+                    if (!(encache_inst2[posicion] == bloque))
                     {
-                        falloCache(procesador, PC);
+                        fallocache_inst(procesador, PC);
                     }
                     posicion = posicion * 4;
                     for (int i = 0; i < 4; ++i)
                     {
-                        retorna[i] = cache2[posicion + i];
+                        retorna[i] = cache_inst2[posicion + i];
                     }
                     break;
                 case 3:
-                    if (!(enCache3[posicion] == bloque))
+                    if (!(encache_inst3[posicion] == bloque))
                     {
-                        falloCache(procesador, PC);
+                        fallocache_inst(procesador, PC);
                     }
                     posicion = posicion * 4;
                     for (int i = 0; i < 4; ++i)
                     {
-                        retorna[i] = cache3[posicion + i];
+                        retorna[i] = cache_inst3[posicion + i];
                     }
                     break;
             }
@@ -665,6 +730,7 @@ namespace Proyecto
                     //Funciones del procesador 1.
                     bool indicador = true;
                     procesador1 = (int[])contextoProcesador1.Dequeue();
+                    procesador1[38] = -1;
                     int p1 = procesador1[pos_pc];
                     int id1 = procesador1[1];
                     contadorProcesador1 = 0;
@@ -700,6 +766,7 @@ namespace Proyecto
                 {
                     bool indicador = true;
                     procesador2 = (int[])contextoProcesador2.Dequeue();
+                    procesador2[38] = -1;
                     int p1 = procesador2[pos_pc];
                     int id1 = procesador2[1];
                     contadorProcesador2 = 0;
@@ -735,6 +802,7 @@ namespace Proyecto
                 {
                     bool indicador = true;
                     procesador3 = (int[])contextoProcesador3.Dequeue();
+                    procesador3[38] = -1;
                     int p1 = procesador3[pos_pc];
                     int id1 = procesador3[1];
                     contadorProcesador3 = 0;
