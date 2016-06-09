@@ -591,13 +591,13 @@ namespace Proyecto
                     resultado = primerRegistro;
                     guardarEn = pos_pc;
                     break;
+                case 35: //LW
+
+                    break;
                 case 50: //LL
 
                     break;
                 case 51: //SC
-
-                    break;
-                case 35: //LW
 
                     break;
                 case 43: //SW
