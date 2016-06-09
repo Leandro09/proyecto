@@ -630,17 +630,11 @@ namespace Proyecto
             return resultadoFinal;
         }
 
-
-
-
-
-
-
-
-
-
-
-
+        //Se encarga de verificar si el bloque que se va a leer ya esta en la cache y si no esta lo sube.
+        public static bool cache_Load(int procesador, int direccion)
+        {
+            return false;
+        }
 
 
 
