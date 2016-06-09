@@ -70,6 +70,10 @@ namespace Proyecto
         static int[] encache_datos1 = new int[4];
         static int[] encache_datos2 = new int[4];
         static int[] encache_datos3 = new int[4];
+        //Almacena los estados de los directorios
+        static char[] estadoCache1 = new char[4];
+        static char[] estadoCache2 = new char[4];
+        static char[] estadoCache3 = new char[4]; 
 
         //Memoria compartida
         static int[] memComp1 = new int[128];
@@ -113,14 +117,14 @@ namespace Proyecto
         static Barrier miBarrerita = new Barrier(4);
 
         //Almacena los estados de los directorios
-        static char[] estado1 = new char[8];
-        static char[] estado2 = new char[8];
-        static char[] estado3 = new char[8]; 
+        static char[] estadoDir1 = new char[8];
+        static char[] estadoDir2 = new char[8];
+        static char[] estadoDir3 = new char[8]; 
  
         //Contiene la ubicación de los bloques en las caché
-        static bool[] ubicacion1 = new bool[24];
-        static bool[] ubicacion2 = new bool[24];
-        static bool[] ubicacion3 = new bool[24];
+        static bool[] ubicacionDir1 = new bool[24];
+        static bool[] ubicacionDir2 = new bool[24];
+        static bool[] ubicacionDir3 = new bool[24];
 
 
 
@@ -356,16 +360,23 @@ namespace Proyecto
 
             for (int i = 0; i < cant_campos_directorio; ++i)
             {
-                   estado1[i] = 'U';
-                   estado2[i] = 'U';
-                   estado3[i] = 'U';
+                   estadoDir1[i] = 'U';
+                   estadoDir2[i] = 'U';
+                   estadoDir3[i] = 'U';
+            }
+
+            for (int i = 0; i < cant_campos_directorio; ++i)
+            {
+                estadoCache1[i] = 'I';
+                estadoCache2[i] = 'I';
+                estadoCache3[i] = 'I';
             }
 
             for (int i = 0; i < cant_campos_ubicacion_directorio; ++i)
             {
-                ubicacion1[i] = false;
-                ubicacion2[i] = false;
-                ubicacion3[i] = false;
+                ubicacionDir1[i] = false;
+                ubicacionDir2[i] = false;
+                ubicacionDir3[i] = false;
             }
 
 
@@ -633,7 +644,8 @@ namespace Proyecto
         public static bool cache_Load(int procesador, int direccion)
         {
             int bloque = direccion / 16;
-            int posicion = bloque % 4;
+            int posicionCache = bloque % 4;
+            int posicionDir = bloque % 8;
             bool r = false;
             while (!r)
             {
@@ -645,15 +657,15 @@ namespace Proyecto
                 switch (procesador)
                 {
                     case 1:
-                        if ((encache_datos1[posicion] == bloque) && ((estado1[posicion] == 'C') || (estado1[posicion] == 'M')))
+                        if ((encache_datos1[posicionCache] == bloque) && ((estadoDir1[posicionCache] == 'C') || (estadoDir1[posicionCache] == 'M')))
                         {
                             return true;
                         }
                         else
                         {
-                            if (estado1[posicion] == 'M')
+                            if (estadoDir1[posicionCache] == 'M')
                             {
-                                r = escribirBloqueEnMem(bloque, 1, posicion, true, true);
+                                r = escribirBloqueEnMem(bloque, 1, posicionCache, true, true);
                                 if (r)
                                 {
                                     if (true)//trylock directorio del bloque solicitado
@@ -672,7 +684,9 @@ namespace Proyecto
                                                 miBarrerita.SignalAndWait();
                                             }
                                         }
-
+                                        if ((estadoDir1[bloque / 8]) == 0) 
+                                        { 
+                                        }
                                     }
                                     else 
                                     {
