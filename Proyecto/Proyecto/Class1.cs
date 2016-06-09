@@ -48,6 +48,10 @@ namespace Proyecto
         static int contadorProcesador2 = 0;
         static int contadorProcesador3 = 0;
 
+        //Banderas de LL activo de cada procesador
+        //1 es el proc 1, 2 es el proc 2 y 0 es el proc 3
+        static bool[] LLactivo1 = new bool[3];
+
         //Caché de instrucciones de los procesadores.
         static int[] cache_inst1 = new int[64];
         static int[] cache_inst2 = new int[64];
