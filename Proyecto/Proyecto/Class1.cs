@@ -630,6 +630,54 @@ namespace Proyecto
             return resultadoFinal;
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //Se encarga de poner el bloque al que pertence la instruccion solicitada a la cache_inst
         public static bool fallocache_inst(int procesador, int direccion)
         {
