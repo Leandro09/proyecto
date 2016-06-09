@@ -592,8 +592,8 @@ namespace Proyecto
                     guardarEn = pos_pc;
                     break;
                 case 35: //LW
-
-                    //break;
+                    cache_Load(0,0);
+                    break;
                 case 50: //LL
 
                     break;
@@ -616,7 +616,6 @@ namespace Proyecto
                 switch (procesador)
                 {
                     case 1:
-
                         procesador1[guardarEn] = resultado;
                         break;
                     case 2:
@@ -633,9 +632,42 @@ namespace Proyecto
         //Se encarga de verificar si el bloque que se va a leer ya esta en la cache y si no esta lo sube.
         public static bool cache_Load(int procesador, int direccion)
         {
+            int bloque = direccion / 16;
+            int posicion = bloque % 4;
+            while(true)//trylock de mi cache
+            {
+                miBarrerita.SignalAndWait();
+            }
+            switch (procesador)
+            {
+                case 1:
+                    if ((encache_datos1[posicion] == bloque ) && ((estado1[posicion]=='C')||(estado1[posicion]=='M')))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        if (estado1[posicion] == 'M') 
+                        {
+
+                        }
+                    }
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+            }
             return false;
         }
-
+        public static bool escribirBloqueEnMem(int procesador, int direccion)
+        {
+            return false;
+        }
+        public static bool reemplazarBloqueCompartido(int procesador, int direccion)
+        {
+            return false;
+        }
 
 
 
