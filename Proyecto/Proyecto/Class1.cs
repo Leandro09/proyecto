@@ -689,15 +689,47 @@ namespace Proyecto
                                             r = escribirBloqueEnMem(bloque, 1, posicionCache, true, false);
                                             if (r) 
                                             { 
+                                                //Pone el bloque en el directorio
+                                                //bloque=compartido
+                                                //Estoy usando bloque en C
+                                                //Subir Bloque a mi cache
+                                                //Soltar dir
+                                                //Soltar cache 
                                             } 
                                             else 
                                             { 
+                                                //suelta directorio
+                                                //suelta cache
+                                            }
+                                        }
+                                        else 
+                                        {
+                                            //Pone el bloque en el directorio
+                                            //bloque=compartido
+                                            //Estoy usando bloque en C
+                                            //Subir Bloque a mi cache
+                                            //Soltar dir
+                                            //Soltar cache 
+                                            if ((bloque / 8) == 0)
+                                            {
+                                                for (int i = 0; i < 16; ++i)
+                                                {
+                                                    miBarrerita.SignalAndWait();
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int i = 0; i < 20; ++i)
+                                                {
+                                                    miBarrerita.SignalAndWait();
+                                                }
                                             }
                                         }
                                     }
                                     else 
                                     {
                                         r = false;
+                                        //suelta cache
                                     }
                                 }
                             }
@@ -711,44 +743,16 @@ namespace Proyecto
             }
             return false;
         }
+
         public static bool escribirBloqueEnMem(int bloque, int numcache,int posicion, bool esLoad, bool reemplazo)
         {
             return false;
         }
+
         public static bool reemplazarBloqueCompartido(int procesador, int direccion)
         {
             return false;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
