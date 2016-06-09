@@ -593,7 +593,7 @@ namespace Proyecto
                     break;
                 case 35: //LW
 
-                    break;
+                    //break;
                 case 50: //LL
 
                     break;
