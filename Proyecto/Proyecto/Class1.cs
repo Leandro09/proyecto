@@ -634,33 +634,63 @@ namespace Proyecto
         {
             int bloque = direccion / 16;
             int posicion = bloque % 4;
-            while(true)//trylock de mi cache
+            bool r = false;
+            while (!r)
             {
-                miBarrerita.SignalAndWait();
-            }
-            switch (procesador)
-            {
-                case 1:
-                    if ((encache_datos1[posicion] == bloque ) && ((estado1[posicion]=='C')||(estado1[posicion]=='M')))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        if (estado1[posicion] == 'M') 
+                r = true;
+                while (true)//trylock de mi cache
+                {
+                    miBarrerita.SignalAndWait();
+                }
+                switch (procesador)
+                {
+                    case 1:
+                        if ((encache_datos1[posicion] == bloque) && ((estado1[posicion] == 'C') || (estado1[posicion] == 'M')))
                         {
-
+                            return true;
                         }
-                    }
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
+                        else
+                        {
+                            if (estado1[posicion] == 'M')
+                            {
+                                r = escribirBloqueEnMem(bloque, 1, posicion, true, true);
+                                if (r)
+                                {
+                                    if (true)//trylock directorio del bloque solicitado
+                                    {
+                                        if ((bloque / 8)== 0)
+                                        {
+                                            for (int i = 0; i < 2; ++i)
+                                            {
+                                                miBarrerita.SignalAndWait();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            for (int i = 0; i < 4; ++i)
+                                            {
+                                                miBarrerita.SignalAndWait();
+                                            }
+                                        }
+
+                                    }
+                                    else 
+                                    {
+                                        r = false;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                }
             }
             return false;
         }
-        public static bool escribirBloqueEnMem(int procesador, int direccion)
+        public static bool escribirBloqueEnMem(int bloque, int numcache,int posicion, bool esLoad, bool reemplazo)
         {
             return false;
         }
