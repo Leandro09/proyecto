@@ -657,7 +657,7 @@ namespace Proyecto
                 switch (procesador)
                 {
                     case 1:
-                        if ((encache_datos1[posicionCache] == bloque) && ((estadoDir1[posicionCache] == 'C') || (estadoDir1[posicionCache] == 'M')))
+                        if ((encache_datos1[posicionCache] == bloque) && ((estadoCache1[posicionCache] == 'C') || (estadoCache1[posicionCache] == 'M')))
                         {
                             return true;
                         }
@@ -684,8 +684,15 @@ namespace Proyecto
                                                 miBarrerita.SignalAndWait();
                                             }
                                         }
-                                        if ((estadoDir1[bloque / 8]) == 0) 
-                                        { 
+                                        if ((estadoDir1[posicionDir]) == 'M') 
+                                        {
+                                            r = escribirBloqueEnMem(bloque, 1, posicionCache, true, false);
+                                            if (r) 
+                                            { 
+                                            } 
+                                            else 
+                                            { 
+                                            }
                                         }
                                     }
                                     else 
