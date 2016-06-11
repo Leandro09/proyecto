@@ -673,16 +673,23 @@ namespace Proyecto
             int posicionDir = temporal[1]*5;
             bool termino = false;                               //Controla si se logró acceder al directorio de la caché.
             int indice = 0;
+            bool solicitudDeBloqueo = false;
+            bool terminoDos = false;
             //int numDir = bloque / 8;
-            
             while (termino == false)
             { 
+                //Busca acceder a la cache correspondiente
                 switch(temporal[0])
                 {
                     case 1:
                         if (Monitor.TryEnter(cache_datos1))
                         {
+
+                            //Una vez obtenida la cache
                             indice = bloque % cant_bytes_palabra;
+
+
+                            // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos1[indice] == temporal[1] && estadoCache1[indice] == 'M' )
                             {
                                 return true;
@@ -690,9 +697,78 @@ namespace Proyecto
 
                             }else
                             {
-                                if (estadoCache1[indice] == 'M')
+                                // bloque victima esta modificado
+
+                                while (terminoDos)
                                 {
-                                    escribirBloqueEnMem(bloque,temporal[0],indice, false, true);
+                                    if (estadoCache1[indice] == 'M')
+                                    {
+                                        solicitudDeBloqueo = escribirBloqueEnMem(bloque, temporal[0], indice, false, true);
+                                        if (solicitudDeBloqueo)
+                                        {
+
+                                            switch (temporal[0])
+                                            {
+                                                case 1:
+
+
+                                                    //solicitud del directorio correspondiente que contiene el bloque objetivo
+                                                    if (Monitor.TryEnter(dir1))
+                                                    {
+                                                        if (temporal[0] != procesador) //remoto
+                                                        {
+                                                            contadorProcesador1 = contadorProcesador1 + 4;
+                                                            for (int i = 0; i < 4; ++i)
+                                                            {
+                                                                miBarrerita.SignalAndWait();
+                                                            }
+
+                                                        } else //local
+                                                        {
+                                                            contadorProcesador1 = contadorProcesador1 + 2;
+                                                            for (int i = 0; i < 2; ++i)
+                                                            {
+                                                                miBarrerita.SignalAndWait();
+                                                            }
+
+                                                        }
+
+                                                        //PREGUNTAR SI BLOQUE ESTA MODIFICADO EN OTRA CACHE
+                                                        switch (temporal[0])
+                                                        {
+                                                            case 1:
+
+                                                                break;
+                                                            case 2:
+                                                                break;
+                                                            case 3:
+                                                                break;
+                                                        }
+
+                                                        
+
+
+                                                    } else
+                                                    {
+                                                        termino = false;
+                                                        terminoDos = false;
+                                                    }
+
+                                                    break;
+                                                case 2:
+                                                    break;
+                                                case 3:
+                                                    break;
+
+                                            }
+                                        }
+
+
+                                    }
+                                    else
+                                    {
+                                        // no hace nada
+                                    }
 
                                 }
                                 return true;
@@ -731,6 +807,9 @@ namespace Proyecto
 
 
         }
+
+
+
 
 
 
