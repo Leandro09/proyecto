@@ -694,30 +694,10 @@ namespace Proyecto
                                     if ((estadoDir1[posicionDir]) == 'M')
                                     {
                                         r = escribirBloqueEnMem(bloque, 1, posicionCache, true, false);
-                                        /*if (r)
-                                        {
-                                            //Pone el bloque en el directorio
-                                            //bloque=compartido
-                                            //Estoy usando bloque en C 
-                                            //Subir Bloque a mi cache
-                                            //Soltar dir
-                                            //Soltar cache 
-                                        }
-                                        else
-                                        {
-                                            //suelta directorio
-                                            //suelta cache
-                                        }*/
                                     }
-                                    else //Si esta como C o U en el directorio
-                                    {
-                                        //Pone el bloque en el directorio
-                                        //bloque=compartido
-                                        //Estoy usando bloque en C
-                                        //Subir Bloque a mi cache
-                                        //Soltar dir
-                                        //Soltar cache 
-                                        if ((bloque / 8) == 0)
+                                    else if(((estadoDir1[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                    {//Si esta como U o en C en el directorio
+                                        if ((numDir) == 0)
                                         {
                                             for (int i = 0; i < 16; ++i)
                                             {
@@ -731,13 +711,17 @@ namespace Proyecto
                                                 miBarrerita.SignalAndWait();
                                             }
                                         }
+                                        //subir bloque a mi cache
+                                        encache_inst2[posicionCache] = bloque;
+                                        posicionCache = posicionCache * 16;
+                                        for (int i = 0; i < 16; ++i)
+                                        {
+                                            //pasa las 4 palabras MIPS a la cache_inst
+                                            cache_inst2[posicionCache + i] = memNoComp2[direccion + i];
+                                        }
                                     }
                                 }
-                                /*else 
-                                {
-                                    r = false;
-                                    //suelta cache
-                                }*/
+
                             }
                         }
                         break;
