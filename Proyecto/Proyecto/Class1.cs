@@ -20,6 +20,7 @@ namespace Proyecto
         static int cant_campos = 39;
         static int cant_cache_inst = 64;
         static int cant_encache_inst = 4;
+        static int cant_encache_datos = 4;
         static int cant_memComp = 128;
         static int cant_memNoComp = 256;
         static int limite = 128;
@@ -31,7 +32,7 @@ namespace Proyecto
         static int pos_nombre_procesador = 37;
         static int pos_rl = 38;
         static int cant_cache_datos = 16;
-        static int cant_campos_directorio = 8;
+        static int cant_campos_directorio = 40;
         static int cant_campos_ubicacion_directorio = 24;
 
 
@@ -117,14 +118,14 @@ namespace Proyecto
         static Barrier miBarrerita = new Barrier(4);
 
         //Almacena los estados de los directorios
-        static char[] estadoDir1 = new char[8];
-        static char[] estadoDir2 = new char[8];
-        static char[] estadoDir3 = new char[8]; 
+        static char[] dir1 = new char[40];
+        static char[] dir2 = new char[40];
+        static char[] dir3 = new char[40]; 
  
         //Contiene la ubicación de los bloques en las caché
-        static bool[] ubicacionDir1 = new bool[24];
+        /*static bool[] ubicacionDir1 = new bool[24];
         static bool[] ubicacionDir2 = new bool[24];
-        static bool[] ubicacionDir3 = new bool[24];
+        static bool[] ubicacionDir3 = new bool[24];*/
 
 
 
@@ -358,26 +359,26 @@ namespace Proyecto
                 memComp3[i] = 1;
             }
 
-            for (int i = 0; i < cant_campos_directorio; ++i)
+            for (int i = 0; i < cant_campos_directorio; i= i+5)
             {
-                   estadoDir1[i] = 'U';
-                   estadoDir2[i] = 'U';
-                   estadoDir3[i] = 'U';
+                   dir1[i] = 'U';
+                   dir2[i] = 'U';
+                   dir3[i] = 'U';
             }
 
-            for (int i = 0; i < cant_campos_directorio; ++i)
+            for (int i = 0; i < cant_encache_datos; ++i)
             {
                 estadoCache1[i] = 'I';
                 estadoCache2[i] = 'I';
                 estadoCache3[i] = 'I';
             }
 
-            for (int i = 0; i < cant_campos_ubicacion_directorio; ++i)
+          /*  for (int i = 0; i < cant_campos_ubicacion_directorio; ++i)
             {
                 ubicacionDir1[i] = false;
                 ubicacionDir2[i] = false;
                 ubicacionDir3[i] = false;
-            }
+            }*/
 
 
         }
@@ -639,10 +640,104 @@ namespace Proyecto
             }
             return resultadoFinal;
         }
+        //Retorna el número de procesador al que pertenece ese procesador y la dirección del bloque
+        //al que pertenece como tal.
+        public static int[] obtener_num_estruct(int num_bloque)
+        {
+            int[] resultado = new int[2];
+            if (num_bloque < 8)
+            {
+                resultado[0] = 1;
+                resultado[1] = num_bloque;
+            }
+            else if (num_bloque > 8 && num_bloque < 16)
+            {
+                resultado[0] = 2;
+                resultado[1] = num_bloque - 8;
+            }
+            else
+            {
+                resultado[0] = 3;
+                resultado[1] = num_bloque - 16;
+            }
+
+
+            return resultado;
+        }
+
+        public static bool cache_store(int procesador, int direccion)
+        {
+            int bloque = direccion / 8;
+            int posicionCache = bloque % 4;
+            int[] temporal = obtener_num_estruct(bloque);       //Almacena temporalmente el número de bloque del directorio a utilizar.
+            int posicionDir = temporal[1]*5;
+            bool termino = false;                               //Controla si se logró acceder al directorio de la caché.
+            int indice = 0;
+            //int numDir = bloque / 8;
+            
+            while (termino == false)
+            { 
+                switch(temporal[0])
+                {
+                    case 1:
+                        if (Monitor.TryEnter(cache_datos1))
+                        {
+                            indice = bloque % cant_bytes_palabra;
+                            if (encache_datos1[indice] == temporal[1] && estadoCache1[indice] == 'M' )
+                            {
+                                return true;
+
+
+                            }else
+                            {
+                                if (estadoCache1[indice] == 'M')
+                                {
+                                    escribirBloqueEnMem(bloque,temporal[0],indice, false, true);
+
+                                }
+                                return true;
+                            }
+                            
+                        }
+                        else
+                        {
+                            miBarrerita.SignalAndWait(); 
+                        }
+                        break;
+                    case 2:
+                        if (Monitor.TryEnter(cache_datos2))
+                        {
+
+                        }
+                        else
+                        {
+                            miBarrerita.SignalAndWait();
+                        }
+                        break;
+                    case 3:
+                        if (Monitor.TryEnter(cache_datos3))
+                        {
+
+                        }
+                        else
+                        {
+                            miBarrerita.SignalAndWait();
+                        }
+                        break;
+                }
+
+            }
+
+
+
+        }
+
+
 
         //Se encarga de verificar si el bloque que se va a leer ya esta en la cache y si no esta lo sube.
         public static bool cache_Load(int procesador, int direccion)
         {
+            /*
             int bloque = direccion / 16;
             int posicionCache = bloque % 4;
             int posicionDir = bloque % 8;
@@ -744,7 +839,7 @@ namespace Proyecto
                         break;
                 }
             }
-            return false;
+            return false;*/
         }
 
         public static bool escribirBloqueEnMem(int bloque, int numcache,int posicion, bool esLoad, bool reemplazo)
