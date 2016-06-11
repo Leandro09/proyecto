@@ -646,11 +646,12 @@ namespace Proyecto
             int bloque = direccion / 16;
             int posicionCache = bloque % 4;
             int posicionDir = bloque % 8;
+            int numDir = bloque / 8;
             bool r = false;
             while (!r)
             {
                 r = true;
-                while (true)//trylock de mi cache
+                while (false)//trylock de mi cache
                 {
                     miBarrerita.SignalAndWait();
                 }
@@ -666,139 +667,77 @@ namespace Proyecto
                             if (estadoCache1[posicionCache] == 'M')
                             {
                                 r = escribirBloqueEnMem(bloque, 1, posicionCache, true, true);
-                                if (r)
-                                {
-                                    r = true;//trylock directorio del bloque solicitado
-                                    if (r)
-                                    {
-                                        if ((bloque / 8) == 0)
-                                        {
-                                            for (int i = 0; i < 2; ++i)
-                                            {
-                                                miBarrerita.SignalAndWait();
-                                            }
-                                        }
-                                        else
-                                        {
-                                            for (int i = 0; i < 4; ++i)
-                                            {
-                                                miBarrerita.SignalAndWait();
-                                            }
-                                        }
-                                        if ((estadoDir1[posicionDir]) == 'M')
-                                        {
-                                            r = escribirBloqueEnMem(bloque, 1, posicionCache, true, false);
-                                            if (r)
-                                            {
-                                                //Pone el bloque en el directorio
-                                                //bloque=compartido
-                                                //Estoy usando bloque en C
-                                                //Subir Bloque a mi cache
-                                                //Soltar dir
-                                                //Soltar cache 
-                                            }
-                                            else
-                                            {
-                                                //suelta directorio
-                                                //suelta cache
-                                            }
-                                        }
-                                        else
-                                        {
-                                            //Pone el bloque en el directorio
-                                            //bloque=compartido
-                                            //Estoy usando bloque en C
-                                            //Subir Bloque a mi cache
-                                            //Soltar dir
-                                            //Soltar cache 
-                                            if ((bloque / 8) == 0)
-                                            {
-                                                for (int i = 0; i < 16; ++i)
-                                                {
-                                                    miBarrerita.SignalAndWait();
-                                                }
-                                            }
-                                            else
-                                            {
-                                                for (int i = 0; i < 20; ++i)
-                                                {
-                                                    miBarrerita.SignalAndWait();
-                                                }
-                                            }
-                                        }
-                                    }
-                                    /*else 
-                                    {
-                                        r = false;
-                                        //suelta cache
-                                    }*/
-                                }
                             }
                             else if (estadoCache1[posicionCache] == 'C')
                             {
                                 r = reemplazarBloqueCompartido(procesador, direccion);
+                            }
+                            if (r)
+                            {
+                                r = true;//trylock directorio del bloque solicitado
                                 if (r)
                                 {
-                                    r = true;//trylock directorio del bloque solicitado
-                                    if (r)
+                                    if ((numDir / 8) == 0)
                                     {
-                                        if ((bloque / 8) == 0)
+                                        for (int i = 0; i < 2; ++i)
                                         {
-                                            for (int i = 0; i < 2; ++i)
-                                            {
-                                                miBarrerita.SignalAndWait();
-                                            }
+                                            miBarrerita.SignalAndWait();
                                         }
-                                        else
+                                    }
+                                    else
+                                    {
+                                        for (int i = 0; i < 4; ++i)
                                         {
-                                            for (int i = 0; i < 4; ++i)
-                                            {
-                                                miBarrerita.SignalAndWait();
-                                            }
+                                            miBarrerita.SignalAndWait();
                                         }
-                                        if ((estadoDir1[posicionDir]) == 'M')
-                                        {
-                                            r = escribirBloqueEnMem(bloque, 1, posicionCache, true, false);
-                                            if (r)
-                                            {
-                                                //Pone el bloque en el directorio
-                                                //bloque=compartido
-                                                //Estoy usando bloque en C
-                                                //Subir Bloque a mi cache
-                                                //Soltar dir
-                                                //Soltar cache 
-                                            }
-                                            else
-                                            {
-                                                //suelta directorio
-                                                //suelta cache
-                                            }
-                                        }
-                                        else
+                                    }
+                                    if ((estadoDir1[posicionDir]) == 'M')
+                                    {
+                                        r = escribirBloqueEnMem(bloque, 1, posicionCache, true, false);
+                                        /*if (r)
                                         {
                                             //Pone el bloque en el directorio
                                             //bloque=compartido
-                                            //Estoy usando bloque en C
+                                            //Estoy usando bloque en C 
                                             //Subir Bloque a mi cache
                                             //Soltar dir
                                             //Soltar cache 
-                                            if ((bloque / 8) == 0)
+                                        }
+                                        else
+                                        {
+                                            //suelta directorio
+                                            //suelta cache
+                                        }*/
+                                    }
+                                    else //Si esta como C o U en el directorio
+                                    {
+                                        //Pone el bloque en el directorio
+                                        //bloque=compartido
+                                        //Estoy usando bloque en C
+                                        //Subir Bloque a mi cache
+                                        //Soltar dir
+                                        //Soltar cache 
+                                        if ((bloque / 8) == 0)
+                                        {
+                                            for (int i = 0; i < 16; ++i)
                                             {
-                                                for (int i = 0; i < 16; ++i)
-                                                {
-                                                    miBarrerita.SignalAndWait();
-                                                }
+                                                miBarrerita.SignalAndWait();
                                             }
-                                            else
+                                        }
+                                        else
+                                        {
+                                            for (int i = 0; i < 20; ++i)
                                             {
-                                                for (int i = 0; i < 20; ++i)
-                                                {
-                                                    miBarrerita.SignalAndWait();
-                                                }
+                                                miBarrerita.SignalAndWait();
                                             }
                                         }
                                     }
                                 }
+                                /*else 
+                                {
+                                    r = false;
+                                    //suelta cache
+                                }*/
                             }
                         }
                         break;
