@@ -713,13 +713,26 @@ namespace Proyecto
                                         }
                                         //subir bloque a mi cache
                                         encache_inst2[posicionCache] = bloque;
-                                        posicionCache = posicionCache * 16;
-                                        for (int i = 0; i < 16; ++i)
+                                        posicionCache = posicionCache * 4;
+                                        for (int i = 0; i < 4; ++i)
                                         {
                                             //pasa las 4 palabras MIPS a la cache_inst
                                             cache_inst2[posicionCache + i] = memNoComp2[direccion + i];
                                         }
                                     }
+                                    switch (numDir)
+                                    {
+                                        case 1:
+                                            estadoDir1[posicionDir] = 'C';
+                                            ubicacionDir1[posicionDir * 3] = true;
+                                            break;
+                                        case 2:
+                                            break;
+                                        case 3:
+                                            break;
+                                    }
+                                    //soltar directorio
+                                    //soltar cache
                                 }
 
                             }
