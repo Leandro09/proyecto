@@ -805,6 +805,114 @@ namespace Proyecto
             }
 
 
+            return true;
+        }
+
+
+        public static bool reemplazarBloqueCompartido(int bloque, int numCache,int posicion)
+        {
+
+            int[] temporal = obtener_num_estruct(bloque);
+            switch (numCache)
+            {
+                case 1:
+
+                    if (Monitor.TryEnter(dir1))
+                    {
+                        estadoCache1[posicion] = 'I';
+                        dir1[bloque * 5 + numCache] = '0';
+                        if (temporal[0] == numCache)
+                        {
+                            contadorProcesador1 = contadorProcesador1 + 2;
+
+
+                            for (int i = 0; i < 2; ++i)
+                            {
+                                miBarrerita.SignalAndWait();
+                            }
+
+                        }else
+                        {
+                            contadorProcesador1 = contadorProcesador1 + 4;
+                            for (int i = 0; i < 4; ++i)
+                            {
+                                miBarrerita.SignalAndWait();
+                            }
+                        }
+                        Monitor.Exit(dir1);
+                    }else
+                    {
+                        return false;
+                    }
+                    break;
+                case 2:
+
+                    if (Monitor.TryEnter(dir2))
+                    {
+                        estadoCache2[posicion] = 'I';
+                        dir2[bloque * 5 + numCache] = '0';
+                        if (temporal[0] == numCache)
+                        {
+                            contadorProcesador2 = contadorProcesador2 + 2;
+
+
+                            for (int i = 0; i < 2; ++i)
+                            {
+                                miBarrerita.SignalAndWait();
+                            }
+
+                        }
+                        else
+                        {
+                            contadorProcesador2 = contadorProcesador2 + 4;
+                            for (int i = 0; i < 4; ++i)
+                            {
+                                miBarrerita.SignalAndWait();
+                            }
+                        }
+                        Monitor.Exit(dir2);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    break;
+                case 3:
+
+                    if (Monitor.TryEnter(dir3))
+                    {
+                        estadoCache3[posicion] = 'I';
+                        dir3[bloque * 5 + numCache] = '0';
+                        if (temporal[0] == numCache)
+                        {
+                            contadorProcesador3 = contadorProcesador3 + 2;
+
+
+                            for (int i = 0; i < 2; ++i)
+                            {
+                                miBarrerita.SignalAndWait();
+                            }
+
+                        }
+                        else
+                        {
+                            contadorProcesador3 = contadorProcesador3 + 4;
+                            for (int i = 0; i < 4; ++i)
+                            {
+                                miBarrerita.SignalAndWait();
+                            }
+                        }
+                        Monitor.Exit(dir3);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    break;
+
+            }
+
+            return true;
 
         }
 
@@ -919,6 +1027,7 @@ namespace Proyecto
                 }
             }
             return false;*/
+            return true;
         }
 
         public static bool escribirBloqueEnMem(int bloque, int numcache,int posicion, bool esLoad, bool reemplazo)
