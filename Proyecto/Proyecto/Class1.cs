@@ -607,20 +607,49 @@ namespace Proyecto
                     //segundoRegistro;
                     //int bloque = direccion / 16;
                     int bloque = segundoRegistro / 16;
-                    int posicionCache = bloque % 4;
-                    int posicionDir = bloque % 8;
-                    int numDir = (bloque / 8) + 1;
+                    int posicionCache = bloque / 4;
+                    //int posicionDir = bloque % 8;
+                    //int numDir = (bloque / 8) + 1;
                     int direccionBloque = bloque * 16;
+                    int palabra = bloque % 16;
                     cache_Load(procesador, direccionBloque,posicionCache,bloque,segundoRegistro);
+                    /*
+                    int[] bloqueSol = new int[4]; 
+                    switch (procesador)
+                    {
+                        case 1:
+                            for(int i = 0;i<4;++i){
+                                bloqueSol[posicionCache*4+i] = cache_datos1[posicionCache];
+                            }
+                            break;
+                        case 2:
+                            for (int i = 0; i < 4; ++i)
+                            {
+                                bloqueSol[posicionCache * 4 + i] = cache_datos2[posicionCache];
+                            }
+                            break;
+                        case 3:
+                            for(int i = 0;i<4;++i){
+                                bloqueSol[posicionCache * 4 + i] = cache_datos3[posicionCache];
+                            }
+                            break;
+                    }
+                    guardarEn = primerRegistro;
+                    resultado = bloqueSol[palabra];*/
+                    guardarEn = primerRegistro;
+                    resultado = cache_datos3[palabra];
                     //Lee de la cache
                     break;
                 case 50: //LL
                     int bloque1 = segundoRegistro / 16;
                     int posicionCache1 = bloque1 % 4;
-                    int posicionDir1 = bloque1 % 8;
-                    int numDir1 = (bloque1 / 8) + 1;
+                    int palabra1 = bloque1 % 16;
+                    //int posicionDir1 = bloque1 % 8;
+                    //int numDir1 = (bloque1 / 8) + 1;
                     int direccionBloque1 = bloque1 * 16;
                     cache_Load(procesador, direccionBloque1,posicionCache1,bloque1,segundoRegistro);
+                    guardarEn = primerRegistro;
+                    resultado = cache_datos3[palabra1];
                     //guardarEn = cac;
                     //Lee de la cache
                     resultado = segundoRegistro;
