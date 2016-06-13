@@ -710,7 +710,19 @@ namespace Proyecto
             while (!r)
             {
                 r = true;
-                while (false)//trylock de mi cache
+                switch(procesador)
+                {
+                    case 1:
+                        r = Monitor.TryEnter(cache_datos1);
+                        break;
+                    case 2:
+                        r = Monitor.TryEnter(cache_datos2);
+                        break;
+                    case 3:
+                        r = Monitor.TryEnter(cache_datos3);
+                        break;
+                }
+                while (r)//trylock de mi cache
                 {
                     miBarrerita.SignalAndWait();
                 }
@@ -734,6 +746,18 @@ namespace Proyecto
                             if (r)
                             {
                                 r = true;//trylock directorio del bloque solicitado
+                                switch (numDir)
+                                {
+                                    case 1:
+                                        r = Monitor.TryEnter(dir1);
+                                        break;
+                                    case 2:
+                                        r = Monitor.TryEnter(dir2);
+                                        break;
+                                    case 3:
+                                        r = Monitor.TryEnter(dir3);
+                                        break;
+                                }
                                 if (r)
                                 {
                                     if ((numDir) == 1)
@@ -775,6 +799,7 @@ namespace Proyecto
                                             }
                                             dir1[posicionDir * 5 + 1] = 'C';
                                             dir1[posicionDir * 5 + 1] = '1';
+                                            Monitor.Exit(dir1);
                                             break;
                                         case 2:
                                             if ((dir2[posicionDir]) == 'M')
@@ -799,6 +824,7 @@ namespace Proyecto
                                                 }
                                                 dir2[posicionDir * 5 + 1] = 'C';
                                                 dir2[posicionDir * 5 + 1] = '1';
+                                                Monitor.Exit(dir2);
                                             }
                                             break;
                                         case 3:
@@ -824,6 +850,7 @@ namespace Proyecto
                                                 }
                                                 dir3[posicionDir * 5 + 1] = 'C';
                                                 dir3[posicionDir * 5 + 1] = '1';
+                                                Monitor.Exit(dir3);
                                             }
                                             break;
                                     }
@@ -851,6 +878,18 @@ namespace Proyecto
                             if (r)
                             {
                                 r = true;//trylock directorio del bloque solicitado
+                                switch (numDir)
+                                {
+                                    case 1:
+                                        r = Monitor.TryEnter(dir1);
+                                        break;
+                                    case 2:
+                                        r = Monitor.TryEnter(dir2);
+                                        break;
+                                    case 3:
+                                        r = Monitor.TryEnter(dir3);
+                                        break;
+                                }
                                 if (r)
                                 {
                                     if ((numDir) == 2)
@@ -892,6 +931,7 @@ namespace Proyecto
                                             }
                                             dir1[posicionDir * 5 + 1] = 'C';
                                             dir1[posicionDir * 5 + 1] = '1';
+                                            Monitor.Exit(dir1);
                                             break;
                                         case 2:
                                             if ((dir2[posicionDir]) == 'M')
@@ -916,6 +956,7 @@ namespace Proyecto
                                                 }
                                                 dir2[posicionDir * 5 + 1] = 'C';
                                                 dir2[posicionDir * 5 + 1] = '1';
+                                                Monitor.Exit(dir2);
                                             }
                                             break;
                                         case 3:
@@ -941,6 +982,7 @@ namespace Proyecto
                                                 }
                                                 dir3[posicionDir * 5 + 1] = 'C';
                                                 dir3[posicionDir * 5 + 1] = '1';
+                                                Monitor.Exit(dir3);
                                             }
                                             break;
                                     }
@@ -968,6 +1010,18 @@ namespace Proyecto
                             if (r)
                             {
                                 r = true;//trylock directorio del bloque solicitado
+                                switch (numDir)
+                                {
+                                    case 1:
+                                        r = Monitor.TryEnter(dir1);
+                                        break;
+                                    case 2:
+                                        r = Monitor.TryEnter(dir2);
+                                        break;
+                                    case 3:
+                                        r = Monitor.TryEnter(dir3);
+                                        break;
+                                }
                                 if (r)
                                 {
                                     if ((numDir) == 2)
@@ -1009,6 +1063,7 @@ namespace Proyecto
                                             }
                                             dir1[posicionDir * 5 + 1] = 'C';
                                             dir1[posicionDir * 5 + 1] = '1';
+                                            Monitor.Exit(dir1);
                                             break;
                                         case 2:
                                             if ((dir2[posicionDir]) == 'M')
@@ -1033,6 +1088,7 @@ namespace Proyecto
                                                 }
                                                 dir2[posicionDir * 5 + 1] = 'C';
                                                 dir2[posicionDir * 5 + 1] = '1';
+                                                Monitor.Exit(dir2);
                                             }
                                             break;
                                         case 3:
@@ -1058,6 +1114,7 @@ namespace Proyecto
                                                 }
                                                 dir3[posicionDir * 5 + 1] = 'C';
                                                 dir3[posicionDir * 5 + 1] = '1';
+                                                Monitor.Exit(dir3);
                                             }
                                             break;
                                     }
