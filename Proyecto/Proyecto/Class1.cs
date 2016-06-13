@@ -1026,7 +1026,7 @@ namespace Proyecto
                                 }
                                 if (r)
                                 {
-                                    if ((numDir) == 2)
+                                    if ((numDir) == 3)
                                     {
                                         for (int i = 0; i < 2; ++i)
                                         {
