@@ -605,11 +605,22 @@ namespace Proyecto
                     break;
                 case 35: //LW
                     //segundoRegistro;
-                    cache_Load(procesador, segundoRegistro);
+                    //int bloque = direccion / 16;
+                    int bloque = segundoRegistro / 16;
+                    int posicionCache = bloque % 4;
+                    int posicionDir = bloque % 8;
+                    int numDir = (bloque / 8) + 1;
+                    int direccionBloque = bloque * 16;
+                    cache_Load(procesador, direccionBloque,posicionCache,bloque,segundoRegistro);
                     //Lee de la cache
                     break;
                 case 50: //LL
-                    cache_Load(procesador, segundoRegistro);
+                    int bloque1 = segundoRegistro / 16;
+                    int posicionCache1 = bloque1 % 4;
+                    int posicionDir1 = bloque1 % 8;
+                    int numDir1 = (bloque1 / 8) + 1;
+                    int direccionBloque1 = bloque1 * 16;
+                    cache_Load(procesador, direccionBloque1,posicionCache1,bloque1,segundoRegistro);
                     //guardarEn = cac;
                     //Lee de la cache
                     resultado = segundoRegistro;
@@ -659,13 +670,13 @@ namespace Proyecto
             return resultadoFinal;
         }
         //Se encarga de verificar si el bloque que se va a leer ya esta en la cache y si no esta lo sube.
-        public static bool cache_Load(int procesador, int direccion)
+        public static bool cache_Load(int procesador, int direccionBloque, int posicionCache, int bloque, int direccion)
         {
-            int bloque = direccion / 16;
-            int posicionCache = bloque % 4;
+            //int bloque = direccion / 16;
+            //int posicionCache = bloque % 4;
             int posicionDir = bloque % 8;
             int numDir = (bloque / 8) + 1;
-            int direccionBloque = bloque * 16;
+            //int direccionBloque = bloque * 16;
             bool r = false;
             while (!r)
             {
