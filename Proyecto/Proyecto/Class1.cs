@@ -604,10 +604,68 @@ namespace Proyecto
                     guardarEn = pos_pc;
                     break;
                 case 35: //LW
-                    cache_Load(0,0);
+                    //segundoRegistro;
+                    //int bloque = direccion / 16;
+                    int bloque = segundoRegistro / 16;
+                    int posicionCache = bloque / 4;
+                    //int posicionDir = bloque % 8;
+                    //int numDir = (bloque / 8) + 1;
+                    int direccionBloque = bloque * 16;
+                    int palabra = bloque % 16;
+                    cache_Load(procesador, direccionBloque,posicionCache,bloque,segundoRegistro);
+                    /*
+                    int[] bloqueSol = new int[4]; 
+                    switch (procesador)
+                    {
+                        case 1:
+                            for(int i = 0;i<4;++i){
+                                bloqueSol[posicionCache*4+i] = cache_datos1[posicionCache];
+                            }
+                            break;
+                        case 2:
+                            for (int i = 0; i < 4; ++i)
+                            {
+                                bloqueSol[posicionCache * 4 + i] = cache_datos2[posicionCache];
+                            }
+                            break;
+                        case 3:
+                            for(int i = 0;i<4;++i){
+                                bloqueSol[posicionCache * 4 + i] = cache_datos3[posicionCache];
+                            }
+                            break;
+                    }
+                    guardarEn = primerRegistro;
+                    resultado = bloqueSol[palabra];*/
+                    guardarEn = primerRegistro;
+                    resultado = cache_datos3[palabra];
+                    //Lee de la cache
                     break;
                 case 50: //LL
-
+                    int bloque1 = segundoRegistro / 16;
+                    int posicionCache1 = bloque1 % 4;
+                    int palabra1 = bloque1 % 16;
+                    //int posicionDir1 = bloque1 % 8;
+                    //int numDir1 = (bloque1 / 8) + 1;
+                    int direccionBloque1 = bloque1 * 16;
+                    cache_Load(procesador, direccionBloque1,posicionCache1,bloque1,segundoRegistro);
+                    guardarEn = primerRegistro;
+                    resultado = cache_datos3[palabra1];
+                    //guardarEn = cac;
+                    //Lee de la cache
+                    resultado = segundoRegistro;
+                    LLactivo1[procesador / 3] = true;
+                    switch (procesador)
+                    {
+                        case 1:
+                            procesador1[pos_rl] = segundoRegistro;
+                            break;
+                        case 2:
+                            procesador2[pos_rl] = segundoRegistro;
+                            break;
+                        case 3:
+                            procesador3[pos_rl] = segundoRegistro;
+                            break;
+                    }
                     break;
                 case 51: //SC
 
@@ -623,7 +681,7 @@ namespace Proyecto
 
             }
             //para guardar los resultados en los registros del procesador que corresponde
-            if (codigo != 63)
+            if ((codigo != 63) && (codigo != 35))
             {
                 switch (procesador)
                 {
@@ -640,6 +698,381 @@ namespace Proyecto
             }
             return resultadoFinal;
         }
+        //Se encarga de verificar si el bloque que se va a leer ya esta en la cache y si no esta lo sube.
+        public static bool cache_Load(int procesador, int direccionBloque, int posicionCache, int bloque, int direccion)
+        {
+            //int bloque = direccion / 16;
+            //int posicionCache = bloque % 4;
+            int posicionDir = bloque % 8;
+            int numDir = (bloque / 8) + 1;
+            //int direccionBloque = bloque * 16;
+            bool r = false;
+            while (!r)
+            {
+                r = true;
+                while (false)//trylock de mi cache
+                {
+                    miBarrerita.SignalAndWait();
+                }
+                switch (procesador)
+                {
+                    case 1:
+                        if ((encache_datos1[posicionCache] == bloque) && ((estadoCache1[posicionCache] == 'C') || (estadoCache1[posicionCache] == 'M')))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            if (estadoCache1[posicionCache] == 'M')
+                            {
+                                r = escribirBloqueEnMem(bloque, 1, posicionCache, true, true);
+                            }
+                            else if (estadoCache1[posicionCache] == 'C')
+                            {
+                                r = reemplazarBloqueCompartido(procesador, direccion);
+                            }
+                            if (r)
+                            {
+                                r = true;//trylock directorio del bloque solicitado
+                                if (r)
+                                {
+                                    if ((numDir) == 1)
+                                    {
+                                        for (int i = 0; i < 2; ++i)
+                                        {
+                                            miBarrerita.SignalAndWait();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for (int i = 0; i < 4; ++i)
+                                        {
+                                            miBarrerita.SignalAndWait();
+                                        }
+                                    }
+                                    switch (numDir)
+                                    {
+                                        case 1:
+                                            if ((dir1[posicionDir]) == 'M')
+                                            {
+                                                r = escribirBloqueEnMem(bloque, 1, posicionCache, true, false);
+                                            }
+                                            else if (((dir1[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            {//Si esta como U o en C en el directorio
+                                                for (int i = 0; i < 16; ++i)
+                                                {
+                                                    miBarrerita.SignalAndWait();
+                                                }
+
+                                                //subir bloque a mi cache
+                                                encache_inst2[posicionCache] = bloque;
+                                                posicionCache = posicionCache * 4;
+                                                for (int i = 0; i < 4; ++i)
+                                                {
+                                                    //pasa las 4 palabras MIPS a la cache_inst
+                                                    cache_datos1[posicionCache + i] = memComp1[direccionBloque *4 + i];
+                                                }
+                                            }
+                                            dir1[posicionDir * 5 + 1] = 'C';
+                                            dir1[posicionDir * 5 + 1] = '1';
+                                            break;
+                                        case 2:
+                                            if ((dir2[posicionDir]) == 'M')
+                                            {
+                                                r = escribirBloqueEnMem(bloque, 1, posicionCache, true, false);
+                                            }
+                                            else if (((dir2[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            {//Si esta como U o en C en el directorio
+
+                                                for (int i = 0; i < 20; ++i)
+                                                {
+                                                    miBarrerita.SignalAndWait();
+                                                }
+
+                                                //subir bloque a mi cache
+                                                encache_inst2[posicionCache] = bloque;
+                                                posicionCache = posicionCache * 4;
+                                                for (int i = 0; i < 4; ++i)
+                                                {
+                                                    //pasa las 4 palabras MIPS a la cache_inst
+                                                    cache_datos1[posicionCache + i] = memComp2[direccionBloque * 4 + i];
+                                                }
+                                                dir2[posicionDir * 5 + 1] = 'C';
+                                                dir2[posicionDir * 5 + 1] = '1';
+                                            }
+                                            break;
+                                        case 3:
+                                            if ((dir3[posicionDir]) == 'M')
+                                            {
+                                                r = escribirBloqueEnMem(bloque, 1, posicionCache, true, false);
+                                            }
+                                            else if (((dir3[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            {//Si esta como U o en C en el directorio
+
+                                                for (int i = 0; i < 20; ++i)
+                                                {
+                                                    miBarrerita.SignalAndWait();
+                                                }
+
+                                                //subir bloque a mi cache
+                                                encache_inst1[posicionCache] = bloque;
+                                                posicionCache = posicionCache * 4;
+                                                for (int i = 0; i < 4; ++i)
+                                                {
+                                                    //pasa las 4 palabras MIPS a la cache_inst
+                                                    cache_datos1[posicionCache + i] = memComp3[direccionBloque * 4 + i];
+                                                }
+                                                dir3[posicionDir * 5 + 1] = 'C';
+                                                dir3[posicionDir * 5 + 1] = '1';
+                                            }
+                                            break;
+                                    }
+                                    //soltar directorio
+                                    //soltar cache
+                                }
+                            }
+                        }
+                        break;
+                    case 2:
+                        if ((encache_datos2[posicionCache] == bloque) && ((estadoCache2[posicionCache] == 'C') || (estadoCache2[posicionCache] == 'M')))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            if (estadoCache2[posicionCache] == 'M')
+                            {
+                                r = escribirBloqueEnMem(bloque, 2, posicionCache, true, true);
+                            }
+                            else if (estadoCache2[posicionCache] == 'C')
+                            {
+                                r = reemplazarBloqueCompartido(procesador, direccion);
+                            }
+                            if (r)
+                            {
+                                r = true;//trylock directorio del bloque solicitado
+                                if (r)
+                                {
+                                    if ((numDir) == 2)
+                                    {
+                                        for (int i = 0; i < 2; ++i)
+                                        {
+                                            miBarrerita.SignalAndWait();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for (int i = 0; i < 4; ++i)
+                                        {
+                                            miBarrerita.SignalAndWait();
+                                        }
+                                    }
+                                    switch (numDir)
+                                    {
+                                        case 1:
+                                            if ((dir1[posicionDir]) == 'M')
+                                            {
+                                                r = escribirBloqueEnMem(bloque, 2, posicionCache, true, false);
+                                            }
+                                            else if (((dir1[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            {//Si esta como U o en C en el directorio
+                                                for (int i = 0; i < 16; ++i)
+                                                {
+                                                    miBarrerita.SignalAndWait();
+                                                }
+
+                                                //subir bloque a mi cache
+                                                encache_inst2[posicionCache] = bloque;
+                                                posicionCache = posicionCache * 4;
+                                                for (int i = 0; i < 4; ++i)
+                                                {
+                                                    //pasa las 4 palabras MIPS a la cache_inst
+                                                    cache_datos1[posicionCache + i] = memComp1[direccion + i];
+                                                }
+                                            }
+                                            dir1[posicionDir * 5 + 1] = 'C';
+                                            dir1[posicionDir * 5 + 1] = '1';
+                                            break;
+                                        case 2:
+                                            if ((dir2[posicionDir]) == 'M')
+                                            {
+                                                r = escribirBloqueEnMem(bloque, 2, posicionCache, true, false);
+                                            }
+                                            else if (((dir2[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            {//Si esta como U o en C en el directorio
+
+                                                for (int i = 0; i < 20; ++i)
+                                                {
+                                                    miBarrerita.SignalAndWait();
+                                                }
+
+                                                //subir bloque a mi cache
+                                                encache_inst2[posicionCache] = bloque;
+                                                posicionCache = posicionCache * 4;
+                                                for (int i = 0; i < 4; ++i)
+                                                {
+                                                    //pasa las 4 palabras MIPS a la cache_inst
+                                                    cache_datos1[posicionCache + i] = memComp2[direccion + i];
+                                                }
+                                                dir2[posicionDir * 5 + 1] = 'C';
+                                                dir2[posicionDir * 5 + 1] = '1';
+                                            }
+                                            break;
+                                        case 3:
+                                            if ((dir3[posicionDir]) == 'M')
+                                            {
+                                                r = escribirBloqueEnMem(bloque, 2, posicionCache, true, false);
+                                            }
+                                            else if (((dir3[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            {//Si esta como U o en C en el directorio
+
+                                                for (int i = 0; i < 20; ++i)
+                                                {
+                                                    miBarrerita.SignalAndWait();
+                                                }
+
+                                                //subir bloque a mi cache
+                                                encache_inst2[posicionCache] = bloque;
+                                                posicionCache = posicionCache * 4;
+                                                for (int i = 0; i < 4; ++i)
+                                                {
+                                                    //pasa las 4 palabras MIPS a la cache_inst
+                                                    cache_datos2[posicionCache + i] = memComp3[direccion + i];
+                                                }
+                                                dir3[posicionDir * 5 + 1] = 'C';
+                                                dir3[posicionDir * 5 + 1] = '1';
+                                            }
+                                            break;
+                                    }
+                                    //soltar directorio
+                                    //soltar cache
+                                }
+                            }
+                        }
+                        break;
+                    case 3:
+                        if ((encache_datos3[posicionCache] == bloque) && ((estadoCache3[posicionCache] == 'C') || (estadoCache3[posicionCache] == 'M')))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            if (estadoCache3[posicionCache] == 'M')
+                            {
+                                r = escribirBloqueEnMem(bloque, 3, posicionCache, true, true);
+                            }
+                            else if (estadoCache3[posicionCache] == 'C')
+                            {
+                                r = reemplazarBloqueCompartido(procesador, direccion);
+                            }
+                            if (r)
+                            {
+                                r = true;//trylock directorio del bloque solicitado
+                                if (r)
+                                {
+                                    if ((numDir) == 2)
+                                    {
+                                        for (int i = 0; i < 2; ++i)
+                                        {
+                                            miBarrerita.SignalAndWait();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for (int i = 0; i < 4; ++i)
+                                        {
+                                            miBarrerita.SignalAndWait();
+                                        }
+                                    }
+                                    switch (numDir)
+                                    {
+                                        case 1:
+                                            if ((dir1[posicionDir]) == 'M')
+                                            {
+                                                r = escribirBloqueEnMem(bloque, 3, posicionCache, true, false);
+                                            }
+                                            else if (((dir1[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            {//Si esta como U o en C en el directorio
+                                                for (int i = 0; i < 16; ++i)
+                                                {
+                                                    miBarrerita.SignalAndWait();
+                                                }
+
+                                                //subir bloque a mi cache
+                                                encache_inst3[posicionCache] = bloque;
+                                                posicionCache = posicionCache * 4;
+                                                for (int i = 0; i < 4; ++i)
+                                                {
+                                                    //pasa las 4 palabras MIPS a la cache_inst
+                                                    cache_datos1[posicionCache + i] = memComp1[direccion + i];
+                                                }
+                                            }
+                                            dir1[posicionDir * 5 + 1] = 'C';
+                                            dir1[posicionDir * 5 + 1] = '1';
+                                            break;
+                                        case 2:
+                                            if ((dir2[posicionDir]) == 'M')
+                                            {
+                                                r = escribirBloqueEnMem(bloque, 3, posicionCache, true, false);
+                                            }
+                                            else if (((dir2[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            {//Si esta como U o en C en el directorio
+
+                                                for (int i = 0; i < 20; ++i)
+                                                {
+                                                    miBarrerita.SignalAndWait();
+                                                }
+
+                                                //subir bloque a mi cache
+                                                encache_inst3[posicionCache] = bloque;
+                                                posicionCache = posicionCache * 4;
+                                                for (int i = 0; i < 4; ++i)
+                                                {
+                                                    //pasa las 4 palabras MIPS a la cache_inst
+                                                    cache_datos1[posicionCache + i] = memComp2[direccion + i];
+                                                }
+                                                dir2[posicionDir * 5 + 1] = 'C';
+                                                dir2[posicionDir * 5 + 1] = '1';
+                                            }
+                                            break;
+                                        case 3:
+                                            if ((dir3[posicionDir]) == 'M')
+                                            {
+                                                r = escribirBloqueEnMem(bloque, 3, posicionCache, true, false);
+                                            }
+                                            else if (((dir3[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            {//Si esta como U o en C en el directorio
+
+                                                for (int i = 0; i < 20; ++i)
+                                                {
+                                                    miBarrerita.SignalAndWait();
+                                                }
+
+                                                //subir bloque a mi cache
+                                                encache_inst3[posicionCache] = bloque;
+                                                posicionCache = posicionCache * 4;
+                                                for (int i = 0; i < 4; ++i)
+                                                {
+                                                    //pasa las 4 palabras MIPS a la cache_inst
+                                                    cache_datos3[posicionCache + i] = memComp3[direccion + i];
+                                                }
+                                                dir3[posicionDir * 5 + 1] = 'C';
+                                                dir3[posicionDir * 5 + 1] = '1';
+                                            }
+                                            break;
+                                    }
+                                    //soltar directorio
+                                    //soltar cache
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+            return false;
+        }
+
+
         //Retorna el número de procesador al que pertenece ese procesador y la dirección del bloque
         //al que pertenece como tal.
         public static int[] obtener_num_estruct(int num_bloque)
@@ -943,114 +1376,7 @@ namespace Proyecto
 
 
 
-        //Se encarga de verificar si el bloque que se va a leer ya esta en la cache y si no esta lo sube.
-        public static bool cache_Load(int procesador, int direccion)
-        {
-            /*
-            int bloque = direccion / 16;
-            int posicionCache = bloque % 4;
-            int posicionDir = bloque % 8;
-            int numDir = bloque / 8;
-            bool r = false;
-            while (!r)
-            {
-                r = true;
-                while (false)//trylock de mi cache
-                {
-                    miBarrerita.SignalAndWait();
-                }
-                switch (procesador)
-                {
-                    case 1:
-                        if ((encache_datos1[posicionCache] == bloque) && ((estadoCache1[posicionCache] == 'C') || (estadoCache1[posicionCache] == 'M')))
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            if (estadoCache1[posicionCache] == 'M')
-                            {
-                                r = escribirBloqueEnMem(bloque, 1, posicionCache, true, true);
-                            }
-                            else if (estadoCache1[posicionCache] == 'C')
-                            {
-                                r = reemplazarBloqueCompartido(procesador, direccion);
-                            }
-                            if (r)
-                            {
-                                r = true;//trylock directorio del bloque solicitado
-                                if (r)
-                                {
-                                    if ((numDir / 8) == 0)
-                                    {
-                                        for (int i = 0; i < 2; ++i)
-                                        {
-                                            miBarrerita.SignalAndWait();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        for (int i = 0; i < 4; ++i)
-                                        {
-                                            miBarrerita.SignalAndWait();
-                                        }
-                                    }
-                                    if ((estadoDir1[posicionDir]) == 'M')
-                                    {
-                                        r = escribirBloqueEnMem(bloque, 1, posicionCache, true, false);
-                                    }
-                                    else if(((estadoDir1[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
-                                    {//Si esta como U o en C en el directorio
-                                        if ((numDir) == 0)
-                                        {
-                                            for (int i = 0; i < 16; ++i)
-                                            {
-                                                miBarrerita.SignalAndWait();
-                                            }
-                                        }
-                                        else
-                                        {
-                                            for (int i = 0; i < 20; ++i)
-                                            {
-                                                miBarrerita.SignalAndWait();
-                                            }
-                                        }
-                                        //subir bloque a mi cache
-                                        encache_inst2[posicionCache] = bloque;
-                                        posicionCache = posicionCache * 4;
-                                        for (int i = 0; i < 4; ++i)
-                                        {
-                                            //pasa las 4 palabras MIPS a la cache_inst
-                                            cache_inst2[posicionCache + i] = memNoComp2[direccion + i];
-                                        }
-                                    }
-                                    switch (numDir)
-                                    {
-                                        case 1:
-                                            estadoDir1[posicionDir] = 'C';
-                                            ubicacionDir1[posicionDir * 3] = true;
-                                            break;
-                                        case 2:
-                                            break;
-                                        case 3:
-                                            break;
-                                    }
-                                    //soltar directorio
-                                    //soltar cache
-                                }
 
-                            }
-                        }
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        break;
-                }
-            }
-            return false;*/
-            return true;
-        }
 
         public static bool escribirBloqueEnMem(int bloque, int numcache,int posicion, bool esLoad, bool reemplazo)
         {
