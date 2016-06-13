@@ -856,6 +856,7 @@ namespace Proyecto
                                     }
                                     //soltar directorio
                                     //soltar cache
+                                    Monitor.Exit(cache_datos1);
                                 }
                             }
                         }
@@ -988,6 +989,7 @@ namespace Proyecto
                                     }
                                     //soltar directorio
                                     //soltar cache
+                                    Monitor.Exit(cache_datos2);
                                 }
                             }
                         }
@@ -1120,6 +1122,7 @@ namespace Proyecto
                                     }
                                     //soltar directorio
                                     //soltar cache
+                                    Monitor.Exit(cache_datos3);
                                 }
                             }
                         }
