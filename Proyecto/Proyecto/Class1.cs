@@ -676,6 +676,10 @@ namespace Proyecto
             bool solicitudDeBloqueo = false;
             bool terminoDos = false;
             //int numDir = bloque / 8;
+
+
+            indice = bloque % cant_bytes_palabra;
+
             while (termino == false)
             { 
                 //Busca acceder a la cache correspondiente
@@ -684,11 +688,7 @@ namespace Proyecto
                     case 1:
                         if (Monitor.TryEnter(cache_datos1))
                         {
-
-                            //Una vez obtenida la cache
-                            indice = bloque % cant_bytes_palabra;
-
-
+                           
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos1[indice] == temporal[1] && estadoCache1[indice] == 'M' )
                             {
@@ -733,18 +733,33 @@ namespace Proyecto
 
                                                         }
 
-                                                        //PREGUNTAR SI BLOQUE ESTA MODIFICADO EN OTRA CACHE
-                                                        switch (temporal[0])
-                                                        {
-                                                            case 1:
 
-                                                                break;
-                                                            case 2:
-                                                                break;
-                                                            case 3:
-                                                                break;
+                                                        //preguntar si bloque esta modificado en otra cache
+                                                        if(dir1[temporal[1]*5+temporal[0]]=='M'){
+
+                                                            solicitudDeBloqueo = escribirBloqueEnMem(bloque,temporal[0], indice, false,false);
+                                                            if(solicitudDeBloqueo == false){
+                                                                Monitor.Exit(dir1);
+                                                                Monitor.Exit(cache_datos1);
+                                                                miBarrerita.SignalAndWait();
+                                                            }
+                                                            else
+                                                            {
+
+                                                                dir1[temporal[1] * 5 + temporal[0]] = 'M';
+                                                                ///
+
+                                                                ////
+
+
+                                                                ////
+
+
+
+                                                            }
+
+
                                                         }
-
                                                         
 
 
@@ -761,6 +776,13 @@ namespace Proyecto
                                                     break;
 
                                             }
+                                        }
+                                        else
+                                        {
+                                            termino = false;
+                                            terminoDos = false;
+                                            Monitor.Exit(cache_datos1);
+                                            miBarrerita.SignalAndWait();
                                         }
 
 
