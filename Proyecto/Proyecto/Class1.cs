@@ -606,12 +606,26 @@ namespace Proyecto
                 case 35: //LW
                     //segundoRegistro;
                     cache_Load(procesador, segundoRegistro);
+                    //Lee de la cache
                     break;
                 case 50: //LL
                     cache_Load(procesador, segundoRegistro);
-                    guardarEn = pos_rl;
+                    //guardarEn = cac;
+                    //Lee de la cache
                     resultado = segundoRegistro;
                     LLactivo1[procesador / 3] = true;
+                    switch (procesador)
+                    {
+                        case 1:
+                            procesador1[pos_rl] = segundoRegistro;
+                            break;
+                        case 2:
+                            procesador2[pos_rl] = segundoRegistro;
+                            break;
+                        case 3:
+                            procesador3[pos_rl] = segundoRegistro;
+                            break;
+                    }
                     break;
                 case 51: //SC
 
