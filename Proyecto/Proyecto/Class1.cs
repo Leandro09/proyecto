@@ -557,7 +557,7 @@ namespace Proyecto
             {
                 case 1:
                     primerRegistro = procesador1[primerRegistro];
-                    if (codigo != 8)//Si es el 8 no cambia nada porque el segundo registro del DADDI es en que registro se guardara el resultado
+                    if ((codigo != 8) && (codigo != 35) && (codigo != 50))//Si es el 8 no cambia nada porque el segundo registro del DADDI es en que registro se guardara el resultado
                     {
                         segundoRegistro = procesador1[segundoRegistro];
                     }
@@ -565,7 +565,7 @@ namespace Proyecto
                 case 2:
                     primerRegistro = procesador2[primerRegistro];
                     //Si es el 8 no cambia nada porque el segundo registro del DADDI es en que registro se guardara el resultado
-                    if (codigo != 8)
+                    if ((codigo != 8) && (codigo != 35) && (codigo != 50))
                     {
                         segundoRegistro = procesador2[segundoRegistro];
                     }
@@ -574,7 +574,7 @@ namespace Proyecto
                 case 3:
                     primerRegistro = procesador3[primerRegistro];
                     //Si es el 8 no cambia nada porque el segundo registro del DADDI es en que registro se guardara el resultado
-                    if (codigo != 8)
+                    if ((codigo != 8) && (codigo != 35) && (codigo != 50))
                     {
                         segundoRegistro = procesador3[segundoRegistro];
                     }
@@ -642,7 +642,7 @@ namespace Proyecto
                 case 35: //LW
                     //segundoRegistro;
                     //int bloque = direccion / 16;
-                    int direccion = segundoRegistro + ultimaParte;
+                    int direccion = primerRegistro + ultimaParte;
                     int bloque = direccion / 16;
                     int posicionCache = bloque / 4;
                     //int posicionDir = bloque % 8;
@@ -675,35 +675,50 @@ namespace Proyecto
                     }
                     guardarEn = primerRegistro;
                     resultado = bloqueSol[palabra];*/
-                    guardarEn = primerRegistro;
-                    resultado = cache_datos3[palabra];
+                    guardarEn = segundoRegistro;
+                    //resultado = cache_datos3[palabra];
+                    switch (procesador)
+                    {
+                        case 1:
+                            resultado = cache_datos1[palabra];
+                            break;
+                        case 2:
+                            resultado = cache_datos2[palabra];
+                            break;
+                        case 3:
+                            resultado = cache_datos3[palabra];
+                            break;
+                    }
                     //Lee de la cache
                     break;
                 case 50: //LL
-                    int direccion1 = segundoRegistro + ultimaParte;
+                    int direccion1 = primerRegistro + ultimaParte;
                     int bloque1 = direccion1 / 16;
                     int posicionCache1 = bloque1 % 4;
                     int palabra1 = bloque1 % 16;
                     //int posicionDir1 = bloque1 % 8;
                     //int numDir1 = (bloque1 / 8) + 1;
                     int direccionBloque1 = bloque1 * 16;
-                    cache_Load(procesador, direccionBloque1,posicionCache1,bloque1,segundoRegistro);
-                    guardarEn = primerRegistro;
-                    resultado = cache_datos3[palabra1];
+                    cache_Load(procesador, direccionBloque1,posicionCache1,bloque1,direccion1);
+                    guardarEn = segundoRegistro;
+                    //resultado = cache_datos3[palabra1];
                     //guardarEn = cac;
                     //Lee de la cache
-                    resultado = segundoRegistro;
+                    //resultado = direccion1;
                     LLactivo1[procesador / 3] = true;
                     switch (procesador)
                     {
                         case 1:
-                            procesador1[pos_rl] = segundoRegistro;
+                            procesador1[pos_rl] = direccion1;
+                            resultado = cache_datos1[palabra1];
                             break;
                         case 2:
-                            procesador2[pos_rl] = segundoRegistro;
+                            procesador2[pos_rl] = direccion1;
+                            resultado = cache_datos2[palabra1];
                             break;
                         case 3:
-                            procesador3[pos_rl] = segundoRegistro;
+                            procesador3[pos_rl] = direccion1;
+                            resultado = cache_datos3[palabra1];
                             break;
                     }
                     break;
