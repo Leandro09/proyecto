@@ -33,6 +33,7 @@ namespace Proyecto
         static int pos_rl = 38;
         static int cant_cache_datos = 16;
         static int cant_campos_directorio = 40;
+        static int cant_bloques_directorio = 8;
         static int cant_campos_ubicacion_directorio = 24;
 
 
@@ -351,20 +352,46 @@ namespace Proyecto
                 encache_datos2[i] = -1;
                 encache_datos3[i] = -1;
             }
-
+            /*
+            int f = 256 * 256;
+            for (int i = 0; i < cant_memComp; ++i)
+            {
+                memComp1[i] = i;
+                memComp2[i] = i*256;
+                memComp3[i] = i*f;
+            }
+            */
             for (int i = 0; i < cant_memComp; ++i)
             {
                 memComp1[i] = 1;
                 memComp2[i] = 1;
                 memComp3[i] = 1;
             }
-
-            for (int i = 0; i < cant_campos_directorio; i= i+5)
+            for (int i = 0; i < cant_bloques_directorio; ++i)
             {
-                   dir1[i] = 'U';
-                   dir2[i] = 'U';
-                   dir3[i] = 'U';
+                int g = i * 5;
+                dir1[i] = Convert.ToChar(i);
+                dir2[i] = Convert.ToChar(i + 8);
+                dir3[i] = Convert.ToChar(i + 16);
+                dir1[g+1] = 'U';
+                dir2[g+1] = 'U';
+                dir3[g+1] = 'U';
+                dir1[g + 2] = '0';
+                dir2[g + 2] = '0';
+                dir3[g + 2] = '0';
+                dir1[g + 3] = '0';
+                dir2[g + 3] = '0';
+                dir3[g + 3] = '0';
+                dir1[g + 4] = '0';
+                dir2[g + 4] = '0';
+                dir3[g + 4] = '0';
             }
+            /*for (int i = 1; i < cant_bloques_directorio; ++i)
+            {
+                dir1[i] = 'U';
+                dir2[i] = 'U';
+                dir3[i] = 'U';
+            }*/
 
             for (int i = 0; i < cant_encache_datos; ++i)
             {
@@ -382,6 +409,15 @@ namespace Proyecto
 
 
         }
+        /*
+        public static void pruebaLW1()
+        {
+            int r = 0;
+            for (int i = 1; i < 32; ++i)
+            {
+                ;
+            }
+        }*/
         //int[] pertenece = new int[12];
         String[] path = new String[12];
         // metodo para realizar la lectura de las instrucciones
@@ -606,17 +642,20 @@ namespace Proyecto
                 case 35: //LW
                     //segundoRegistro;
                     //int bloque = direccion / 16;
-                    int bloque = segundoRegistro / 16;
+                    int direccion = segundoRegistro + ultimaParte;
+                    int bloque = direccion / 16;
                     int posicionCache = bloque / 4;
                     //int posicionDir = bloque % 8;
                     //int numDir = (bloque / 8) + 1;
                     int direccionBloque = bloque * 16;
                     int palabra = bloque % 16;
-                    cache_Load(procesador, direccionBloque,posicionCache,bloque,segundoRegistro);
+                    
+                    cache_Load(procesador, direccionBloque,posicionCache,bloque,direccion);
                     /*
                     int[] bloqueSol = new int[4]; 
                     switch (procesador)
                     {
+                     * 
                         case 1:
                             for(int i = 0;i<4;++i){
                                 bloqueSol[posicionCache*4+i] = cache_datos1[posicionCache];
@@ -641,7 +680,8 @@ namespace Proyecto
                     //Lee de la cache
                     break;
                 case 50: //LL
-                    int bloque1 = segundoRegistro / 16;
+                    int direccion1 = segundoRegistro + ultimaParte;
+                    int bloque1 = direccion1 / 16;
                     int posicionCache1 = bloque1 % 4;
                     int palabra1 = bloque1 % 16;
                     //int posicionDir1 = bloque1 % 8;
