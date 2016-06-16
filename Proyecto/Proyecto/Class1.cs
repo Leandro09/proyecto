@@ -36,21 +36,21 @@ namespace Proyecto
         static int cant_campos_ubicacion_directorio = 24;
 
 
-        //Varibles indispensables para la implementacion de la simulacion debido a que son muy significativas
-        //Varible que almacena el valor del reloj
+        //Varibles indispensables para la implementacion de la simulacion debido a que son muy significativas.
+        //Varible que almacena el valor del reloj.
         static int reloj = 1;
         
         //Almacena el quantum ingresado por el usuario.
         static int quantum = 0;
 
-        //Para llevar un mejor control del quantum
-        //Dice cuantos ciclos de reloj lleva corriendo el hilillo que esta en el procesador actualmente
+        //Para llevar un mejor control del quantum.
+        //Dice cuantos ciclos de reloj lleva corriendo el hilillo que esta en el procesador actualmente.
         static int contadorProcesador1 = 0;
         static int contadorProcesador2 = 0;
         static int contadorProcesador3 = 0;
 
-        //Banderas de LL activo de cada procesador
-        //1 es el proc 1, 2 es el proc 2 y 0 es el proc 3
+        //Banderas de LL activo de cada procesador.
+        //1 es el proc 1, 2 es el proc 2 y 0 es el proc 3.
         static bool[] LLactivo1 = new bool[3];
 
         //Caché de instrucciones de los procesadores.
@@ -58,7 +58,7 @@ namespace Proyecto
         static int[] cache_inst2 = new int[64];
         static int[] cache_inst3 = new int[64];
 
-        //Cual es el bloque que esta en la caché de instrucciones en esa posicion.
+        //Cual es el bloque que esta en la caché de instrucciones en esa posición.
         static int[] encache_inst1 = new int[4];
         static int[] encache_inst2 = new int[4];
         static int[] encache_inst3 = new int[4];
@@ -67,49 +67,49 @@ namespace Proyecto
         static int[] cache_datos1 = new int[16];
         static int[] cache_datos2 = new int[16];
         static int[] cache_datos3 = new int[16];
-        //Cual es el bloque que esta en la caché de instrucciones en esa posicion.
+        //Cual es el bloque que esta en la caché de instrucciones en esa posición.
         static int[] encache_datos1 = new int[4];
         static int[] encache_datos2 = new int[4];
         static int[] encache_datos3 = new int[4];
-        //Almacena los estados de los directorios
+        //Almacena los estados de los directorios.
         static char[] estadoCache1 = new char[4];
         static char[] estadoCache2 = new char[4];
         static char[] estadoCache3 = new char[4]; 
 
-        //Memoria compartida
+        //Memoria compartida.
         static int[] memComp1 = new int[128];
         static int[] memComp2 = new int[128];
         static int[] memComp3 = new int[128];
 
-        //Memoria no compartida de cada procesador
+        //Memoria no compartida de cada procesador.
         static int[] memNoComp1 = new int[256];
         static int[] memNoComp2 = new int[256];
         static int[] memNoComp3 = new int[256];
 
-        /// estructuras para observar los recursos del procesador
-        static int[] procesador1 = new int[39];        //En la posición 32 se encuentra el PC
+        /// estructuras para observar los recursos del procesador.
+        static int[] procesador1 = new int[39];        //En la posición 32 se encuentra el PC.
         static int[] procesador2 = new int[39];
-        static int[] procesador3 = new int[39];         //En la posicion 37 va el nombre del HILILLO al que pertenece este contexto
+        static int[] procesador3 = new int[39];         //En la posicion 37 va el nombre del HILILLO al que pertenece este contexto.
 
 
 
-        /// colas para los contextos de los hilillos
+        ///Colas para los contextos de los hilillos.
         static Queue contextoProcesador1 = new Queue();
         static Queue contextoProcesador2 = new Queue();
         static Queue contextoProcesador3 = new Queue();
 
 
-        //colas para resultados de los hilillos
+        //colas para resultados de los hilillos.
         static Queue terminadosProcesador1 = new Queue();
         static Queue terminadosProcesador2 = new Queue();
         static Queue terminadosProcesador3 = new Queue();
 
-        //Delegados de cada proceso 
+        //Delegados de cada proceso. 
         static ThreadStart delegado_proceso_1 = new ThreadStart(nombrarHilo1);
         static ThreadStart delegado_proceso_2 = new ThreadStart(nombrarHilo2);
         static ThreadStart delegado_proceso_3 = new ThreadStart(nombrarHilo3);
 
-        //Los hilos que simularán los procesos en cuestión 
+        //Los hilos que simularán los procesos en cuestión.
         Thread proceso_1 = new Thread(delegado_proceso_1);
         Thread proceso_2 = new Thread(delegado_proceso_2);
         Thread proceso_3 = new Thread(delegado_proceso_3);
@@ -122,7 +122,7 @@ namespace Proyecto
         static char[] dir2 = new char[40];
         static char[] dir3 = new char[40]; 
  
-        //Contiene la ubicación de los bloques en las caché
+        //Contiene la ubicación de los bloques en las caché.
         /*static bool[] ubicacionDir1 = new bool[24];
         static bool[] ubicacionDir2 = new bool[24];
         static bool[] ubicacionDir3 = new bool[24];*/
@@ -137,7 +137,7 @@ namespace Proyecto
             //Lee y acomoda en memoria las instrucciones de los hilillos.
             leeArchivos();
             Thread.CurrentThread.Name = "0";
-            //se crean loc hilos que van a actuar como procesadores en esta simulacion
+            //Se crean los hilos que van a actuar como procesadores en esta simulación.
             proceso_1.Start();
             proceso_2.Start();
             proceso_3.Start();
@@ -147,7 +147,7 @@ namespace Proyecto
             //Agregar método para desplegar resultados.
         }
 
-        //Se encarga de finalizar la ejecucion de un hilillo
+        //Se encarga de finalizar la ejecucion de un hilillo.
         public static void finalizarEjecucion(int id_hilo)
         {
             if (id_hilo == 1)
@@ -158,12 +158,12 @@ namespace Proyecto
                     //si hay un fin, este sea o no el ultimo hilillo ejecutandose en este procesador
                     //debemos guardar sus resultados
 
-                    miBarrerita.RemoveParticipant();//Un participante menos a esperar en la barrera
-                    procesador1[35] = reloj;//tiempo en que finalizo el hilillo
-                    terminadosProcesador1.Enqueue(procesador1);//Cola de terminados
-                    procesador1[pos_pc] = 0;//Limpiamos el valor del pc en el procesador
-                    --hilosCorriendo;//Hay un hilo menos que esta corriendo
-                    Thread.CurrentThread.Abort();//Abortamos el hilo actual
+                    miBarrerita.RemoveParticipant();//Un participante menos a esperar en la barrera.
+                    procesador1[35] = reloj;//tiempo en que finalizo el hilillo.
+                    terminadosProcesador1.Enqueue(procesador1);//Cola de terminados.
+                    procesador1[pos_pc] = 0;//Limpiamos el valor del pc en el procesador.
+                    --hilosCorriendo;//Hay un hilo menos que esta corriendo.
+                    Thread.CurrentThread.Abort();//Abortamos el hilo actual.
 
                 }
                 else
@@ -1166,7 +1166,7 @@ namespace Proyecto
             int posicionDir = temporal[1]*5;
             bool termino = false;                               //Controla si se logró acceder al directorio de la caché.
             int indice = 0;
-            bool solicitudDeBloqueo = false;
+            bool solicitudDeBloque = false;
             bool terminoDos = false;
             //int numDir = bloque / 8;
 
@@ -1176,14 +1176,14 @@ namespace Proyecto
             while (termino == false)
             { 
                 //Busca acceder a la cache correspondiente
-                switch(temporal[0])
+                switch(procesador)
                 {
                     case 1:
-                        if (Monitor.TryEnter(cache_datos1))
+                        if (Monitor.TryEnter(cache_datos1) && Monitor.TryEnter(estadoCache1))
                         {
                            
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
-                            if (encache_datos1[indice] == temporal[1] && estadoCache1[indice] == 'M' )
+                            if (encache_datos1[indice] == bloque && estadoCache1[indice] == 'M' )
                             {
                                 return true;
 
@@ -1192,12 +1192,12 @@ namespace Proyecto
                             {
                                 // bloque victima esta modificado
 
-                                while (terminoDos)
-                                {
+                               // while (terminoDos)
+                               // {
                                     if (estadoCache1[indice] == 'M')
                                     {
-                                        solicitudDeBloqueo = escribirBloqueEnMem(bloque, temporal[0], indice, false, true);
-                                        if (solicitudDeBloqueo)
+                                        solicitudDeBloque = escribirBloqueEnMem(bloque, procesador, indice, false, true);     //
+                                        if (solicitudDeBloque)
                                         {
 
                                             switch (temporal[0])
@@ -1228,26 +1228,22 @@ namespace Proyecto
 
 
                                                         //preguntar si bloque esta modificado en otra cache
-                                                        if(dir1[temporal[1]*5+temporal[0]]=='M'){
+                                                        if(dir1[temporal[1]*5+1]=='M'){
 
-                                                            solicitudDeBloqueo = escribirBloqueEnMem(bloque,temporal[0], indice, false,false);
-                                                            if(solicitudDeBloqueo == false){
+                                                            solicitudDeBloque = escribirBloqueEnMem(bloque,temporal[0], indice, false,false);
+                                                            if(solicitudDeBloque == false){
                                                                 Monitor.Exit(dir1);
                                                                 Monitor.Exit(cache_datos1);
+                                                                Monitor.Exit(estadoCache1);
                                                                 miBarrerita.SignalAndWait();
                                                             }
                                                             else
                                                             {
 
-                                                                dir1[temporal[1] * 5 + temporal[0]] = 'M';
-                                                                ///
-
-                                                                ////
-
-
-                                                                ////
-
-
+                                                                dir1[temporal[1] * 5 + 1] = 'M';
+                                                                Monitor.Exit(dir1);
+                                                                Monitor.Exit(cache_datos1);
+                                                                Monitor.Exit(estadoCache1);
 
                                                             }
 
@@ -1260,6 +1256,9 @@ namespace Proyecto
                                                     {
                                                         termino = false;
                                                         terminoDos = false;
+                                                        Monitor.Exit(cache_datos1);
+                                                        Monitor.Exit(estadoCache1);
+                                                        miBarrerita.SignalAndWait();
                                                     }
 
                                                     break;
@@ -1275,6 +1274,7 @@ namespace Proyecto
                                             termino = false;
                                             terminoDos = false;
                                             Monitor.Exit(cache_datos1);
+                                            Monitor.Exit(estadoCache1);
                                             miBarrerita.SignalAndWait();
                                         }
 
@@ -1282,17 +1282,34 @@ namespace Proyecto
                                     }
                                     else
                                     {
-                                        // no hace nada
+                                        if (Monitor.TryEnter(dir1))
+                                        {
+                                            if (dir1[5 * temporal[1] + 1] == 'C')
+                                            {
+
+                                            }
+                                            else 
+                                            {
+
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Monitor.Exit(cache_datos1);
+                                            Monitor.Exit(estadoCache1);
+                                            termino = false;
+                                        }
                                     }
 
                                 }
                                 return true;
-                            }
+                            //}
                             
                         }
                         else
                         {
-                            miBarrerita.SignalAndWait(); 
+                            miBarrerita.SignalAndWait();
+                            termino = false;
                         }
                         break;
                     case 2:
