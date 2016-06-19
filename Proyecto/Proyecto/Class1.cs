@@ -1630,9 +1630,225 @@ namespace Proyecto
 
 
 
-        public static bool escribirBloqueEnMem(int bloque, int numcache,int posicion, bool esLoad, bool reemplazo)
+        public static bool escribirBloqueEnMem(int bloque, int numOtraCache, int numMiCache, int posicion, bool esLoad, bool reemplazo)
         {
+            //Obtiene el directorio a utilizar y el número de bloque de la caché en ese procesador.
+            //int[] temporal = obtener_num_estruct(bloque);
+
+            if (reemplazo)
+            {
+                switch (numMiCache)
+                {
+                    case 1:
+                        //Intenta entrar al directorio correspondiente
+                        if (Monitor.TryEnter(dir1))
+                        {
+                            guardaEnMemoria(true, 'I', bloque, numMiCache, true);
+                        }
+                        else
+                            return false;
+                        Monitor.Exit(cache_datos1);
+                        break;
+                    case 2:
+                        if (Monitor.TryEnter(dir2))
+                        {
+                            guardaEnMemoria(true, 'I', bloque, numMiCache, true);
+                        }
+                        else
+                            return false;
+                        Monitor.Exit(cache_datos2);
+                        break;
+                    case 3:
+                        if (Monitor.TryEnter(dir3))
+                        {
+                            guardaEnMemoria(true, 'I', bloque, numMiCache, true);
+                        }
+                        else
+                            return false;
+                        Monitor.Exit(cache_datos3);
+                        break;
+                }
+            }
+            else
+            {
+                //Accede a la caché que necesita utilizar
+                switch (numOtraCache)
+                {
+                    case 1:
+                        //Intenta entrar a la caché correspondiente
+                        if (Monitor.TryEnter(cache_datos1))
+                        {
+                            //Si es un store
+                            if (!esLoad)
+                            {
+                                guardaEnMemoria(true, 'I', bloque, numOtraCache, false);
+                            }
+                            else
+                            {
+                                guardaEnMemoria(true, 'C', bloque, numOtraCache, false);
+                            }
+                        }
+                        else
+                            return false;
+                        Monitor.Exit(cache_datos1);
+                        break;
+                    case 2:
+                        if (Monitor.TryEnter(cache_datos2))
+                        {
+                            //Si es un store
+                            if (!esLoad)
+                            {
+                                guardaEnMemoria(true, 'I', bloque, numMiCache, false);
+                            }
+                            else
+                            {
+                                guardaEnMemoria(true, 'C', bloque, numOtraCache, false);
+                            }
+                        }
+                        else
+                            return false;
+                        Monitor.Exit(cache_datos2);
+                        break;
+                    case 3:
+                        if (Monitor.TryEnter(cache_datos3))
+                        {
+                            //Si es un store
+                            if (!esLoad)
+                            {
+                                guardaEnMemoria(true, 'I', bloque, numOtraCache, false);
+                            }
+                            else
+                            {
+                                guardaEnMemoria(true, 'C', bloque, numOtraCache, false);
+                            }
+                        }
+                        else
+                            return false;
+                        Monitor.Exit(cache_datos3);
+                        break;
+                }
+            }
+
             return false;
+        }
+
+        //Guarda en memoria si es necesario local o remotamente.
+        public static bool guardaEnMemoria(bool reemplazo, char estado_memoria, int bloque, int procesador, bool etapa_izquierda)
+        {
+            //Obtiene el directorio a utilizar y el número de bloque de la caché en ese procesador.
+            int[] temporal = obtener_num_estruct(bloque);
+
+            //Falta lo de poner estado en la otra caché.
+
+            //Si el bloque de memoria es del procesador x, el directorio debe de pertenecer a al mismo procesador.
+            if (procesador == temporal[0]) //Cambiar por: 
+            {
+                //Guarda en memoria.
+                //Sincroniza el ciclo de reloj.
+                for (int i = 0; i < 16; ++i)
+                {
+                    miBarrerita.SignalAndWait();
+                }
+                reloj = reloj + 16;
+                //Poner en el directorio en que cache se ubica ese bloque y quitarlo de donde estaba antes(el directorio al que corresponde el bloque).
+                if (!etapa_izquierda)
+                {
+                    switch (procesador)
+                    {
+                        case 1:
+                            //Intenta entrar al directorio correspondiente
+                            if (Monitor.TryEnter(dir1))
+                            {
+
+                            }
+                            else
+                                return false;
+                            Monitor.Exit(cache_datos1);
+                            break;
+                        case 2:
+                            if (Monitor.TryEnter(dir2))
+                            {
+
+                            }
+                            else
+                                return false;
+                            Monitor.Exit(cache_datos2);
+                            break;
+                        case 3:
+                            if (Monitor.TryEnter(dir3))
+                            {
+
+                            }
+                            else
+                                return false;
+                            Monitor.Exit(cache_datos3);
+                            break;
+                    }
+                }
+                //Sincroniza el ciclo de reloj.
+                for (int i = 0; i < 2; ++i)
+                {
+                    miBarrerita.SignalAndWait();
+                }
+                reloj = reloj + 2;
+            }
+            else
+            {
+                //Sincroniza el ciclo de reloj.
+                for (int i = 0; i < 32; ++i)
+                {
+                    miBarrerita.SignalAndWait();
+                }
+                reloj = reloj + 32;
+                //Cambia el directorio.
+                if (!etapa_izquierda)
+                {
+                    switch (procesador)
+                    {
+                        case 1:
+                            //Intenta entrar al directorio correspondiente
+                            if (Monitor.TryEnter(dir1))
+                            {
+
+                            }
+                            else
+                                return false;
+                            Monitor.Exit(cache_datos1);
+                            break;
+                        case 2:
+                            if (Monitor.TryEnter(dir2))
+                            {
+
+                            }
+                            else
+                                return false;
+                            Monitor.Exit(cache_datos2);
+                            break;
+                        case 3:
+                            if (Monitor.TryEnter(dir3))
+                            {
+
+                            }
+                            else
+                                return false;
+                            Monitor.Exit(cache_datos3);
+                            break;
+                    }
+                }
+                //Sincroniza el ciclo de reloj.
+                for (int i = 0; i < 4; ++i)
+                {
+                    miBarrerita.SignalAndWait();
+                }
+                reloj = reloj + 4;
+            }
+            //Si el procesador debe de subirlo a su propia caché.
+            if (!reemplazo)
+            {
+
+            }
+
+            return true;
         }
 
         public static bool reemplazarBloqueCompartido(int procesador, int direccion)
