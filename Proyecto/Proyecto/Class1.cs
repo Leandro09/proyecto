@@ -1354,7 +1354,7 @@ namespace Proyecto
                                // {
                                     if (estadoCache1[indice] == 'M')
                                     {
-                                        solicitudDeBloque = escribirBloqueEnMem(bloque, procesador, indice, false, true);     //
+                                        solicitudDeBloque = escribirBloqueEnMem(bloque, procesador, procesador, indice, false, true);     //
                                         if (solicitudDeBloque)
                                         {
 
@@ -1439,7 +1439,7 @@ namespace Proyecto
                                 // {
                                 if (estadoCache2[indice] == 'M')
                                 {
-                                    solicitudDeBloque = escribirBloqueEnMem(bloque, procesador, indice, false, true);     //
+                                    solicitudDeBloque = escribirBloqueEnMem(bloque, procesador,procesador, indice, false, true);     //
                                     if (solicitudDeBloque)
                                     {
 
@@ -1529,7 +1529,7 @@ namespace Proyecto
                                 // {
                                 if (estadoCache3[indice] == 'M')
                                 {
-                                    solicitudDeBloque = escribirBloqueEnMem(bloque, procesador, indice, false, true);     //
+                                    solicitudDeBloque = escribirBloqueEnMem(bloque, procesador, procesador, indice, false, true);     //
                                     if (solicitudDeBloque)
                                     {
 
