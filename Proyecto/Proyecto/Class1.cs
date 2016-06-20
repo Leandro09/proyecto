@@ -1643,7 +1643,7 @@ namespace Proyecto
                         //Intenta entrar al directorio correspondiente
                         if (Monitor.TryEnter(dir1))
                         {
-                            guardaEnMemoria(true, 'I', bloque, numMiCache);
+                            guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
                         }
                         else
                             return false;
@@ -1652,7 +1652,7 @@ namespace Proyecto
                     case 2:
                         if (Monitor.TryEnter(dir2))
                         {
-                            guardaEnMemoria(true, 'I', bloque, numMiCache);
+                            guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
                         }
                         else
                             return false;
@@ -1661,7 +1661,7 @@ namespace Proyecto
                     case 3:
                         if (Monitor.TryEnter(dir3))
                         {
-                            guardaEnMemoria(true, 'I', bloque, numMiCache);
+                            guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
                         }
                         else
                             return false;
@@ -1681,11 +1681,11 @@ namespace Proyecto
                             //Si es un store
                             if (!esLoad)
                             {
-                                guardaEnMemoria(true, 'I', bloque, numOtraCache, numMiCache);
+                                guardaEnMemoria(true, 'I', bloque, numOtraCache,esLoad, numMiCache);
                             }
                             else
                             {
-                                guardaEnMemoria(true, 'C', bloque, numOtraCache, numMiCache);
+                                guardaEnMemoria(true, 'C', bloque, numOtraCache,esLoad, numMiCache);
                             }
                         }
                         else
@@ -1698,11 +1698,11 @@ namespace Proyecto
                             //Si es un store
                             if (!esLoad)
                             {
-                                guardaEnMemoria(true, 'I', bloque, numOtraCache, numMiCache);
+                                guardaEnMemoria(true, 'I', bloque, numOtraCache,esLoad, numMiCache);
                             }
                             else
                             {
-                                guardaEnMemoria(true, 'C', bloque, numOtraCache, numMiCache);
+                                guardaEnMemoria(true, 'C', bloque, numOtraCache,esLoad, numMiCache);
                             }
                         }
                         else
@@ -1715,11 +1715,11 @@ namespace Proyecto
                             //Si es un store
                             if (!esLoad)
                             {
-                                guardaEnMemoria(true, 'I', bloque, numOtraCache, numMiCache);
+                                guardaEnMemoria(true, 'I', bloque, numOtraCache,esLoad, numMiCache);
                             }
                             else
                             {
-                                guardaEnMemoria(true, 'C', bloque, numOtraCache, numMiCache);
+                                guardaEnMemoria(true, 'C', bloque, numOtraCache, esLoad ,numMiCache);
                             }
                         }
                         else
@@ -1733,13 +1733,13 @@ namespace Proyecto
         }
 
         //Guarda en memoria si es necesario local o remotamente. La variable procesador contiene el número de la caché.
-        public static bool guardaEnMemoria(bool reemplazo, char estado_memoria, int bloque, int procesador, int cache = -1)
+        public static bool guardaEnMemoria(bool reemplazo, char estado_memoria, int bloque, int procesador, bool esLoad, int cache = -1)
         {
             //Obtiene el directorio a utilizar y el número de bloque en el directorio en ese procesador.
             int[] temporal = obtener_num_estruct(bloque);
             int pos_memoria = 0;
             int pos_memoria_2 = 0;
-            int indice = bloque / 4;
+            int indice = bloque % 4;
             pos_memoria = bloque / 8;
             pos_memoria = pos_memoria * 16;     //Para sacar la dirección en donde comienza el bloque en memoria.
 
@@ -1800,8 +1800,11 @@ namespace Proyecto
                     case 1:
                         if (!reemplazo)
                         {
-                            //Cambia los directorios cuando es local.
-                            dir1[temporal[1]*5 + 1] = 'M';
+                            //Cambia los directorios cuando es local, además verifica si es un load o store para colocar el estado.
+                            if (esLoad)
+                                dir1[temporal[1]*5 + 1] = 'C';
+                            else
+                                dir1[temporal[1] * 5 + 1] = 'M';
                             if (cache == 1)             //Cache indica en que caché va a estar de ahora en adelante.
                             {
                                 dir1[temporal[1] * 5 + 2] = '1';
@@ -1834,8 +1837,11 @@ namespace Proyecto
                     case 2:
                         if (!reemplazo)
                         {
-                            //Cambia los directorios cuando es local.
-                            dir2[temporal[1] * 5 + 1] = 'M';
+                            //Cambia los directorios cuando es local, además verifica si es un load o store para colocar el estado.
+                            if (esLoad)
+                                dir2[temporal[1] * 5 + 1] = 'C';
+                            else
+                                dir2[temporal[1] * 5 + 1] = 'M';
                             if (cache == 1)
                             {
                                 dir2[temporal[1] * 5 + 2] = '1';
@@ -1870,8 +1876,11 @@ namespace Proyecto
                     case 3:
                         if (!reemplazo)
                         {
-                            //Cambia los directorios cuando es local.
-                            dir3[temporal[1] * 5 + 1] = 'M';
+                            //Cambia los directorios cuando es local, además verifica si es un load o store para colocar el estado.
+                            if (esLoad)
+                                dir3[temporal[1] * 5 + 1] = 'C';
+                            else
+                                dir3[temporal[1] * 5 + 1] = 'M';
                             if (procesador == 1)
                             {
                                 dir3[temporal[1] * 5 + 2] = '1';
@@ -1974,8 +1983,12 @@ namespace Proyecto
 
                         if (!reemplazo)
                         {
-                            //Cambia los directorios cuando es local.
-                            dir1[temporal[1] * 5 + 1] = 'M';
+
+                            //Cambia los directorios cuando es local, además verifica si es un load o store para colocar el estado.
+                            if (esLoad)
+                                dir1[temporal[1] * 5 + 1] = 'C';
+                            else
+                                dir1[temporal[1] * 5 + 1] = 'M';
                             if (cache == 1)
                             {
                                 dir1[temporal[1] * 5 + 2] = '1';
@@ -2008,9 +2021,83 @@ namespace Proyecto
                         break;
                     case 2:
 
+
+                        if (!reemplazo)
+                        {
+
+                            //Cambia los directorios cuando es local, además verifica si es un load o store para colocar el estado.
+                            if (esLoad)
+                                dir2[temporal[1] * 5 + 1] = 'C';
+                            else
+                                dir2[temporal[1] * 5 + 1] = 'M';
+                            if (cache == 1)
+                            {
+                                dir2[temporal[1] * 5 + 2] = '1';
+                                dir2[temporal[1] * 5 + 3] = '0';
+                                dir2[temporal[1] * 5 + 4] = '0';
+                            }
+                            else if (cache == 2)
+                            {
+                                dir2[temporal[1] * 5 + 2] = '0';
+                                dir2[temporal[1] * 5 + 3] = '1';
+                                dir2[temporal[1] * 5 + 4] = '0';
+                            }
+                            else
+                            {
+                                dir2[temporal[1] * 5 + 2] = '0';
+                                dir2[temporal[1] * 5 + 3] = '0';
+                                dir2[temporal[1] * 5 + 4] = '1';
+                            }
+                        }
+                        else
+                        {
+                            //Cambia los directorios cuando es local y ninguna caché tendrá el bloque (porque es un reemplazo).
+                            dir2[temporal[1] * 5 + 1] = 'U';
+                            dir2[temporal[1] * 5 + 2] = '0';
+                            dir2[temporal[1] * 5 + 3] = '0';
+                            dir2[temporal[1] * 5 + 4] = '0';
+
+                        }
+
                         break;
                     case 3:
 
+                        if (!reemplazo)
+                        {
+
+                            //Cambia los directorios cuando es local, además verifica si es un load o store para colocar el estado.
+                            if (esLoad)
+                                dir3[temporal[1] * 5 + 1] = 'C';
+                            else
+                                dir3[temporal[1] * 5 + 1] = 'M';
+                            if (cache == 1)
+                            {
+                                dir3[temporal[1] * 5 + 2] = '1';
+                                dir3[temporal[1] * 5 + 3] = '0';
+                                dir3[temporal[1] * 5 + 4] = '0';
+                            }
+                            else if (cache == 2)
+                            {
+                                dir3[temporal[1] * 5 + 2] = '0';
+                                dir3[temporal[1] * 5 + 3] = '1';
+                                dir3[temporal[1] * 5 + 4] = '0';
+                            }
+                            else
+                            {
+                                dir3[temporal[1] * 5 + 2] = '0';
+                                dir3[temporal[1] * 5 + 3] = '0';
+                                dir3[temporal[1] * 5 + 4] = '1';
+                            }
+                        }
+                        else
+                        {
+                            //Cambia los directorios cuando es local y ninguna caché tendrá el bloque (porque es un reemplazo).
+                            dir3[temporal[1] * 5 + 1] = 'U';
+                            dir3[temporal[1] * 5 + 2] = '0';
+                            dir3[temporal[1] * 5 + 3] = '0';
+                            dir3[temporal[1] * 5 + 4] = '0';
+
+                        }
                         break;
                 }
             
@@ -2024,16 +2111,33 @@ namespace Proyecto
             //Si el procesador debe de subirlo a su propia caché.
             if (!reemplazo)
             {
+                switch (cache) 
+                {
+                    case 1:
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            cache_datos1[indice*4 + i] = memComp1[pos_memoria + (i * 4)];
+                        }
+                        break;
+                    case 2:
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            cache_datos2[indice*4 + i] = memComp2[pos_memoria + (i * 4)];
+                        }
+                        break;
+                    case 3:
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            cache_datos3[indice*4 + i] = memComp3[pos_memoria + (i * 4)];
+                        }
+                        break;
 
+                }
             }
 
             return true;
         }
 
-        public static bool reemplazarBloqueCompartido(int procesador, int direccion)
-        {
-            return false;
-        }
 
 
 
