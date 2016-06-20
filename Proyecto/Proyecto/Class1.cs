@@ -1189,7 +1189,7 @@ namespace Proyecto
 
 
         //Retorna el número de procesador al que pertenece ese procesador y la dirección del bloque
-        //al que pertenece como tal.
+        //al directorio que pertenece como tal.
         public static int[] obtener_num_estruct(int num_bloque)
         {
             int[] resultado = new int[2];
@@ -1643,7 +1643,7 @@ namespace Proyecto
                         //Intenta entrar al directorio correspondiente
                         if (Monitor.TryEnter(dir1))
                         {
-                            guardaEnMemoria(true, 'I', bloque, numMiCache, true);
+                            guardaEnMemoria(true, 'I', bloque, numMiCache);
                         }
                         else
                             return false;
@@ -1652,7 +1652,7 @@ namespace Proyecto
                     case 2:
                         if (Monitor.TryEnter(dir2))
                         {
-                            guardaEnMemoria(true, 'I', bloque, numMiCache, true);
+                            guardaEnMemoria(true, 'I', bloque, numMiCache);
                         }
                         else
                             return false;
@@ -1661,7 +1661,7 @@ namespace Proyecto
                     case 3:
                         if (Monitor.TryEnter(dir3))
                         {
-                            guardaEnMemoria(true, 'I', bloque, numMiCache, true);
+                            guardaEnMemoria(true, 'I', bloque, numMiCache);
                         }
                         else
                             return false;
@@ -1681,11 +1681,11 @@ namespace Proyecto
                             //Si es un store
                             if (!esLoad)
                             {
-                                guardaEnMemoria(true, 'I', bloque, numOtraCache, false);
+                                guardaEnMemoria(true, 'I', bloque, numOtraCache, numMiCache);
                             }
                             else
                             {
-                                guardaEnMemoria(true, 'C', bloque, numOtraCache, false);
+                                guardaEnMemoria(true, 'C', bloque, numOtraCache, numMiCache);
                             }
                         }
                         else
@@ -1698,11 +1698,11 @@ namespace Proyecto
                             //Si es un store
                             if (!esLoad)
                             {
-                                guardaEnMemoria(true, 'I', bloque, numMiCache, false);
+                                guardaEnMemoria(true, 'I', bloque, numOtraCache, numMiCache);
                             }
                             else
                             {
-                                guardaEnMemoria(true, 'C', bloque, numOtraCache, false);
+                                guardaEnMemoria(true, 'C', bloque, numOtraCache, numMiCache);
                             }
                         }
                         else
@@ -1715,11 +1715,11 @@ namespace Proyecto
                             //Si es un store
                             if (!esLoad)
                             {
-                                guardaEnMemoria(true, 'I', bloque, numOtraCache, false);
+                                guardaEnMemoria(true, 'I', bloque, numOtraCache, numMiCache);
                             }
                             else
                             {
-                                guardaEnMemoria(true, 'C', bloque, numOtraCache, false);
+                                guardaEnMemoria(true, 'C', bloque, numOtraCache, numMiCache);
                             }
                         }
                         else
@@ -1732,116 +1732,295 @@ namespace Proyecto
             return false;
         }
 
-        //Guarda en memoria si es necesario local o remotamente.
-        public static bool guardaEnMemoria(bool reemplazo, char estado_memoria, int bloque, int procesador, bool etapa_izquierda)
+        //Guarda en memoria si es necesario local o remotamente. La variable procesador contiene el número de la caché.
+        public static bool guardaEnMemoria(bool reemplazo, char estado_memoria, int bloque, int procesador, int cache = -1)
         {
-            //Obtiene el directorio a utilizar y el número de bloque de la caché en ese procesador.
+            //Obtiene el directorio a utilizar y el número de bloque en el directorio en ese procesador.
             int[] temporal = obtener_num_estruct(bloque);
+            int pos_memoria = 0;
+            int pos_memoria_2 = 0;
+            int indice = bloque / 4;
+            pos_memoria = bloque / 8;
+            pos_memoria = pos_memoria * 16;     //Para sacar la dirección en donde comienza el bloque en memoria.
 
-            //Falta lo de poner estado en la otra caché.
+            //Para seleccionar la caché que será tratada.
+            switch (procesador)
+            {
+                case 1:
+                    cache_datos1[temporal[1]] = estado_memoria;
+                    break;
+                case 2:
+                    cache_datos2[temporal[1]] = estado_memoria;
+                    break;
+                case 3:
+                    cache_datos3[temporal[1]] = estado_memoria;
+                    break;
+            }
+
+
 
             //Si el bloque de memoria es del procesador x, el directorio debe de pertenecer a al mismo procesador.
-            if (procesador == temporal[0]) //Cambiar por: 
+            if (procesador == temporal[0])  
             {
                 //Guarda en memoria.
+                switch (procesador)
+                {
+                    case 1:
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            memComp1[pos_memoria + (i * 4)] = cache_datos1[indice + i];
+                        }
+
+                        break;
+                    case 2:
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            memComp2[pos_memoria + (i * 4)] = cache_datos2[indice + i];
+                        }
+                        break;
+                    case 3:
+
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            memComp3[pos_memoria + (i * 4)] = cache_datos3[indice + i];
+                        }
+                        break;
+                }
+
                 //Sincroniza el ciclo de reloj.
                 for (int i = 0; i < 16; ++i)
                 {
                     miBarrerita.SignalAndWait();
                 }
-                reloj = reloj + 16;
+                //reloj = reloj + 16;
                 //Poner en el directorio en que cache se ubica ese bloque y quitarlo de donde estaba antes(el directorio al que corresponde el bloque).
-                if (!etapa_izquierda)
+
+                switch (procesador)
                 {
-                    switch (procesador)
-                    {
-                        case 1:
-                            //Intenta entrar al directorio correspondiente
-                            if (Monitor.TryEnter(dir1))
+                    case 1:
+                        if (!reemplazo)
+                        {
+                            //Cambia los directorios cuando es local.
+                            dir1[temporal[1]*5 + 1] = 'M';
+                            if (cache == 1)             //Cache indica en que caché va a estar de ahora en adelante.
                             {
-
+                                dir1[temporal[1] * 5 + 2] = '1';
+                                dir1[temporal[1] * 5 + 3] = '0';
+                                dir1[temporal[1] * 5 + 4] = '0';
+                            }
+                            else if (cache == 2)
+                            {
+                                dir1[temporal[1] * 5 + 2] = '0';
+                                dir1[temporal[1] * 5 + 3] = '1';
+                                dir1[temporal[1] * 5 + 4] = '0';
                             }
                             else
-                                return false;
-                            Monitor.Exit(cache_datos1);
-                            break;
-                        case 2:
-                            if (Monitor.TryEnter(dir2))
                             {
+                                dir1[temporal[1] * 5 + 2] = '0';
+                                dir1[temporal[1] * 5 + 3] = '0';
+                                dir1[temporal[1] * 5 + 4] = '1';
+                            }
+                        }
+                        else
+                        {
+                            //Cambia los directorios cuando es local y ninguna caché tendrá el bloque (porque es un reemplazo).
+                            dir1[temporal[1] * 5 + 1] = 'U';
+                            dir1[temporal[1] * 5 + 2] = '0';
+                            dir1[temporal[1] * 5 + 3] = '0';
+                            dir1[temporal[1] * 5 + 4] = '0';
 
+                        }
+                        break;
+                    case 2:
+                        if (!reemplazo)
+                        {
+                            //Cambia los directorios cuando es local.
+                            dir2[temporal[1] * 5 + 1] = 'M';
+                            if (cache == 1)
+                            {
+                                dir2[temporal[1] * 5 + 2] = '1';
+                                dir2[temporal[1] * 5 + 3] = '0';
+                                dir2[temporal[1] * 5 + 4] = '0';
+                            }
+                            else if (cache == 2)
+                            {
+                                dir2[temporal[1] * 5 + 2] = '0';
+                                dir2[temporal[1] * 5 + 3] = '1';
+                                dir2[temporal[1] * 5 + 4] = '0';
                             }
                             else
-                                return false;
-                            Monitor.Exit(cache_datos2);
-                            break;
-                        case 3:
-                            if (Monitor.TryEnter(dir3))
                             {
+                                dir2[temporal[1] * 5 + 2] = '0';
+                                dir2[temporal[1] * 5 + 3] = '0';
+                                dir2[temporal[1] * 5 + 4] = '1';
+                            }
+                        }
+                        else
+                        {
+                            //Cambia los directorios cuando es local y ninguna caché tendrá el bloque (porque es un reemplazo).
+                            dir2[temporal[1] * 5 + 1] = 'U';
+                            dir2[temporal[1] * 5 + 2] = '0';
+                            dir2[temporal[1] * 5 + 3] = '0';
+                            dir2[temporal[1] * 5 + 4] = '0';
 
+                        }
+
+
+                        break;
+                    case 3:
+                        if (!reemplazo)
+                        {
+                            //Cambia los directorios cuando es local.
+                            dir3[temporal[1] * 5 + 1] = 'M';
+                            if (procesador == 1)
+                            {
+                                dir3[temporal[1] * 5 + 2] = '1';
+                                dir3[temporal[1] * 5 + 3] = '0';
+                                dir3[temporal[1] * 5 + 4] = '0';
+                            }
+                            else if (procesador == 2)
+                            {
+                                dir3[temporal[1] * 5 + 2] = '0';
+                                dir3[temporal[1] * 5 + 3] = '1';
+                                dir3[temporal[1] * 5 + 4] = '0';
                             }
                             else
-                                return false;
-                            Monitor.Exit(cache_datos3);
-                            break;
-                    }
+                            {
+                                dir3[temporal[1] * 5 + 2] = '0';
+                                dir3[temporal[1] * 5 + 3] = '0';
+                                dir3[temporal[1] * 5 + 4] = '1';
+                            }
+                        }
+                        else
+                        {
+                            //Cambia los directorios cuando es local y ninguna caché tendrá el bloque (porque es un reemplazo).
+                            dir3[temporal[1] * 5 + 1] = 'U';
+                            dir3[temporal[1] * 5 + 2] = '0';
+                            dir3[temporal[1] * 5 + 3] = '0';
+                            dir3[temporal[1] * 5 + 4] = '0';
+
+                        }
+                        break;
                 }
+
                 //Sincroniza el ciclo de reloj.
                 for (int i = 0; i < 2; ++i)
                 {
                     miBarrerita.SignalAndWait();
                 }
-                reloj = reloj + 2;
+                //reloj = reloj + 2;
             }
             else
             {
+                //Almacena el bloque completo de la caché.
+                int[] bloque_en_cache = new int[4];
+                switch (procesador)
+                {
+                    case 1:
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            bloque_en_cache[i] = cache_datos1[indice + i];
+                        }
+
+                        break;
+                    case 2:
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            bloque_en_cache[i] = cache_datos2[indice + i];
+                        }
+                        break;
+                    case 3:
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            bloque_en_cache[i] = cache_datos3[indice + i];
+                        }
+                        break;
+                }
+                //Guardamos en memoria.
+                switch (procesador)
+                {
+                    case 1:
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            memComp1[pos_memoria + (i * 4)] = bloque_en_cache[i];
+                        }
+
+                        break;
+                    case 2:
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            memComp2[pos_memoria + (i * 4)] = bloque_en_cache[i];
+                        }
+                        break;
+                    case 3:
+
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            memComp3[pos_memoria+ (i* 4)] = bloque_en_cache[i];
+                        }
+                        break;
+                }
                 //Sincroniza el ciclo de reloj.
                 for (int i = 0; i < 32; ++i)
                 {
                     miBarrerita.SignalAndWait();
                 }
-                reloj = reloj + 32;
+                //reloj = reloj + 32;
                 //Cambia el directorio.
-                if (!etapa_izquierda)
+
+                switch (temporal[0])
                 {
-                    switch (procesador)
-                    {
-                        case 1:
-                            //Intenta entrar al directorio correspondiente
-                            if (Monitor.TryEnter(dir1))
-                            {
+                    case 1:
 
+                        if (!reemplazo)
+                        {
+                            //Cambia los directorios cuando es local.
+                            dir1[temporal[1] * 5 + 1] = 'M';
+                            if (cache == 1)
+                            {
+                                dir1[temporal[1] * 5 + 2] = '1';
+                                dir1[temporal[1] * 5 + 3] = '0';
+                                dir1[temporal[1] * 5 + 4] = '0';
+                            }
+                            else if (cache == 2)
+                            {
+                                dir1[temporal[1] * 5 + 2] = '0';
+                                dir1[temporal[1] * 5 + 3] = '1';
+                                dir1[temporal[1] * 5 + 4] = '0';
                             }
                             else
-                                return false;
-                            Monitor.Exit(cache_datos1);
-                            break;
-                        case 2:
-                            if (Monitor.TryEnter(dir2))
                             {
-
+                                dir1[temporal[1] * 5 + 2] = '0';
+                                dir1[temporal[1] * 5 + 3] = '0';
+                                dir1[temporal[1] * 5 + 4] = '1';
                             }
-                            else
-                                return false;
-                            Monitor.Exit(cache_datos2);
-                            break;
-                        case 3:
-                            if (Monitor.TryEnter(dir3))
-                            {
+                        }
+                        else
+                        {
+                            //Cambia los directorios cuando es local y ninguna caché tendrá el bloque (porque es un reemplazo).
+                            dir1[temporal[1] * 5 + 1] = 'U';
+                            dir1[temporal[1] * 5 + 2] = '0';
+                            dir1[temporal[1] * 5 + 3] = '0';
+                            dir1[temporal[1] * 5 + 4] = '0';
 
-                            }
-                            else
-                                return false;
-                            Monitor.Exit(cache_datos3);
-                            break;
-                    }
+                        }
+
+                        break;
+                    case 2:
+
+                        break;
+                    case 3:
+
+                        break;
                 }
-                //Sincroniza el ciclo de reloj.
-                for (int i = 0; i < 4; ++i)
-                {
-                    miBarrerita.SignalAndWait();
-                }
-                reloj = reloj + 4;
+            
+            //Sincroniza el ciclo de reloj.
+            for (int i = 0; i < 4; ++i)
+            {
+                miBarrerita.SignalAndWait();
             }
+            //reloj = reloj + 4;
+        }
             //Si el procesador debe de subirlo a su propia caché.
             if (!reemplazo)
             {
