@@ -52,7 +52,7 @@ namespace Proyecto
 
         //Banderas de LL activo de cada procesador.
         //1 es el proc 1, 2 es el proc 2 y 0 es el proc 3.
-        static bool[] LLactivo1 = new bool[3];
+        static bool[] LLactivo = new bool[3];
 
         //Caché de instrucciones de los procesadores.
         static int[] cache_inst1 = new int[64];
@@ -705,7 +705,7 @@ namespace Proyecto
                     //guardarEn = cac;
                     //Lee de la cache
                     //resultado = direccion1;
-                    LLactivo1[procesador / 3] = true;
+                    LLactivo[procesador % 3] = true;
                     switch (procesador)
                     {
                         case 1:
@@ -723,7 +723,30 @@ namespace Proyecto
                     }
                     break;
                 case 51: //SC
+                    int direccion35 = primerRegistro + ultimaParte;
+                    LLactivo[procesador % 3] = false;
+                    switch (procesador)
+                    {
+                        case 1:
+                            if (procesador1[pos_rl] == direccion35)
+                            { 
 
+                            }
+                            break;
+                        case 2:
+                            if (procesador2[pos_rl] == direccion35)
+                            {
+
+                            }
+                            break;
+                        case 3:
+                            if (procesador3[pos_rl] == direccion35)
+                            {
+
+                            }
+                            break;
+                    }
+                    
                     break;
                 case 43: //SW
 
