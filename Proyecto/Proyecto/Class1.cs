@@ -792,11 +792,11 @@ namespace Proyecto
                         {
                             if (estadoCache1[posicionCache] == 'M')
                             {
-                                r = escribirBloqueEnMem(bloque, 1, posicionCache, true, true);
+                                r = escribirBloqueEnMem(bloque, 1, 1,posicionCache, true, true);
                             }
                             else if (estadoCache1[posicionCache] == 'C')
                             {
-                                r = reemplazarBloqueCompartido(procesador, direccion);
+                                r = reemplazarBloqueCompartido(bloque,procesador, direccion);
                             }
                             if (r)
                             {
@@ -832,9 +832,17 @@ namespace Proyecto
                                     switch (numDir)
                                     {
                                         case 1:
-                                            if ((dir1[posicionDir]) == 'M')
+                                            if ((dir1[posicionDir*5+1]) == 'M')
                                             {
-                                                r = escribirBloqueEnMem(bloque, 1, posicionCache, true, false);
+                                                int i=0;
+                                                if((dir1[posicionDir*5+2]=='1')){
+                                                    i=1;
+                                                }else if (dir1[posicionDir*5+3]=='1'){
+                                                    i=2;
+                                                }else if (dir1[posicionDir*5+4]=='1'){
+                                                    i=3;
+                                                }
+                                                r = escribirBloqueEnMem(bloque,i, 1, posicionCache, true, false);
                                             }
                                             else if (((dir1[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
@@ -859,7 +867,15 @@ namespace Proyecto
                                         case 2:
                                             if ((dir2[posicionDir]) == 'M')
                                             {
-                                                r = escribirBloqueEnMem(bloque, 1, posicionCache, true, false);
+                                                int i=0;
+                                                if((dir2[posicionDir*5+2]=='1')){
+                                                    i=1;
+                                                }else if (dir2[posicionDir*5+3]=='1'){
+                                                    i=2;
+                                                }else if (dir2[posicionDir*5+4]=='1'){
+                                                    i=3;
+                                                }
+                                                r = escribirBloqueEnMem(bloque,i, 1, posicionCache, true, false);
                                             }
                                             else if (((dir2[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
@@ -885,7 +901,15 @@ namespace Proyecto
                                         case 3:
                                             if ((dir3[posicionDir]) == 'M')
                                             {
-                                                r = escribirBloqueEnMem(bloque, 1, posicionCache, true, false);
+                                                int i=0;
+                                                if((dir3[posicionDir*5+2]=='1')){
+                                                    i=1;
+                                                }else if (dir3[posicionDir*5+3]=='1'){
+                                                    i=2;
+                                                }else if (dir3[posicionDir*5+4]=='1'){
+                                                    i=3;
+                                                }
+                                                r = escribirBloqueEnMem(bloque,i, 1, posicionCache, true, false);
                                             }
                                             else if (((dir3[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
@@ -925,11 +949,11 @@ namespace Proyecto
                         {
                             if (estadoCache2[posicionCache] == 'M')
                             {
-                                r = escribirBloqueEnMem(bloque, 2, posicionCache, true, true);
+                                r = escribirBloqueEnMem(bloque, 2,2, posicionCache, true, true);
                             }
                             else if (estadoCache2[posicionCache] == 'C')
                             {
-                                r = reemplazarBloqueCompartido(procesador, direccion);
+                                r = reemplazarBloqueCompartido(bloque,procesador, direccion);
                             }
                             if (r)
                             {
@@ -967,7 +991,20 @@ namespace Proyecto
                                         case 1:
                                             if ((dir1[posicionDir]) == 'M')
                                             {
-                                                r = escribirBloqueEnMem(bloque, 2, posicionCache, true, false);
+                                                int i = 0;
+                                                if ((dir1[posicionDir * 5 + 2] == '1'))
+                                                {
+                                                    i = 1;
+                                                }
+                                                else if (dir1[posicionDir * 5 + 3] == '1')
+                                                {
+                                                    i = 2;
+                                                }
+                                                else if (dir1[posicionDir * 5 + 4] == '1')
+                                                {
+                                                    i = 3;
+                                                }
+                                                r = escribirBloqueEnMem(bloque, i,2, posicionCache, true, false);
                                             }
                                             else if (((dir1[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
@@ -992,7 +1029,20 @@ namespace Proyecto
                                         case 2:
                                             if ((dir2[posicionDir]) == 'M')
                                             {
-                                                r = escribirBloqueEnMem(bloque, 2, posicionCache, true, false);
+                                                int i = 0;
+                                                if ((dir2[posicionDir * 5 + 2] == '1'))
+                                                {
+                                                    i = 1;
+                                                }
+                                                else if (dir2[posicionDir * 5 + 3] == '1')
+                                                {
+                                                    i = 2;
+                                                }
+                                                else if (dir2[posicionDir * 5 + 4] == '1')
+                                                {
+                                                    i = 3;
+                                                }
+                                                r = escribirBloqueEnMem(bloque, i, 2, posicionCache, true, false);
                                             }
                                             else if (((dir2[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
@@ -1018,7 +1068,20 @@ namespace Proyecto
                                         case 3:
                                             if ((dir3[posicionDir]) == 'M')
                                             {
-                                                r = escribirBloqueEnMem(bloque, 2, posicionCache, true, false);
+                                                int i = 0;
+                                                if ((dir3[posicionDir * 5 + 2] == '1'))
+                                                {
+                                                    i = 1;
+                                                }
+                                                else if (dir3[posicionDir * 5 + 3] == '1')
+                                                {
+                                                    i = 2;
+                                                }
+                                                else if (dir3[posicionDir * 5 + 4] == '1')
+                                                {
+                                                    i = 3;
+                                                }
+                                                r = escribirBloqueEnMem(bloque, i, 2, posicionCache, true, false);
                                             }
                                             else if (((dir3[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
@@ -1058,11 +1121,11 @@ namespace Proyecto
                         {
                             if (estadoCache3[posicionCache] == 'M')
                             {
-                                r = escribirBloqueEnMem(bloque, 3, posicionCache, true, true);
+                                r = escribirBloqueEnMem(bloque, 3,3, posicionCache, true, true);
                             }
                             else if (estadoCache3[posicionCache] == 'C')
                             {
-                                r = reemplazarBloqueCompartido(procesador, direccion);
+                                r = reemplazarBloqueCompartido(bloque,procesador, direccion);
                             }
                             if (r)
                             {
@@ -1100,7 +1163,20 @@ namespace Proyecto
                                         case 1:
                                             if ((dir1[posicionDir]) == 'M')
                                             {
-                                                r = escribirBloqueEnMem(bloque, 3, posicionCache, true, false);
+                                                int i = 0;
+                                                if ((dir1[posicionDir * 5 + 2] == '1'))
+                                                {
+                                                    i = 1;
+                                                }
+                                                else if (dir1[posicionDir * 5 + 3] == '1')
+                                                {
+                                                    i = 2;
+                                                }
+                                                else if (dir1[posicionDir * 5 + 4] == '1')
+                                                {
+                                                    i = 3;
+                                                }
+                                                r = escribirBloqueEnMem(bloque, i, 3, posicionCache, true, false);
                                             }
                                             else if (((dir1[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
@@ -1125,7 +1201,20 @@ namespace Proyecto
                                         case 2:
                                             if ((dir2[posicionDir]) == 'M')
                                             {
-                                                r = escribirBloqueEnMem(bloque, 3, posicionCache, true, false);
+                                                int i = 0;
+                                                if ((dir1[posicionDir * 5 + 2] == '1'))
+                                                {
+                                                    i = 1;
+                                                }
+                                                else if (dir1[posicionDir * 5 + 3] == '1')
+                                                {
+                                                    i = 2;
+                                                }
+                                                else if (dir1[posicionDir * 5 + 4] == '1')
+                                                {
+                                                    i = 3;
+                                                }
+                                                r = escribirBloqueEnMem(bloque, i, 3, posicionCache, true, false);
                                             }
                                             else if (((dir2[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
@@ -1151,7 +1240,20 @@ namespace Proyecto
                                         case 3:
                                             if ((dir3[posicionDir]) == 'M')
                                             {
-                                                r = escribirBloqueEnMem(bloque, 3, posicionCache, true, false);
+                                                int i = 0;
+                                                if ((dir1[posicionDir * 5 + 2] == '1'))
+                                                {
+                                                    i = 1;
+                                                }
+                                                else if (dir1[posicionDir * 5 + 3] == '1')
+                                                {
+                                                    i = 2;
+                                                }
+                                                else if (dir1[posicionDir * 5 + 4] == '1')
+                                                {
+                                                    i = 3;
+                                                }
+                                                r = escribirBloqueEnMem(bloque, i, 3, posicionCache, true, false);
                                             }
                                             else if (((dir3[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
