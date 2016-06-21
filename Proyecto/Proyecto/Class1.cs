@@ -729,28 +729,54 @@ namespace Proyecto
                     {
                         case 1:
                             if (procesador1[pos_rl] == direccion35)
-                            { 
-
+                            {
+                                cache_store(procesador,direccion35);
+                            }
+                            else
+                            {
+                                procesador1[primerRegistro] = 0;
                             }
                             break;
                         case 2:
                             if (procesador2[pos_rl] == direccion35)
                             {
-
+                                cache_store(procesador, direccion35);
+                            }
+                            else
+                            {
+                                procesador2[primerRegistro] = 0;
                             }
                             break;
                         case 3:
                             if (procesador3[pos_rl] == direccion35)
                             {
-
+                                cache_store(procesador, direccion35);
+                            }
+                            else
+                            {
+                                procesador3[primerRegistro] = 0;
                             }
                             break;
                     }
                     
                     break;
                 case 43: //SW
-
+                    int direccion36 = primerRegistro + ultimaParte;
+                    switch (procesador)
+                { 
+                case 1:
+                        cache_store(procesador, direccion36);
                     break;
+                case 2:
+
+                        cache_store(procesador, direccion36);
+                    break;
+                case 3:
+                        cache_store(procesador, direccion36);
+                    break;
+                    
+               }
+            break;
                 case 63: //FIN
                     resultadoFinal = false;
                     break;
