@@ -147,7 +147,31 @@ namespace Proyecto
 
             //Agregar método para desplegar resultados.
         }
-
+        public static void imprimirMemoriasyCaches()
+        {
+            Console.WriteLine("Memorias compartidas ");
+            Console.WriteLine("Procesador     b1       b2       b3       b4       b5       b6       b7      b8");
+            Console.Write("       1       ");
+            for (int i = 0; i < cant_bloques_directorio * 16; ++i)
+            {
+                Console.Write(memComp1[i]);
+                Console.Write("     ");
+            }
+            Console.WriteLine("");
+            Console.Write("       2       ");
+            for (int i = 0; i < cant_bloques_directorio * 16; ++i)
+            {
+                Console.Write(memComp2[i]);
+                Console.Write("     ");
+            }
+            Console.WriteLine("");
+            Console.Write("       3       ");
+            for (int i = 0; i < cant_bloques_directorio * 16; ++i)
+            {
+                Console.Write(memComp3[i]);
+                Console.Write("     ");
+            }
+        }
         //Se encarga de finalizar la ejecucion de un hilillo.
         public static void finalizarEjecucion(int id_hilo)
         {
@@ -640,11 +664,12 @@ namespace Proyecto
                     guardarEn = pos_pc;
                     break;
                 case 35: //LW
+                    Console.Write("Corriendo un LW");
                     //segundoRegistro;
                     //int bloque = direccion / 16;
                     int direccion = primerRegistro + ultimaParte;
                     int bloque = direccion / 16;
-                    int posicionCache = bloque / 4;
+                    int posicionCache = bloque % 4;
                     //int posicionDir = bloque % 8;
                     //int numDir = (bloque / 8) + 1;
                     int direccionBloque = bloque * 16;
@@ -689,6 +714,7 @@ namespace Proyecto
                             resultado = cache_datos3[palabra];
                             break;
                     }
+                    Console.Write("Fin LW");
                     //Lee de la cache
                     break;
                 case 50: //LL
@@ -826,7 +852,7 @@ namespace Proyecto
                         r = Monitor.TryEnter(cache_datos3);
                         break;
                 }
-                while (r)//trylock de mi cache
+                while (!r)//trylock de mi cache
                 {
                     miBarrerita.SignalAndWait();
                 }
@@ -1704,7 +1730,7 @@ namespace Proyecto
                         if (dir1[temporal[1] * 5 + 1] == 'M')
                         {
 
-                            solicitudDeBloque = escribirBloqueEnMem(bloque, temporal[0], indice, false, false);
+                            solicitudDeBloque = escribirBloqueEnMem(bloque, temporal[0],1, indice, false, false);
                             if (solicitudDeBloque == false)
                             {
                                 Monitor.Exit(dir1);
@@ -1847,7 +1873,7 @@ namespace Proyecto
                         if (dir2[temporal[1] * 5 + 1] == 'M')
                         {
 
-                            solicitudDeBloque = escribirBloqueEnMem(bloque, temporal[0], indice, false, false);
+                            solicitudDeBloque = escribirBloqueEnMem(bloque, temporal[0], 1,indice, false, false);
                             if (solicitudDeBloque == false)
                             {
                                 Monitor.Exit(dir2);
@@ -2000,7 +2026,7 @@ namespace Proyecto
                         if (dir3[temporal[1] * 5 + 1] == 'M')
                         {
 
-                            solicitudDeBloque = escribirBloqueEnMem(bloque, temporal[0], indice, false, false);
+                            solicitudDeBloque = escribirBloqueEnMem(bloque, temporal[0],1, indice, false, false);
                             if (solicitudDeBloque == false)
                             {
                                 Monitor.Exit(dir3);
@@ -3167,6 +3193,7 @@ namespace Proyecto
                 datos[36] = 3;
                 dt.Rows.Add(datos);
             }
+            imprimirMemoriasyCaches();
             return dt;
         }
         //Se encarga de hacer la barrera de sincronizacion
