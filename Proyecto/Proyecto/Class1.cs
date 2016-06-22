@@ -192,7 +192,7 @@ namespace Proyecto
             {
                 for (int j = 0; j < 4; ++j)
                 {
-                    Console.Write(cache_datos1[i*4+j]);
+                    Console.Write(cache_datos1[j*4+i]);
                     Console.Write("    ");
                 }
                 Console.WriteLine("");
@@ -466,21 +466,22 @@ namespace Proyecto
                 encache_datos2[i] = -1;
                 encache_datos3[i] = -1;
             }
-            /*
+            
             int f = 256 * 256;
             for (int i = 0; i < cant_memComp; ++i)
             {
-                memComp1[i] = i;
+                memComp1[i] = i+1;
                 memComp2[i] = i*256;
                 memComp3[i] = i*f;
             }
-            */
+            
+            /*
             for (int i = 0; i < cant_memComp; ++i)
             {
                 memComp1[i] = 1;
                 memComp2[i] = 1;
                 memComp3[i] = 1;
-            }
+            }*/
             for (int i = 0; i < 8; ++i)//cant_bloques_directorio; ++i)
             {
                 int g = i * 5;
@@ -766,9 +767,12 @@ namespace Proyecto
                     //int numDir = (bloque / 8) + 1;
                     int direccionBloque = bloque * 16;
                     //int palabra = direccion % 16;
+                    /*
                     int palabra = direccion - direccionBloque;
                     direccionBloque = direccionBloque % cant_memComp;
                     palabra = palabra / 4;
+                    */
+                    int palabra = direccion % 16;
                     cache_Load(procesador, direccionBloque,posicionCache,bloque,direccion);
                     /*
                     int[] bloqueSol = new int[4]; 
@@ -906,7 +910,7 @@ namespace Proyecto
 
             }
             //para guardar los resultados en los registros del procesador que corresponde
-            if ((codigo != 63) && (codigo != 35))
+            if ((codigo != 63) && (codigo != 43))
             {
                 switch (procesador)
                 {
