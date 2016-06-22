@@ -673,7 +673,7 @@ namespace Proyecto
                     //int posicionDir = bloque % 8;
                     //int numDir = (bloque / 8) + 1;
                     int direccionBloque = bloque * 16;
-                    int palabra = bloque % 16;
+                    int palabra = direccion % 16;
                     
                     cache_Load(procesador, direccionBloque,posicionCache,bloque,direccion);
                     /*
