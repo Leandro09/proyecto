@@ -203,6 +203,47 @@ namespace Proyecto
                 Console.Write("   ");
                 //Console.WriteLine("");
             }
+            Console.WriteLine("");
+            for (int i = 0; i < 4; ++i)
+            {
+                Console.Write(estadoCache1[i]);
+                Console.Write("    ");
+                //Console.WriteLine("");
+            }
+            Console.WriteLine("");
+            Console.WriteLine("Dir");
+            String s = "";
+          //  Console.WriteLine("1");
+            for (int i = 0; i < 40; ++i)
+            {
+                s=s+dir1[i].ToString();
+                s=s+" ";
+                if (((i) % 8) == 0)
+                {
+                    s = s + "\n";
+                }
+            }
+         //   Console.WriteLine("2");
+            for (int i = 0; i < 40; ++i)
+            {
+                s = s + dir1[i].ToString();
+                s = s + " ";
+                if (((i) % 8) == 0)
+                {
+                    s = s + "\n";
+                }
+            }
+           // Console.WriteLine("3");
+            for (int i = 0; i < 40; ++i)
+            {
+                s = s + dir1[i].ToString();
+                s = s + " ";
+                if (((i) % 8) == 0)
+                {
+                    s = s + "\n";
+                }
+            }
+            Console.WriteLine(s);
         }
         //Se encarga de finalizar la ejecucion de un hilillo.
         public static void finalizarEjecucion(int id_hilo)
@@ -423,15 +464,15 @@ namespace Proyecto
                 memComp2[i] = 1;
                 memComp3[i] = 1;
             }
-            for (int i = 0; i < cant_bloques_directorio; ++i)
+            for (int i = 0; i < 8; ++i)//cant_bloques_directorio; ++i)
             {
                 int g = i * 5;
                 dir1[g] = Convert.ToChar(i);
                 dir2[g] = Convert.ToChar(i + 8);
                 dir3[g] = Convert.ToChar(i + 16);
-                dir1[g+1] = 'U';
-                dir2[g+1] = 'U';
-                dir3[g+1] = 'U';
+                dir1[g + 1] = 'U';
+                dir2[g + 1] = 'U';
+                dir3[g + 1] = 'U';
                 dir1[g + 2] = '0';
                 dir2[g + 2] = '0';
                 dir3[g + 2] = '0';
@@ -708,6 +749,7 @@ namespace Proyecto
                     int direccionBloque = bloque * 16;
                     //int palabra = direccion % 16;
                     int palabra = direccion - direccionBloque;
+                    direccionBloque = direccionBloque % cant_memComp;
                     palabra = palabra / 4;
                     cache_Load(procesador, direccionBloque,posicionCache,bloque,direccion);
                     /*
@@ -961,12 +1003,12 @@ namespace Proyecto
                                                 }
 
                                                 //subir bloque a mi cache
-                                                encache_inst2[posicionCache] = bloque;
+                                                encache_datos1[posicionCache] = bloque;
                                                 posicionCache = posicionCache * 4;
                                                 for (int i = 0; i < 4; ++i)
                                                 {
                                                     //pasa las 4 palabras MIPS a la cache_inst
-                                                    cache_datos1[posicionCache + i] = memComp1[direccionBloque *4 + i];
+                                                    cache_datos1[posicionCache + i] = memComp1[direccionBloque + i * 4];
                                                 }
                                             }
                                             dir1[posicionDir * 5 + 1] = 'C';
@@ -995,12 +1037,12 @@ namespace Proyecto
                                                 }
 
                                                 //subir bloque a mi cache
-                                                encache_inst2[posicionCache] = bloque;
+                                                encache_datos1[posicionCache] = bloque;
                                                 posicionCache = posicionCache * 4;
                                                 for (int i = 0; i < 4; ++i)
                                                 {
                                                     //pasa las 4 palabras MIPS a la cache_inst
-                                                    cache_datos1[posicionCache + i] = memComp2[direccionBloque * 4 + i];
+                                                    cache_datos1[posicionCache + i] = memComp2[direccionBloque + i*4];
                                                 }
                                                 dir2[posicionDir * 5 + 1] = 'C';
                                                 dir2[posicionDir * 5 + 1] = '1';
@@ -1029,12 +1071,12 @@ namespace Proyecto
                                                 }
 
                                                 //subir bloque a mi cache
-                                                encache_inst1[posicionCache] = bloque;
+                                                encache_datos1[posicionCache] = bloque;
                                                 posicionCache = posicionCache * 4;
                                                 for (int i = 0; i < 4; ++i)
                                                 {
                                                     //pasa las 4 palabras MIPS a la cache_inst
-                                                    cache_datos1[posicionCache + i] = memComp3[direccionBloque * 4 + i];
+                                                    cache_datos1[posicionCache + i] = memComp3[direccionBloque + i * 4];
                                                 }
                                                 dir3[posicionDir * 5 + 1] = 'C';
                                                 dir3[posicionDir * 5 + 1] = '1';
@@ -1123,12 +1165,12 @@ namespace Proyecto
                                                 }
 
                                                 //subir bloque a mi cache
-                                                encache_inst2[posicionCache] = bloque;
+                                                encache_datos2[posicionCache] = bloque;
                                                 posicionCache = posicionCache * 4;
                                                 for (int i = 0; i < 4; ++i)
                                                 {
                                                     //pasa las 4 palabras MIPS a la cache_inst
-                                                    cache_datos1[posicionCache + i] = memComp1[direccion + i];
+                                                    cache_datos1[posicionCache + i] = memComp1[direccionBloque + i * 4];
                                                 }
                                             }
                                             dir1[posicionDir * 5 + 1] = 'C';
@@ -1162,12 +1204,12 @@ namespace Proyecto
                                                 }
 
                                                 //subir bloque a mi cache
-                                                encache_inst2[posicionCache] = bloque;
+                                                encache_datos2[posicionCache] = bloque;
                                                 posicionCache = posicionCache * 4;
                                                 for (int i = 0; i < 4; ++i)
                                                 {
                                                     //pasa las 4 palabras MIPS a la cache_inst
-                                                    cache_datos1[posicionCache + i] = memComp2[direccion + i];
+                                                    cache_datos1[posicionCache + i] = memComp2[direccionBloque + i * 4];
                                                 }
                                                 dir2[posicionDir * 5 + 1] = 'C';
                                                 dir2[posicionDir * 5 + 1] = '1';
@@ -1201,12 +1243,12 @@ namespace Proyecto
                                                 }
 
                                                 //subir bloque a mi cache
-                                                encache_inst2[posicionCache] = bloque;
+                                                encache_datos2[posicionCache] = bloque;
                                                 posicionCache = posicionCache * 4;
                                                 for (int i = 0; i < 4; ++i)
                                                 {
                                                     //pasa las 4 palabras MIPS a la cache_inst
-                                                    cache_datos2[posicionCache + i] = memComp3[direccion + i];
+                                                    cache_datos2[posicionCache + i] = memComp3[direccionBloque + i * 4];
                                                 }
                                                 dir3[posicionDir * 5 + 1] = 'C';
                                                 dir3[posicionDir * 5 + 1] = '1';
@@ -1295,12 +1337,12 @@ namespace Proyecto
                                                 }
 
                                                 //subir bloque a mi cache
-                                                encache_inst3[posicionCache] = bloque;
+                                                encache_datos3[posicionCache] = bloque;
                                                 posicionCache = posicionCache * 4;
                                                 for (int i = 0; i < 4; ++i)
                                                 {
                                                     //pasa las 4 palabras MIPS a la cache_inst
-                                                    cache_datos1[posicionCache + i] = memComp1[direccion + i];
+                                                    cache_datos1[posicionCache + i] = memComp1[direccionBloque + i * 4];
                                                 }
                                             }
                                             dir1[posicionDir * 5 + 1] = 'C';
@@ -1334,12 +1376,12 @@ namespace Proyecto
                                                 }
 
                                                 //subir bloque a mi cache
-                                                encache_inst3[posicionCache] = bloque;
+                                                encache_datos3[posicionCache] = bloque;
                                                 posicionCache = posicionCache * 4;
                                                 for (int i = 0; i < 4; ++i)
                                                 {
                                                     //pasa las 4 palabras MIPS a la cache_inst
-                                                    cache_datos1[posicionCache + i] = memComp2[direccion + i];
+                                                    cache_datos1[posicionCache + i] = memComp2[direccionBloque + i * 4];
                                                 }
                                                 dir2[posicionDir * 5 + 1] = 'C';
                                                 dir2[posicionDir * 5 + 1] = '1';
@@ -1373,12 +1415,12 @@ namespace Proyecto
                                                 }
 
                                                 //subir bloque a mi cache
-                                                encache_inst3[posicionCache] = bloque;
+                                                encache_datos3[posicionCache] = bloque;
                                                 posicionCache = posicionCache * 4;
                                                 for (int i = 0; i < 4; ++i)
                                                 {
                                                     //pasa las 4 palabras MIPS a la cache_inst
-                                                    cache_datos3[posicionCache + i] = memComp3[direccion + i];
+                                                    cache_datos3[posicionCache + i] = memComp3[direccionBloque + i * 4];
                                                 }
                                                 dir3[posicionDir * 5 + 1] = 'C';
                                                 dir3[posicionDir * 5 + 1] = '1';
