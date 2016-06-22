@@ -459,24 +459,24 @@ namespace Proyecto
                 cache_datos2[i] = 0;
                 cache_datos2[i] = 0;
             }
-
+            
             for (int i = 0; i < cant_encache_inst; ++i)
             {
                 encache_datos1[i] = -1;
                 encache_datos2[i] = -1;
                 encache_datos3[i] = -1;
             }
-            
-            int f = 256 * 256;
             /*
+            int f = 256 * 256;
+            
             for (int i = 0; i < cant_memComp; ++i)
             {
                 memComp1[i] = i+1;
                 memComp2[i] = i*256;
                 memComp3[i] = i*f;
             }
-            */
 
+            */
 
             for (int i = 0; i < cant_memComp; ++i)
             {
@@ -1165,7 +1165,7 @@ namespace Proyecto
                                     switch (numDir)
                                     {
                                         case 1:
-                                            if ((dir1[posicionDir]) == 'M')
+                                            if ((dir1[posicionDir * 5 + 1]) == 'M')
                                             {
                                                 int i = 0;
                                                 if ((dir1[posicionDir * 5 + 2] == '1'))
@@ -1182,7 +1182,7 @@ namespace Proyecto
                                                 }
                                                 r = escribirBloqueEnMem(bloque, i,2, posicionCache, true, false);
                                             }
-                                            else if (((dir1[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            else if (((dir1[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
                                                 for (int i = 0; i < 16; ++i)
                                                 {
@@ -1199,11 +1199,11 @@ namespace Proyecto
                                                 }
                                             }
                                             dir1[posicionDir * 5 + 1] = 'C';
-                                            dir1[posicionDir * 5 + 1] = '1';
+                                            dir1[posicionDir * 5 + 3] = '1';
                                             Monitor.Exit(dir1);
                                             break;
                                         case 2:
-                                            if ((dir2[posicionDir]) == 'M')
+                                            if ((dir2[posicionDir * 5 + 1]) == 'M')
                                             {
                                                 int i = 0;
                                                 if ((dir2[posicionDir * 5 + 2] == '1'))
@@ -1220,7 +1220,7 @@ namespace Proyecto
                                                 }
                                                 r = escribirBloqueEnMem(bloque, i, 2, posicionCache, true, false);
                                             }
-                                            else if (((dir2[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            else if (((dir2[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
 
                                                 for (int i = 0; i < 20; ++i)
@@ -1237,12 +1237,12 @@ namespace Proyecto
                                                     cache_datos1[posicionCache + i] = memComp2[direccionBloque + i * 4];
                                                 }
                                                 dir2[posicionDir * 5 + 1] = 'C';
-                                                dir2[posicionDir * 5 + 1] = '1';
+                                                dir2[posicionDir * 5 + 3] = '1';
                                                 Monitor.Exit(dir2);
                                             }
                                             break;
                                         case 3:
-                                            if ((dir3[posicionDir]) == 'M')
+                                            if ((dir3[posicionDir * 5 + 1]) == 'M')
                                             {
                                                 int i = 0;
                                                 if ((dir3[posicionDir * 5 + 2] == '1'))
@@ -1259,7 +1259,7 @@ namespace Proyecto
                                                 }
                                                 r = escribirBloqueEnMem(bloque, i, 2, posicionCache, true, false);
                                             }
-                                            else if (((dir3[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            else if (((dir3[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
 
                                                 for (int i = 0; i < 20; ++i)
@@ -1276,7 +1276,7 @@ namespace Proyecto
                                                     cache_datos2[posicionCache + i] = memComp3[direccionBloque + i * 4];
                                                 }
                                                 dir3[posicionDir * 5 + 1] = 'C';
-                                                dir3[posicionDir * 5 + 1] = '1';
+                                                dir3[posicionDir * 5 + 3] = '1';
                                                 Monitor.Exit(dir3);
                                             }
                                             break;
@@ -1337,7 +1337,7 @@ namespace Proyecto
                                     switch (numDir)
                                     {
                                         case 1:
-                                            if ((dir1[posicionDir]) == 'M')
+                                            if ((dir1[posicionDir * 5 + 1]) == 'M')
                                             {
                                                 int i = 0;
                                                 if ((dir1[posicionDir * 5 + 2] == '1'))
@@ -1354,7 +1354,7 @@ namespace Proyecto
                                                 }
                                                 r = escribirBloqueEnMem(bloque, i, 3, posicionCache, true, false);
                                             }
-                                            else if (((dir1[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            else if (((dir1[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
                                                 for (int i = 0; i < 16; ++i)
                                                 {
@@ -1371,11 +1371,11 @@ namespace Proyecto
                                                 }
                                             }
                                             dir1[posicionDir * 5 + 1] = 'C';
-                                            dir1[posicionDir * 5 + 1] = '1';
+                                            dir1[posicionDir * 5 + 4] = '1';
                                             Monitor.Exit(dir1);
                                             break;
                                         case 2:
-                                            if ((dir2[posicionDir]) == 'M')
+                                            if ((dir2[posicionDir * 5 + 1]) == 'M')
                                             {
                                                 int i = 0;
                                                 if ((dir1[posicionDir * 5 + 2] == '1'))
@@ -1392,7 +1392,7 @@ namespace Proyecto
                                                 }
                                                 r = escribirBloqueEnMem(bloque, i, 3, posicionCache, true, false);
                                             }
-                                            else if (((dir2[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            else if (((dir2[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
 
                                                 for (int i = 0; i < 20; ++i)
@@ -1409,12 +1409,12 @@ namespace Proyecto
                                                     cache_datos1[posicionCache + i] = memComp2[direccionBloque + i * 4];
                                                 }
                                                 dir2[posicionDir * 5 + 1] = 'C';
-                                                dir2[posicionDir * 5 + 1] = '1';
+                                                dir2[posicionDir * 5 + 4] = '1';
                                                 Monitor.Exit(dir2);
                                             }
                                             break;
                                         case 3:
-                                            if ((dir3[posicionDir]) == 'M')
+                                            if ((dir3[posicionDir * 5 + 1]) == 'M')
                                             {
                                                 int i = 0;
                                                 if ((dir1[posicionDir * 5 + 2] == '1'))
@@ -1431,7 +1431,7 @@ namespace Proyecto
                                                 }
                                                 r = escribirBloqueEnMem(bloque, i, 3, posicionCache, true, false);
                                             }
-                                            else if (((dir3[posicionDir]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            else if (((dir3[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
 
                                                 for (int i = 0; i < 20; ++i)
@@ -1448,7 +1448,7 @@ namespace Proyecto
                                                     cache_datos3[posicionCache + i] = memComp3[direccionBloque + i * 4];
                                                 }
                                                 dir3[posicionDir * 5 + 1] = 'C';
-                                                dir3[posicionDir * 5 + 1] = '1';
+                                                dir3[posicionDir * 5 + 4] = '1';
                                                 Monitor.Exit(dir3);
                                             }
                                             break;
