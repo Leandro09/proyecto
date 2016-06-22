@@ -150,42 +150,57 @@ namespace Proyecto
         public static void imprimirMemoriasyCaches()
         {
             Console.WriteLine("Memorias compartidas ");
-            Console.WriteLine("Proc              b1              b2              b3              b4              b5              b6              b7              b8");
-            Console.Write("       1       ");
+            Console.WriteLine("Proc        b0          b1          b2          b3          b4          b5          b6          b7");
+            Console.Write("1       ");
             for (int i = 0; i < cant_bloques_directorio * 16; i=i+4)
             {
                 Console.Write(memComp1[i]);
                 Console.Write(" ");
+                if (((i-12) % 16) == 0)
+                {
+                    Console.Write("    ");
+                }
             }
             Console.WriteLine("");
-            Console.Write("       2       ");
+            Console.Write("2       ");
             for (int i = 0; i < cant_bloques_directorio * 16; i = i + 4)
             {
                 Console.Write(memComp2[i]);
                 Console.Write(" ");
+                if (((i - 12) % 16) == 0)
+                {
+                    Console.Write("    ");
+                }
             }
             Console.WriteLine("");
-            Console.Write("       3       ");
+            Console.Write("3       ");
             for (int i = 0; i < cant_bloques_directorio * 16; i = i + 4)
             {
                 Console.Write(memComp3[i]);
-                Console.Write("  ");
+                Console.Write(" ");
+                if (((i - 12) % 16) == 0)
+                {
+                    Console.Write("    ");
+                }
             }
+            Console.WriteLine("");
             Console.WriteLine("Cache");
-            Console.WriteLine("Proc              B0              B1              B2              B3");
-            Console.Write(" 1  ");
-            for (int i = 0; i < 4; i = i + 4)
+            //Console.WriteLine("Proc              B0              B1              B2              B3");
+            Console.WriteLine("B0   B1   B2   B3");
+            //Console.Write(" 1  ");
+            for (int i = 0; i < 4; ++i)
             {
-                for (int j = 0; j < 4; j = j + 4)
+                for (int j = 0; j < 4; ++j)
                 {
                     Console.Write(cache_datos1[i*4+j]);
-                    Console.Write("  ");
+                    Console.Write("    ");
                 }
                 Console.WriteLine("");
             }
-            for (int i = 0; i < 4; i = i + 4)
+            for (int i = 0; i < 4; ++i)
             {
                 Console.Write(encache_datos1[i]);
+                Console.Write("   ");
                 //Console.WriteLine("");
             }
         }
@@ -3145,7 +3160,6 @@ namespace Proyecto
             }
 
         }
-
         //Este metodo se encarga de meter los resultados de los hilillos en un DataTable
         public DataTable resultadosHilillos()
         {
