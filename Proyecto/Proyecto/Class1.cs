@@ -795,6 +795,7 @@ namespace Proyecto
                     guardarEn = primerRegistro;
                     resultado = bloqueSol[palabra];*/
                     guardarEn = segundoRegistro;
+                    imprimirMemoriasyCaches();
                     //resultado = cache_datos3[palabra];
                     switch (procesador)
                     {
