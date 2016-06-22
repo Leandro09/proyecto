@@ -155,21 +155,21 @@ namespace Proyecto
             for (int i = 0; i < cant_bloques_directorio * 16; ++i)
             {
                 Console.Write(memComp1[i]);
-                Console.Write("     ");
+                Console.Write("  ");
             }
             Console.WriteLine("");
             Console.Write("       2       ");
             for (int i = 0; i < cant_bloques_directorio * 16; ++i)
             {
                 Console.Write(memComp2[i]);
-                Console.Write("     ");
+                Console.Write("  ");
             }
             Console.WriteLine("");
             Console.Write("       3       ");
             for (int i = 0; i < cant_bloques_directorio * 16; ++i)
             {
                 Console.Write(memComp3[i]);
-                Console.Write("     ");
+                Console.Write("  ");
             }
         }
         //Se encarga de finalizar la ejecucion de un hilillo.
