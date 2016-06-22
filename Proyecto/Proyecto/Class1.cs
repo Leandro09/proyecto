@@ -767,12 +767,12 @@ namespace Proyecto
                     //int numDir = (bloque / 8) + 1;
                     int direccionBloque = bloque * 16;
                     //int palabra = direccion % 16;
-                    /*
+                    
                     int palabra = direccion - direccionBloque;
                     direccionBloque = direccionBloque % cant_memComp;
                     palabra = palabra / 4;
-                    */
-                    int palabra = direccion % 16;
+                    
+                    //int palabra = direccion % 16;
                     cache_Load(procesador, direccionBloque,posicionCache,bloque,direccion);
                     /*
                     int[] bloqueSol = new int[4]; 
@@ -804,13 +804,13 @@ namespace Proyecto
                     switch (procesador)
                     {
                         case 1:
-                            resultado = cache_datos1[palabra];
+                            resultado = cache_datos1[posicionCache*4+palabra];
                             break;
                         case 2:
-                            resultado = cache_datos2[palabra];
+                            resultado = cache_datos2[posicionCache * 4 + palabra];
                             break;
                         case 3:
-                            resultado = cache_datos3[palabra];
+                            resultado = cache_datos3[posicionCache * 4 + palabra];
                             break;
                     }
                     Console.WriteLine("Fin LW");
