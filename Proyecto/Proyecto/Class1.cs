@@ -150,26 +150,43 @@ namespace Proyecto
         public static void imprimirMemoriasyCaches()
         {
             Console.WriteLine("Memorias compartidas ");
-            Console.WriteLine("Procesador     b1       b2       b3       b4       b5       b6       b7      b8");
+            Console.WriteLine("Proc              b1              b2              b3              b4              b5              b6              b7              b8");
             Console.Write("       1       ");
-            for (int i = 0; i < cant_bloques_directorio * 16; ++i)
+            for (int i = 0; i < cant_bloques_directorio * 16; i=i+4)
             {
                 Console.Write(memComp1[i]);
-                Console.Write("  ");
+                Console.Write(" ");
             }
             Console.WriteLine("");
             Console.Write("       2       ");
-            for (int i = 0; i < cant_bloques_directorio * 16; ++i)
+            for (int i = 0; i < cant_bloques_directorio * 16; i = i + 4)
             {
                 Console.Write(memComp2[i]);
-                Console.Write("  ");
+                Console.Write(" ");
             }
             Console.WriteLine("");
             Console.Write("       3       ");
-            for (int i = 0; i < cant_bloques_directorio * 16; ++i)
+            for (int i = 0; i < cant_bloques_directorio * 16; i = i + 4)
             {
                 Console.Write(memComp3[i]);
                 Console.Write("  ");
+            }
+            Console.WriteLine("Cache");
+            Console.WriteLine("Proc              B0              B1              B2              B3");
+            Console.Write(" 1  ");
+            for (int i = 0; i < 4; i = i + 4)
+            {
+                for (int j = 0; j < 4; j = j + 4)
+                {
+                    Console.Write(cache_datos1[i*4+j]);
+                    Console.Write("  ");
+                }
+                Console.WriteLine("");
+            }
+            for (int i = 0; i < 4; i = i + 4)
+            {
+                Console.Write(encache_datos1[i]);
+                //Console.WriteLine("");
             }
         }
         //Se encarga de finalizar la ejecucion de un hilillo.
@@ -394,9 +411,9 @@ namespace Proyecto
             for (int i = 0; i < cant_bloques_directorio; ++i)
             {
                 int g = i * 5;
-                dir1[i] = Convert.ToChar(i);
-                dir2[i] = Convert.ToChar(i + 8);
-                dir3[i] = Convert.ToChar(i + 16);
+                dir1[g] = Convert.ToChar(i);
+                dir2[g] = Convert.ToChar(i + 8);
+                dir3[g] = Convert.ToChar(i + 16);
                 dir1[g+1] = 'U';
                 dir2[g+1] = 'U';
                 dir3[g+1] = 'U';
@@ -664,7 +681,8 @@ namespace Proyecto
                     guardarEn = pos_pc;
                     break;
                 case 35: //LW
-                    Console.Write("Corriendo un LW");
+                    Console.WriteLine("Corriendo un LW");
+                    imprimirMemoriasyCaches();
                     //segundoRegistro;
                     //int bloque = direccion / 16;
                     int direccion = primerRegistro + ultimaParte;
@@ -715,7 +733,7 @@ namespace Proyecto
                             resultado = cache_datos3[palabra];
                             break;
                     }
-                    Console.Write("Fin LW");
+                    Console.WriteLine("Fin LW");
                     //Lee de la cache
                     break;
                 case 50: //LL
