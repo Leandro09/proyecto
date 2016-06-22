@@ -1041,7 +1041,7 @@ namespace Proyecto
                                             Monitor.Exit(dir1);
                                             break;
                                         case 2:
-                                            if ((dir2[posicionDir]) == 'M')
+                                            if ((dir2[posicionDir * 5 + 1]) == 'M')
                                             {
                                                 int i=0;
                                                 if((dir2[posicionDir*5+2]=='1')){
