@@ -467,22 +467,22 @@ namespace Proyecto
             }
 
             int f = 256 * 256;
-
+            /*
             for (int i = 0; i < cant_memComp; ++i)
             {
                 memComp1[i] = i + 1;
                 memComp2[i] = i * 256;
                 memComp3[i] = i * f;
             }
-
-            /*
+            */
+            
 
             for (int i = 0; i < cant_memComp; ++i)
             {
                 memComp1[i] = 1;
                 memComp2[i] = 1;
                 memComp3[i] = 1;
-            }*/
+            }
             for (int i = 0; i < 8; ++i)//cant_bloques_directorio; ++i)
             {
                 int g = i * 5;
