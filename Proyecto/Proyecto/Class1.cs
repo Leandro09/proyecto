@@ -277,6 +277,7 @@ namespace Proyecto
                     procesador1[pos_pc] = 0;//Limpiamos el valor del pc en el procesador.
                     --hilosCorriendo;//Hay un hilo menos que esta corriendo.
                     Thread.CurrentThread.Abort();//Abortamos el hilo actual.
+                    
 
                 }
                 else
@@ -856,6 +857,8 @@ namespace Proyecto
                             if (procesador1[pos_rl] == direccion35)
                             {
                                 cache_store(procesador,direccion35);
+                                //Guarda en memoria.
+                                memComp1[direccion35] = segundoRegistro;
                             }
                             else
                             {
@@ -866,6 +869,8 @@ namespace Proyecto
                             if (procesador2[pos_rl] == direccion35)
                             {
                                 cache_store(procesador, direccion35);
+                                //Guarda en memoria.
+                                memComp1[direccion35] = segundoRegistro;
                             }
                             else
                             {
@@ -876,6 +881,8 @@ namespace Proyecto
                             if (procesador3[pos_rl] == direccion35)
                             {
                                 cache_store(procesador, direccion35);
+                                //Guarda en memoria.
+                                memComp1[direccion35] = segundoRegistro;
                             }
                             else
                             {
@@ -887,19 +894,24 @@ namespace Proyecto
                     break;
                 case 43: //SW
                     int direccion36 = primerRegistro + ultimaParte;
-                    switch (procesador)
+                switch (procesador)
                 { 
-                case 1:
-                        cache_store(procesador, direccion36);
-                    break;
-                case 2:
+                    case 1:
+                            cache_store(procesador, direccion36);
+                            //Guarda en memoria.
+                            memComp1[direccion36] = segundoRegistro;
+                            break;
+                    case 2:
 
-                        cache_store(procesador, direccion36);
-                    break;
-                case 3:
-                        cache_store(procesador, direccion36);
-                    break;
-                    
+                            cache_store(procesador, direccion36);
+                            //Guarda en memoria.
+                            memComp1[direccion36] = segundoRegistro;
+                            break;
+                    case 3:
+                            cache_store(procesador, direccion36);
+                            //Guarda en memoria.
+                            memComp1[direccion36] = segundoRegistro;
+                            break;    
                }
             break;
                 case 63: //FIN
