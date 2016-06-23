@@ -3474,7 +3474,7 @@ namespace Proyecto
             for (int i = 0; i < hilillos; ++i)
             {
                 //Ruta del archivo que será leído.
-                directorio_archivo = directorio_raiz + (i + 1) + ".txt";
+                directorio_archivo = directorio_raiz + (i) + ".txt";
 
 
                 //Procede a leer el archivo linea a linea
