@@ -2658,7 +2658,7 @@ namespace Proyecto
             int indice = bloque % 4;
             pos_memoria = bloque / 8;
             pos_memoria = pos_memoria * 16;     //Para sacar la dirección en donde comienza el bloque en memoria.
-
+            int[] bloque_en_cache = new int[4];
             //Para seleccionar la caché que será tratada.
             switch (procesador)
             {
@@ -2685,12 +2685,14 @@ namespace Proyecto
                         for (int i = 0; i < 4; ++i)
                         {
                             memComp1[pos_memoria + (i * 4)] = cache_datos1[indice + i];
+                            bloque_en_cache[i] = cache_datos1[indice + i];
                         }
                         break;
                     case 2:
                         for (int i = 0; i < 4; ++i)
                         {
                             memComp2[pos_memoria + (i * 4)] = cache_datos2[indice + i];
+                            bloque_en_cache[i] = cache_datos2[indice + i];
                         }
                         break;
                     case 3:
@@ -2698,6 +2700,7 @@ namespace Proyecto
                         for (int i = 0; i < 4; ++i)
                         {
                             memComp3[pos_memoria + (i * 4)] = cache_datos3[indice + i];
+                            bloque_en_cache[i] = cache_datos3[indice + i];
                         }
                         break;
                 }
@@ -2719,28 +2722,40 @@ namespace Proyecto
                             if (esLoad)
                             {
                                 dir1[temporal[1] * 5 + 1] = 'C';
+                                if (cache == 1)
+                                {
+                                    dir1[temporal[1] * 5 + 2] = '1';
+                                }
+                                else if (cache == 2)
+                                {
+                                    dir1[temporal[1] * 5 + 3] = '1';
+                                }
+                                else
+                                {
+                                    dir1[temporal[1] * 5 + 4] = '1';
+                                }
                             }
                             else
                             {
                                 dir1[temporal[1] * 5 + 1] = 'M';
-                            }
-                            if (cache == 1)             //Cache indica en que caché va a estar de ahora en adelante.
-                            {
-                                dir1[temporal[1] * 5 + 2] = '1';
-                                dir1[temporal[1] * 5 + 3] = '0';
-                                dir1[temporal[1] * 5 + 4] = '0';
-                            }
-                            else if (cache == 2)
-                            {
-                                dir1[temporal[1] * 5 + 2] = '0';
-                                dir1[temporal[1] * 5 + 3] = '1';
-                                dir1[temporal[1] * 5 + 4] = '0';
-                            }
-                            else
-                            {
-                                dir1[temporal[1] * 5 + 2] = '0';
-                                dir1[temporal[1] * 5 + 3] = '0';
-                                dir1[temporal[1] * 5 + 4] = '1';
+                                if (cache == 1)
+                                {
+                                    dir1[temporal[1] * 5 + 2] = '1';
+                                    dir1[temporal[1] * 5 + 3] = '0';
+                                    dir1[temporal[1] * 5 + 4] = '0';
+                                }
+                                else if (cache == 2)
+                                {
+                                    dir1[temporal[1] * 5 + 2] = '0';
+                                    dir1[temporal[1] * 5 + 3] = '1';
+                                    dir1[temporal[1] * 5 + 4] = '0';
+                                }
+                                else
+                                {
+                                    dir1[temporal[1] * 5 + 2] = '0';
+                                    dir1[temporal[1] * 5 + 3] = '0';
+                                    dir1[temporal[1] * 5 + 4] = '1';
+                                }
                             }
                         }
                         else
@@ -2750,7 +2765,6 @@ namespace Proyecto
                             dir1[temporal[1] * 5 + 2] = '0';
                             dir1[temporal[1] * 5 + 3] = '0';
                             dir1[temporal[1] * 5 + 4] = '0';
-
                         }
                         break;
                     case 2:
@@ -2758,9 +2772,13 @@ namespace Proyecto
                         {
                             //Cambia los directorios cuando es local, además verifica si es un load o store para colocar el estado.
                             if (esLoad)
+                            {
                                 dir2[temporal[1] * 5 + 1] = 'C';
+                            }
                             else
+                            {
                                 dir2[temporal[1] * 5 + 1] = 'M';
+                            }
                             if (cache == 1)
                             {
                                 dir2[temporal[1] * 5 + 2] = '1';
@@ -2787,19 +2805,20 @@ namespace Proyecto
                             dir2[temporal[1] * 5 + 2] = '0';
                             dir2[temporal[1] * 5 + 3] = '0';
                             dir2[temporal[1] * 5 + 4] = '0';
-
                         }
-
-
                         break;
                     case 3:
                         if (!reemplazo)
                         {
                             //Cambia los directorios cuando es local, además verifica si es un load o store para colocar el estado.
                             if (esLoad)
+                            {
                                 dir3[temporal[1] * 5 + 1] = 'C';
+                            }
                             else
+                            {
                                 dir3[temporal[1] * 5 + 1] = 'M';
+                            }
                             if (procesador == 1)
                             {
                                 dir3[temporal[1] * 5 + 2] = '1';
@@ -2826,7 +2845,6 @@ namespace Proyecto
                             dir3[temporal[1] * 5 + 2] = '0';
                             dir3[temporal[1] * 5 + 3] = '0';
                             dir3[temporal[1] * 5 + 4] = '0';
-
                         }
                         break;
                 }
@@ -2837,11 +2855,11 @@ namespace Proyecto
                     miBarrerita.SignalAndWait();
                 }
                 //reloj = reloj + 2;
-            }
+            }//Termina el si es local
             else
-            {
+            { //Comienza el si es remoto
                 //Almacena el bloque completo de la caché.
-                int[] bloque_en_cache = new int[4];
+                //int[] bloque_en_cache = new int[4];
                 switch (procesador)
                 {
                     case 1:
@@ -2849,7 +2867,6 @@ namespace Proyecto
                         {
                             bloque_en_cache[i] = cache_datos1[indice + i];
                         }
-
                         break;
                     case 2:
                         for (int i = 0; i < 4; ++i)
@@ -2899,73 +2916,98 @@ namespace Proyecto
                 switch (temporal[0])
                 {
                     case 1:
-
                         if (!reemplazo)
                         {
-
                             //Cambia los directorios cuando es local, además verifica si es un load o store para colocar el estado.
                             if (esLoad)
+                            {
                                 dir1[temporal[1] * 5 + 1] = 'C';
+                                if (cache == 1)
+                                {
+                                    dir1[temporal[1] * 5 + 2] = '1';
+                                }
+                                else if (cache == 2)
+                                {
+                                    dir1[temporal[1] * 5 + 3] = '1';
+                                }
+                                else
+                                {
+                                    dir1[temporal[1] * 5 + 4] = '1';
+                                }
+                            }
                             else
+                            {
                                 dir1[temporal[1] * 5 + 1] = 'M';
-                            if (cache == 1)
-                            {
-                                dir1[temporal[1] * 5 + 2] = '1';
-                                dir1[temporal[1] * 5 + 3] = '0';
-                                dir1[temporal[1] * 5 + 4] = '0';
-                            }
-                            else if (cache == 2)
-                            {
-                                dir1[temporal[1] * 5 + 2] = '0';
-                                dir1[temporal[1] * 5 + 3] = '1';
-                                dir1[temporal[1] * 5 + 4] = '0';
-                            }
-                            else
-                            {
-                                dir1[temporal[1] * 5 + 2] = '0';
-                                dir1[temporal[1] * 5 + 3] = '0';
-                                dir1[temporal[1] * 5 + 4] = '1';
+                                if (cache == 1)
+                                {
+                                    dir1[temporal[1] * 5 + 2] = '1';
+                                    dir1[temporal[1] * 5 + 3] = '0';
+                                    dir1[temporal[1] * 5 + 4] = '0';
+                                }
+                                else if (cache == 2)
+                                {
+                                    dir1[temporal[1] * 5 + 2] = '0';
+                                    dir1[temporal[1] * 5 + 3] = '1';
+                                    dir1[temporal[1] * 5 + 4] = '0';
+                                }
+                                else
+                                {
+                                    dir1[temporal[1] * 5 + 2] = '0';
+                                    dir1[temporal[1] * 5 + 3] = '0';
+                                    dir1[temporal[1] * 5 + 4] = '1';
+                                }
                             }
                         }
-                        else
+                        else //Si es reemplazo hay que ponerlo U porque ya no vaa
                         {
                             //Cambia los directorios cuando es local y ninguna caché tendrá el bloque (porque es un reemplazo).
                             dir1[temporal[1] * 5 + 1] = 'U';
                             dir1[temporal[1] * 5 + 2] = '0';
                             dir1[temporal[1] * 5 + 3] = '0';
                             dir1[temporal[1] * 5 + 4] = '0';
-
                         }
-
-                        break;
+                        break;//fin case 1 directorio remoto
                     case 2:
-
-
                         if (!reemplazo)
                         {
-
                             //Cambia los directorios cuando es local, además verifica si es un load o store para colocar el estado.
                             if (esLoad)
+                            {
                                 dir2[temporal[1] * 5 + 1] = 'C';
+                                if (cache == 1)
+                                {
+                                    dir2[temporal[1] * 5 + 2] = '1';
+                                }
+                                else if (cache == 2)
+                                {
+                                    dir2[temporal[1] * 5 + 3] = '1';
+                                }
+                                else
+                                {
+                                    dir2[temporal[1] * 5 + 4] = '1';
+                                }
+                            }
                             else
+                            {
                                 dir2[temporal[1] * 5 + 1] = 'M';
-                            if (cache == 1)
-                            {
-                                dir2[temporal[1] * 5 + 2] = '1';
-                                dir2[temporal[1] * 5 + 3] = '0';
-                                dir2[temporal[1] * 5 + 4] = '0';
-                            }
-                            else if (cache == 2)
-                            {
-                                dir2[temporal[1] * 5 + 2] = '0';
-                                dir2[temporal[1] * 5 + 3] = '1';
-                                dir2[temporal[1] * 5 + 4] = '0';
-                            }
-                            else
-                            {
-                                dir2[temporal[1] * 5 + 2] = '0';
-                                dir2[temporal[1] * 5 + 3] = '0';
-                                dir2[temporal[1] * 5 + 4] = '1';
+                                if (cache == 1)
+                                {
+                                    dir2[temporal[1] * 5 + 2] = '1';
+                                    dir2[temporal[1] * 5 + 3] = '0';
+                                    dir2[temporal[1] * 5 + 4] = '0';
+                                }
+                                else if (cache == 2)
+                                {
+                                    dir2[temporal[1] * 5 + 2] = '0';
+                                    dir2[temporal[1] * 5 + 3] = '1';
+                                    dir2[temporal[1] * 5 + 4] = '0';
+                                }
+                                else
+                                {
+                                    dir2[temporal[1] * 5 + 2] = '0';
+                                    dir2[temporal[1] * 5 + 3] = '0';
+                                    dir2[temporal[1] * 5 + 4] = '1';
+                                }
                             }
                         }
                         else
@@ -2975,37 +3017,50 @@ namespace Proyecto
                             dir2[temporal[1] * 5 + 2] = '0';
                             dir2[temporal[1] * 5 + 3] = '0';
                             dir2[temporal[1] * 5 + 4] = '0';
-
                         }
-
-                        break;
+                        break;//fin case 2 directorio remoto
                     case 3:
-
                         if (!reemplazo)
                         {
-
                             //Cambia los directorios cuando es local, además verifica si es un load o store para colocar el estado.
                             if (esLoad)
+                            {
                                 dir3[temporal[1] * 5 + 1] = 'C';
+                                if (cache == 1)
+                                {
+                                    dir3[temporal[1] * 5 + 2] = '1';
+                                }
+                                else if (cache == 2)
+                                {
+                                    dir3[temporal[1] * 5 + 3] = '1';
+                                }
+                                else
+                                {
+                                    dir3[temporal[1] * 5 + 4] = '1';
+                                }
+                            }
                             else
+                            {
                                 dir3[temporal[1] * 5 + 1] = 'M';
-                            if (cache == 1)
-                            {
-                                dir3[temporal[1] * 5 + 2] = '1';
-                                dir3[temporal[1] * 5 + 3] = '0';
-                                dir3[temporal[1] * 5 + 4] = '0';
-                            }
-                            else if (cache == 2)
-                            {
-                                dir3[temporal[1] * 5 + 2] = '0';
-                                dir3[temporal[1] * 5 + 3] = '1';
-                                dir3[temporal[1] * 5 + 4] = '0';
-                            }
-                            else
-                            {
-                                dir3[temporal[1] * 5 + 2] = '0';
-                                dir3[temporal[1] * 5 + 3] = '0';
-                                dir3[temporal[1] * 5 + 4] = '1';
+                                //}
+                                if (cache == 1)
+                                {
+                                    dir3[temporal[1] * 5 + 2] = '1';
+                                    dir3[temporal[1] * 5 + 3] = '0';
+                                    dir3[temporal[1] * 5 + 4] = '0';
+                                }
+                                else if (cache == 2)
+                                {
+                                    dir3[temporal[1] * 5 + 2] = '0';
+                                    dir3[temporal[1] * 5 + 3] = '1';
+                                    dir3[temporal[1] * 5 + 4] = '0';
+                                }
+                                else
+                                {
+                                    dir3[temporal[1] * 5 + 2] = '0';
+                                    dir3[temporal[1] * 5 + 3] = '0';
+                                    dir3[temporal[1] * 5 + 4] = '1';
+                                }
                             }
                         }
                         else
@@ -3015,9 +3070,8 @@ namespace Proyecto
                             dir3[temporal[1] * 5 + 2] = '0';
                             dir3[temporal[1] * 5 + 3] = '0';
                             dir3[temporal[1] * 5 + 4] = '0';
-
                         }
-                        break;
+                        break;//case 3 procesador (directorio)
                 }
 
                 //Sincroniza el ciclo de reloj.
@@ -3030,30 +3084,32 @@ namespace Proyecto
             //Si el procesador debe de subirlo a su propia caché.
             if (!reemplazo)
             {
-                switch (cache)
-                {
+                switch (cache)//revisar lo de las memorias. Lo de las memorias depende de a cual directorio pertence el bloque y no de a cual cache o procesador.
+                {//Osea se necesita otro switch para el procesador o mas facil usar la informacion que ya habiamos guardado en bloque_en_cache[i] = cache_datos1[indice + i];
+                    //Pero hacerlo al reves
                     case 1:
                         for (int i = 0; i < 4; ++i)
                         {
-                            cache_datos1[indice * 4 + i] = memComp1[pos_memoria + (i * 4)];
+                            //cache_datos1[indice * 4 + i] = memComp1[pos_memoria + (i * 4)];
+                            cache_datos1[indice + i] = bloque_en_cache[i];
                         }
                         break;
                     case 2:
                         for (int i = 0; i < 4; ++i)
                         {
-                            cache_datos2[indice * 4 + i] = memComp2[pos_memoria + (i * 4)];
+                            //cache_datos2[indice * 4 + i] = memComp2[pos_memoria + (i * 4)];
+                            cache_datos2[indice + i] = bloque_en_cache[i];
                         }
                         break;
                     case 3:
                         for (int i = 0; i < 4; ++i)
                         {
-                            cache_datos3[indice * 4 + i] = memComp3[pos_memoria + (i * 4)];
+                            //cache_datos3[indice * 4 + i] = memComp3[pos_memoria + (i * 4)];
+                            cache_datos3[indice + i] = bloque_en_cache[i];
                         }
                         break;
-
                 }
             }
-
             return true;
         }
 
