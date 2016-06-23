@@ -1365,7 +1365,7 @@ namespace Proyecto
                                                 for (int i = 0; i < 4; ++i)
                                                 {
                                                     //pasa las 4 palabras MIPS a la cache_inst
-                                                    cache_datos1[posicionCache + i] = memComp1[direccionBloque + i * 4];
+                                                    cache_datos3[posicionCache + i] = memComp1[direccionBloque + i * 4];
                                                 }
                                             }
                                             dir1[posicionDir * 5 + 1] = 'C';
@@ -1404,7 +1404,7 @@ namespace Proyecto
                                                 for (int i = 0; i < 4; ++i)
                                                 {
                                                     //pasa las 4 palabras MIPS a la cache_inst
-                                                    cache_datos1[posicionCache + i] = memComp2[direccionBloque + i * 4];
+                                                    cache_datos3[posicionCache + i] = memComp2[direccionBloque + i * 4];
                                                 }
                                                 dir2[posicionDir * 5 + 1] = 'C';
                                                 dir2[posicionDir * 5 + 4] = '1';
