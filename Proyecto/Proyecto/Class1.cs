@@ -184,7 +184,7 @@ namespace Proyecto
                 }
             }
             Console.WriteLine("");
-            Console.WriteLine("Cache");
+            Console.WriteLine("Cache1");
             //Console.WriteLine("Proc              B0              B1              B2              B3");
             Console.WriteLine("B0   B1   B2   B3");
             //Console.Write(" 1  ");
@@ -211,39 +211,37 @@ namespace Proyecto
                 //Console.WriteLine("");
             }
             Console.WriteLine("");
-            Console.WriteLine("Dir");
-            String s = "";
-          //  Console.WriteLine("1");
-            for (int i = 0; i < 40; ++i)
+            // ------------------------------
+            Console.WriteLine("Cache2");
+            //Console.WriteLine("Proc              B0              B1              B2              B3");
+            Console.WriteLine("B0   B1   B2   B3");
+            //Console.Write(" 1  ");
+            for (int i = 0; i < 4; ++i)
             {
-                s=s+dir1[i].ToString();
-                s=s+" ";
-                if (((i) % 8) == 0)
+                for (int j = 0; j < 4; ++j)
                 {
-                    s = s + "\n";
+                    Console.Write(cache_datos2[j * 4 + i]);
+                    Console.Write("    ");
                 }
+                Console.WriteLine("");
             }
-         //   Console.WriteLine("2");
-            for (int i = 0; i < 40; ++i)
+            for (int i = 0; i < 4; ++i)
             {
-                s = s + dir1[i].ToString();
-                s = s + " ";
-                if (((i) % 8) == 0)
-                {
-                    s = s + "\n";
-                }
+                Console.Write(encache_datos2[i]);
+                Console.Write("   ");
+                //Console.WriteLine("");
             }
-           // Console.WriteLine("3");
-            for (int i = 0; i < 40; ++i)
+            Console.WriteLine("");
+            for (int i = 0; i < 4; ++i)
             {
-                s = s + dir1[i].ToString();
-                s = s + " ";
-                if (((i) % 8) == 0)
-                {
-                    s = s + "\n";
-                }
+                Console.Write(estadoCache2[i]);
+                Console.Write("    ");
+                //Console.WriteLine("");
             }
-            Console.WriteLine(s);
+            Console.WriteLine("");
+
+
+
         }
 
         public static void verDir()
@@ -466,7 +464,7 @@ namespace Proyecto
                 encache_datos2[i] = -1;
                 encache_datos3[i] = -1;
             }
-            /*
+            
             int f = 256 * 256;
             
             for (int i = 0; i < cant_memComp; ++i)
@@ -476,14 +474,14 @@ namespace Proyecto
                 memComp3[i] = i*f;
             }
 
-            */
+            /*
 
             for (int i = 0; i < cant_memComp; ++i)
             {
                 memComp1[i] = 1;
                 memComp2[i] = 1;
                 memComp3[i] = 1;
-            }
+            }*/
             for (int i = 0; i < 8; ++i)//cant_bloques_directorio; ++i)
             {
                 int g = i * 5;
@@ -1008,19 +1006,19 @@ namespace Proyecto
                                     switch (numDir)
                                     {
                                         case 1:
-                                            if ((dir1[posicionDir*5+1]) == 'M')
+                                            if ((dir1[posicionDir * 5 + 1]) == 'M')
                                             {
                                                 int i=0;
-                                                if((dir1[posicionDir*5+2]=='1')){
+                                                if((dir1[posicionDir * 5 + 2]=='1')){
                                                     i=1;
-                                                }else if (dir1[posicionDir*5+3]=='1'){
+                                                }else if (dir1[posicionDir * 5 + 3] =='1'){
                                                     i=2;
-                                                }else if (dir1[posicionDir*5+4]=='1'){
+                                                }else if (dir1[posicionDir * 5 + 4] =='1'){
                                                     i=3;
                                                 }
                                                 r = escribirBloqueEnMem(bloque,i, 1, posicionCache, true, false);
                                             }
-                                            else if (((dir1[posicionDir*5+1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                            else if (((dir1[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                             {//Si esta como U o en C en el directorio
                                                 for (int i = 0; i < 16; ++i)
                                                 {
@@ -1044,11 +1042,11 @@ namespace Proyecto
                                             if ((dir2[posicionDir * 5 + 1]) == 'M')
                                             {
                                                 int i=0;
-                                                if((dir2[posicionDir*5+2]=='1')){
+                                                if((dir2[posicionDir * 5 + 2] =='1')){
                                                     i=1;
-                                                }else if (dir2[posicionDir*5+3]=='1'){
+                                                }else if (dir2[posicionDir * 5 + 3] =='1'){
                                                     i=2;
-                                                }else if (dir2[posicionDir*5+4]=='1'){
+                                                }else if (dir2[posicionDir * 5 + 4] =='1'){
                                                     i=3;
                                                 }
                                                 r = escribirBloqueEnMem(bloque,i, 1, posicionCache, true, false);
@@ -1078,11 +1076,11 @@ namespace Proyecto
                                             if ((dir3[posicionDir * 5 + 1]) == 'M')
                                             {
                                                 int i=0;
-                                                if((dir3[posicionDir*5+2]=='1')){
+                                                if((dir3[posicionDir * 5 + 2] =='1')){
                                                     i=1;
-                                                }else if (dir3[posicionDir*5+3]=='1'){
+                                                }else if (dir3[posicionDir * 5 + 3] =='1'){
                                                     i=2;
-                                                }else if (dir3[posicionDir*5+4]=='1'){
+                                                }else if (dir3[posicionDir * 5 + 4] =='1'){
                                                     i=3;
                                                 }
                                                 r = escribirBloqueEnMem(bloque,i, 1, posicionCache, true, false);
