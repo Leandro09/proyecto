@@ -2443,7 +2443,7 @@ namespace Proyecto
                         dir1[temporal[1] * 5 + 1 + numCache] = '0';
                         if (temporal[0] == numCache)
                         {
-                            contadorProcesador1 = contadorProcesador1 + 2;
+                            //contadorProcesador1 = contadorProcesador1 + 2;
 
                             for (int i = 0; i < 2; ++i)
                             {
@@ -2453,7 +2453,7 @@ namespace Proyecto
                         }
                         else
                         {
-                            contadorProcesador1 = contadorProcesador1 + 4;
+                            //contadorProcesador1 = contadorProcesador1 + 4;
                             for (int i = 0; i < 4; ++i)
                             {
                                 miBarrerita.SignalAndWait();
@@ -2476,7 +2476,7 @@ namespace Proyecto
                         dir2[temporal[1] * 5 + 1 + numCache] = '0';
                         if (temporal[0] == numCache)
                         {
-                            contadorProcesador2 = contadorProcesador2 + 2;
+                            //contadorProcesador2 = contadorProcesador2 + 2;
 
                             for (int i = 0; i < 2; ++i)
                             {
@@ -2486,7 +2486,7 @@ namespace Proyecto
                         }
                         else
                         {
-                            contadorProcesador2 = contadorProcesador2 + 4;
+                            //contadorProcesador2 = contadorProcesador2 + 4;
                             for (int i = 0; i < 4; ++i)
                             {
                                 miBarrerita.SignalAndWait();
@@ -2509,7 +2509,7 @@ namespace Proyecto
                         dir3[temporal[1] * 5 + 1 + numCache] = '0';
                         if (temporal[0] == numCache)
                         {
-                            contadorProcesador3 = contadorProcesador3 + 2;
+                            //contadorProcesador3 = contadorProcesador3 + 2;
 
                             for (int i = 0; i < 2; ++i)
                             {
@@ -2519,7 +2519,7 @@ namespace Proyecto
                         }
                         else
                         {
-                            contadorProcesador3 = contadorProcesador3 + 4;
+                            //contadorProcesador3 = contadorProcesador3 + 4;
                             for (int i = 0; i < 4; ++i)
                             {
                                 miBarrerita.SignalAndWait();
