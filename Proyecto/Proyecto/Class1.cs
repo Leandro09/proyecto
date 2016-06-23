@@ -1864,6 +1864,7 @@ namespace Proyecto
                             if (dir1[temporal[1] * 5 + 1] == 'U')
                             {
                                 //Hacer fallo de caché
+                                fallocache_inst(procesador,direccion);
                             }
                             else 
                             {
@@ -1888,7 +1889,9 @@ namespace Proyecto
                                             encache_datos2[posicionCache] = 'I';
                                             miBarrerita.SignalAndWait();
                                             //Llamar fallo de caché. Recordar liberar recursos.
-                                        }else
+                                            fallocache_inst(procesador, direccion);
+                                        }
+                                        else
                                         {
                                             Monitor.Exit(dir1);
                                             Monitor.Exit(cache_datos2);
@@ -1904,7 +1907,9 @@ namespace Proyecto
                                                 encache_datos3[posicionCache] = 'I';
                                                 miBarrerita.SignalAndWait();
                                                 //Llamar fallo de caché. Recordar liberar recursos.
-                                            }else
+                                                fallocache_inst(procesador, direccion);
+                                            }
+                                            else
                                             {
                                                 Monitor.Exit(dir1);
                                                 Monitor.Exit(cache_datos3);
@@ -1929,7 +1934,9 @@ namespace Proyecto
                                         Monitor.Exit(cache_datos3);
                                         Monitor.Exit(estadoCache3);
                                         //hacer fallo de cache
-                                    }else
+                                        fallocache_inst(procesador, direccion);
+                                    }
+                                    else
                                     {
                                         Monitor.Exit(dir1);
                                     }
@@ -2007,6 +2014,7 @@ namespace Proyecto
                             if (dir1[temporal[1] * 5 + 1] == 'U')
                             {
                                 //Hacer fallo de caché
+                                fallocache_inst(procesador, direccion);
                             }
                             else
                             {
@@ -2032,6 +2040,7 @@ namespace Proyecto
                                             encache_datos1[posicionCache] = 'I';
                                             miBarrerita.SignalAndWait();
                                             //Llamar fallo de caché. Recordar liberar recursos.
+                                            fallocache_inst(procesador, direccion);
                                         }
                                         else
                                         {
@@ -2048,7 +2057,8 @@ namespace Proyecto
                                             {
                                                 encache_datos3[posicionCache] = 'I';
                                                 miBarrerita.SignalAndWait();
-                                                //Llamar fallo de caché. Recordar liberar recursos.
+                                                //Llamar fallo de caché. Recordar liberar recursos.-
+                                                fallocache_inst(procesador, direccion);
                                             }
                                             else
                                             {
@@ -2076,6 +2086,7 @@ namespace Proyecto
                                         Monitor.Exit(cache_datos3);
                                         Monitor.Exit(estadoCache3);
                                         //hacer fallo de cache
+                                        fallocache_inst(procesador, direccion);
                                     }
                                     else
                                     {
@@ -2160,6 +2171,7 @@ namespace Proyecto
                             if (dir3[temporal[1] * 5 + 1] == 'U')
                             {
                                 //Hacer fallo de caché
+                                fallocache_inst(procesador, direccion);
                             }
                             else
                             {
@@ -2185,6 +2197,7 @@ namespace Proyecto
                                             encache_datos1[posicionCache] = 'I';
                                             miBarrerita.SignalAndWait();
                                             //Llamar fallo de caché. Recordar liberar recursos.
+                                            fallocache_inst(procesador, direccion);
                                         }
                                         else
                                         {
@@ -2202,6 +2215,7 @@ namespace Proyecto
                                                 encache_datos2[posicionCache] = 'I';
                                                 miBarrerita.SignalAndWait();
                                                 //Llamar fallo de caché. Recordar liberar recursos.
+                                                fallocache_inst(procesador, direccion);
                                             }
                                             else
                                             {
@@ -2220,7 +2234,6 @@ namespace Proyecto
                                         encache_datos1[posicionCache] = 'I';
                                         Monitor.Exit(cache_datos1);
                                         Monitor.Exit(estadoCache1);
-
                                     }
 
                                     if (Monitor.TryEnter(cache_datos2) && Monitor.TryEnter(encache_datos2))
@@ -2229,6 +2242,7 @@ namespace Proyecto
                                         Monitor.Exit(cache_datos2);
                                         Monitor.Exit(estadoCache2);
                                         //hacer fallo de cache
+                                        fallocache_inst(procesador, direccion);
                                     }
                                     else
                                     {
@@ -2396,7 +2410,8 @@ namespace Proyecto
                     if (Monitor.TryEnter(dir1))
                     {
                         estadoCache1[posicion] = 'I';
-                        dir1[bloque * 5 + numCache] = '0';
+                        //dir1[bloque * 5 + numCache] = '0';
+                        dir1[temporal[1] * 5 + 1 + numCache] = '0';
                         if (temporal[0] == numCache)
                         {
                             contadorProcesador1 = contadorProcesador1 + 2;
@@ -2426,7 +2441,7 @@ namespace Proyecto
                     if (Monitor.TryEnter(dir2))
                     {
                         estadoCache2[posicion] = 'I';
-                        dir2[bloque * 5 + numCache] = '0';
+                        dir1[temporal[1] * 5 + 1 + numCache] = '0';
                         if (temporal[0] == numCache)
                         {
                             contadorProcesador2 = contadorProcesador2 + 2;
@@ -2458,7 +2473,7 @@ namespace Proyecto
                     if (Monitor.TryEnter(dir3))
                     {
                         estadoCache3[posicion] = 'I';
-                        dir3[bloque * 5 + numCache] = '0';
+                        dir1[temporal[1] * 5 + 1 + numCache] = '0';
                         if (temporal[0] == numCache)
                         {
                             contadorProcesador3 = contadorProcesador3 + 2;
