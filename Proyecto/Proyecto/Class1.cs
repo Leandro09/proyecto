@@ -2407,15 +2407,16 @@ namespace Proyecto
             {
                 case 1:
 
-                    if (Monitor.TryEnter(dir1))
-                    {
+                    if (Monitor.TryEnter(dir1))//como saben que es este directorio? El directorio no tiene nada que ver con el numero de la cache si no con
+                    {                          //el bloque que es. A partir del bloque lo calculan y hacen un switch para ver a cual directorio 
+                                               //le deben hacer el tryEnter.Lo del temporal[0]==numCache esta bien pero el switch va antes (y si lo ven
+                                               //ya con el swtch sabrian si es local o no)
                         estadoCache1[posicion] = 'I';
                         //dir1[bloque * 5 + numCache] = '0';
                         dir1[temporal[1] * 5 + 1 + numCache] = '0';
                         if (temporal[0] == numCache)
                         {
                             contadorProcesador1 = contadorProcesador1 + 2;
-
 
                             for (int i = 0; i < 2; ++i)
                             {
@@ -2438,14 +2439,15 @@ namespace Proyecto
                     break;
                 case 2:
 
-                    if (Monitor.TryEnter(dir2))
-                    {
+                    if (Monitor.TryEnter(dir2))//como saben que es este directorio? El directorio no tiene nada que ver con el numero de la cache si no con
+                    {                          //el bloque que es. A partir del bloque lo calculan y hacen un switch para ver a cual directorio 
+                                               //le deben hacer el tryEnter.Lo del temporal[0]==numCache esta bien pero el switch va antes (y si lo ven
+                                               //ya con el swtch sabrian si es local o no)
                         estadoCache2[posicion] = 'I';
-                        dir1[temporal[1] * 5 + 1 + numCache] = '0';
+                        dir2[temporal[1] * 5 + 1 + numCache] = '0';
                         if (temporal[0] == numCache)
                         {
                             contadorProcesador2 = contadorProcesador2 + 2;
-
 
                             for (int i = 0; i < 2; ++i)
                             {
@@ -2470,14 +2472,15 @@ namespace Proyecto
                     break;
                 case 3:
 
-                    if (Monitor.TryEnter(dir3))
-                    {
+                    if (Monitor.TryEnter(dir3))//como saben que es este directorio? El directorio no tiene nada que ver con el numero de la cache si no con
+                    {                          //el bloque que es. A partir del bloque lo calculan y hacen un switch para ver a cual directorio 
+                                               //le deben hacer el tryEnter.Lo del temporal[0]==numCache esta bien pero el switch va antes. (y si lo ven
+                                               //ya con el swtch sabrian si es local o no)
                         estadoCache3[posicion] = 'I';
-                        dir1[temporal[1] * 5 + 1 + numCache] = '0';
+                        dir3[temporal[1] * 5 + 1 + numCache] = '0';
                         if (temporal[0] == numCache)
                         {
                             contadorProcesador3 = contadorProcesador3 + 2;
-
 
                             for (int i = 0; i < 2; ++i)
                             {
@@ -2521,8 +2524,8 @@ namespace Proyecto
 
             if (reemplazo)
             {
-                switch (numMiCache)
-                {
+                switch (numMiCache)//Esta mal. Deben calcular a cual directorio pertenece el bloque y pedir ese directorio. 
+                {                   //acuerdense que el directorio depende del bloque y no de la cache.
                     case 1:
                         //Intenta entrar al directorio correspondiente
                         if (Monitor.TryEnter(dir1))
@@ -2556,7 +2559,7 @@ namespace Proyecto
             else
             {
                 //Accede a la caché que necesita utilizar
-                switch (numOtraCache)
+                switch (numOtraCache)//Este switch si esta bien.
                 {
                     case 1:
                         //Intenta entrar a la caché correspondiente
@@ -2564,7 +2567,7 @@ namespace Proyecto
                         {
                             //Si es un store
                             if (!esLoad)
-                            {
+                            {       
                                 guardaEnMemoria(true, 'I', bloque, numOtraCache,esLoad, numMiCache);
                             }
                             else
@@ -2581,7 +2584,7 @@ namespace Proyecto
                         {
                             //Si es un store
                             if (!esLoad)
-                            {
+                            {       
                                 guardaEnMemoria(true, 'I', bloque, numOtraCache,esLoad, numMiCache);
                             }
                             else
@@ -2598,7 +2601,7 @@ namespace Proyecto
                         {
                             //Si es un store
                             if (!esLoad)
-                            {
+                            {   
                                 guardaEnMemoria(true, 'I', bloque, numOtraCache,esLoad, numMiCache);
                             }
                             else
@@ -2654,7 +2657,6 @@ namespace Proyecto
                         {
                             memComp1[pos_memoria + (i * 4)] = cache_datos1[indice + i];
                         }
-
                         break;
                     case 2:
                         for (int i = 0; i < 4; ++i)
@@ -2686,9 +2688,13 @@ namespace Proyecto
                         {
                             //Cambia los directorios cuando es local, además verifica si es un load o store para colocar el estado.
                             if (esLoad)
-                                dir1[temporal[1]*5 + 1] = 'C';
+                            {
+                                dir1[temporal[1] * 5 + 1] = 'C';
+                            }
                             else
+                            {
                                 dir1[temporal[1] * 5 + 1] = 'M';
+                            }
                             if (cache == 1)             //Cache indica en que caché va a estar de ahora en adelante.
                             {
                                 dir1[temporal[1] * 5 + 2] = '1';
