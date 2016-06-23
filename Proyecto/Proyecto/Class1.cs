@@ -2598,7 +2598,7 @@ namespace Proyecto
                 }
             }
 
-            return false;
+            return true;
         }
 
         //Guarda en memoria si es necesario local o remotamente. La variable procesador contiene el número de la caché.
