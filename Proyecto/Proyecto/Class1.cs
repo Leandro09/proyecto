@@ -1518,7 +1518,7 @@ namespace Proyecto
 
         public static bool cache_store(int procesador, int direccion)
         {
-            int bloque = direccion / 8;
+            int bloque = direccion / 16;
             int posicionCache = bloque % 4;
             int[] temporal = obtener_num_estruct(bloque);       //Almacena temporalmente el número de bloque del directorio a utilizar.
             int posicionDir = temporal[1] * 5;
@@ -1580,8 +1580,8 @@ namespace Proyecto
                                     if (Monitor.TryEnter(dir1))
                                     {
                                         //Obtiene el procesador y el número del bloque víctima. 
-                                        temporalDos = obtener_num_estruct(encache_datos1[indice]);
-                                        if (dir1[5 * temporalDos[1] + 1] == 'C')
+                                       // temporalDos = obtener_num_estruct(encache_datos1[indice]);
+                                        if (estadoCache1[indice] == 'C')
                                         {
                                             if (reemplazarBloqueCompartido(bloque, procesador, indice))
                                             {
@@ -1815,7 +1815,7 @@ namespace Proyecto
         public static void hacer_bifurcacion(int direccion, int procesador)
         {
 
-            int bloque = direccion / 8;
+            int bloque = direccion / 16;
             int posicionCache = bloque % 4;
             int[] temporal = obtener_num_estruct(bloque);       //Almacena temporalmente el número de bloque del directorio a utilizar.
             int posicionDir = temporal[1] * 5;
