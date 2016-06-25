@@ -823,7 +823,7 @@ namespace Proyecto
                     Console.WriteLine("Fin LL");
                     break;
                 case 51: //SC
-                    int direccion35 = primerRegistro + ultimaParte;
+                    /*int direccion35 = primerRegistro + ultimaParte;
                     LLactivo[procesador % 3] = false;//No necesitan consultarlo antes de ponerlo en falso????
                     switch (procesador)
                     {
@@ -861,8 +861,41 @@ namespace Proyecto
                             else
                             {
                                 procesador3[primerRegistro] = 0;
-                            }
-                            break;
+                            }*/
+                    int direccion35 = primerRegistro + ultimaParte;
+                    int bloque35 = direccion35 / 16;
+                    int posicionCache35 = bloque35 % 4;
+                    int direccionBloque35 = bloque35 * 16;
+
+                    int palabra35 = direccion35 - direccionBloque35;
+                    bool e= false;
+                    switch (procesador)
+                    {
+                       case 1:
+                          e = procesador1[pos_rl] == direccion35;
+                          break;
+                       case 2:
+                          e = procesador2[pos_rl] == direccion35;
+                          break;
+                        case 3:
+                          e = procesador3[pos_rl] == direccion35;
+                          break;
+                    }
+                    if (e)
+                    {
+                        cache_store(procesador, direccion35);
+                        switch (procesador)
+                        {
+                            case 1:
+                                cache_datos1[posicionCache35 * 4 + palabra35] = segundoRegistro;
+                                break;
+                            case 2:
+                                cache_datos2[posicionCache35 * 4 + palabra35] = segundoRegistro;
+                                break;
+                            case 3:
+                                cache_datos3[posicionCache35 * 4 + palabra35] = segundoRegistro;
+                                break;
+                        }
                     }
 
                     break;
@@ -885,23 +918,6 @@ namespace Proyecto
                         case 3:
                             cache_datos3[posicionCache36 * 4 + palabra36] = segundoRegistro;
                             break;
-                        /*case 1:
-                            cache_store(procesador, direccion36);
-                            //Guarda en memoria.
-                            memComp1[direccion36] = segundoRegistro;
-                            break;
-                        case 2:
-
-                            cache_store(procesador, direccion36);
-                            //Guarda en memoria.
-                            memComp1[direccion36] = segundoRegistro;
-                            break;
-                        case 3:
-                            cache_store(procesador, direccion36);
-                            //Guarda en memoria.
-                            memComp1[direccion36] = segundoRegistro;
-                            break;
-                       */
                     }
                     break;
                 case 63: //FIN
