@@ -759,49 +759,19 @@ namespace Proyecto
                     Console.WriteLine("Corriendo un LW");
                     imprimirMemoriasyCaches();
                     verDir();
-                    //segundoRegistro;
-                    //int bloque = direccion / 16;
                     int direccion = primerRegistro + ultimaParte;
                     int bloque = direccion / 16;
                     int posicionCache = bloque % 4;
-                    //int posicionDir = bloque % 8;
-                    //int numDir = (bloque / 8) + 1;
                     int direccionBloque = bloque * 16;
-                    //int palabra = direccion % 16;
 
                     int palabra = direccion - direccionBloque;
                     direccionBloque = direccionBloque % cant_memComp;
                     palabra = palabra / 4;
 
-                    //int palabra = direccion % 16;
                     cache_Load(procesador, direccionBloque, posicionCache, bloque, direccion);
-                    /*
-                    int[] bloqueSol = new int[4]; 
-                    switch (procesador)
-                    {
-                     * 
-                        case 1:
-                            for(int i = 0;i<4;++i){
-                                bloqueSol[posicionCache*4+i] = cache_datos1[posicionCache];
-                            }
-                            break;
-                        case 2:
-                            for (int i = 0; i < 4; ++i)
-                            {
-                                bloqueSol[posicionCache * 4 + i] = cache_datos2[posicionCache];
-                            }
-                            break;
-                        case 3:
-                            for(int i = 0;i<4;++i){
-                                bloqueSol[posicionCache * 4 + i] = cache_datos3[posicionCache];
-                            }
-                            break;
-                    }
-                    guardarEn = primerRegistro;
-                    resultado = bloqueSol[palabra];*/
+                  
                     guardarEn = segundoRegistro;
                     imprimirMemoriasyCaches();
-                    //resultado = cache_datos3[palabra];
                     switch (procesador)
                     {
                         case 1:
@@ -818,39 +788,43 @@ namespace Proyecto
                     //Lee de la cache
                     break;
                 case 50: //LL
+                    Console.WriteLine("Corriendo un LL");
+                    imprimirMemoriasyCaches();
+                    verDir();
                     int direccion1 = primerRegistro + ultimaParte;
                     int bloque1 = direccion1 / 16;
                     int posicionCache1 = bloque1 % 4;
-                    int palabra1 = bloque1 % 16;
-                    //int posicionDir1 = bloque1 % 8;
-                    //int numDir1 = (bloque1 / 8) + 1;
                     int direccionBloque1 = bloque1 * 16;
+
+                    int palabra1 = direccion1 - direccionBloque1;
+                    direccionBloque = direccionBloque1 % cant_memComp;
+                    palabra1 = palabra1 / 4;
+
                     cache_Load(procesador, direccionBloque1, posicionCache1, bloque1, direccion1);
+                  
                     guardarEn = segundoRegistro;
-                    //resultado = cache_datos3[palabra1];
-                    //guardarEn = cac;
-                    //Lee de la cache
-                    //resultado = direccion1;
                     LLactivo[procesador % 3] = true;
+                    imprimirMemoriasyCaches();
                     switch (procesador)
                     {
                         case 1:
+                            resultado = cache_datos1[posicionCache1 * 4 + palabra1];
                             procesador1[pos_rl] = direccion1;
-                            resultado = cache_datos1[palabra1];
                             break;
                         case 2:
+                            resultado = cache_datos2[posicionCache1 * 4 + palabra1];
                             procesador2[pos_rl] = direccion1;
-                            resultado = cache_datos2[palabra1];
                             break;
                         case 3:
+                            resultado = cache_datos3[posicionCache1 * 4 + palabra1];
                             procesador3[pos_rl] = direccion1;
-                            resultado = cache_datos3[palabra1];
                             break;
                     }
+                    Console.WriteLine("Fin LL");
                     break;
                 case 51: //SC
-                    int direccion35 = primerRegistro + ultimaParte;
-                    LLactivo[procesador % 3] = false;
+                    /*int direccion35 = primerRegistro + ultimaParte;
+                    LLactivo[procesador % 3] = false;//No necesitan consultarlo antes de ponerlo en falso????
                     switch (procesador)
                     {
                         case 1:
@@ -887,30 +861,62 @@ namespace Proyecto
                             else
                             {
                                 procesador3[primerRegistro] = 0;
-                            }
-                            break;
+                            }*/
+                    int direccion35 = primerRegistro + ultimaParte;
+                    int bloque35 = direccion35 / 16;
+                    int posicionCache35 = bloque35 % 4;
+                    int direccionBloque35 = bloque35 * 16;
+
+                    int palabra35 = direccion35 - direccionBloque35;
+                    bool e= false;
+                    switch (procesador)
+                    {
+                       case 1:
+                          e = procesador1[pos_rl] == direccion35;
+                          break;
+                       case 2:
+                          e = procesador2[pos_rl] == direccion35;
+                          break;
+                        case 3:
+                          e = procesador3[pos_rl] == direccion35;
+                          break;
+                    }
+                    if (e)
+                    {
+                        cache_store(procesador, direccion35);
+                        switch (procesador)
+                        {
+                            case 1:
+                                cache_datos1[posicionCache35 * 4 + palabra35] = segundoRegistro;
+                                break;
+                            case 2:
+                                cache_datos2[posicionCache35 * 4 + palabra35] = segundoRegistro;
+                                break;
+                            case 3:
+                                cache_datos3[posicionCache35 * 4 + palabra35] = segundoRegistro;
+                                break;
+                        }
                     }
 
                     break;
                 case 43: //SW
                     int direccion36 = primerRegistro + ultimaParte;
+                    int bloque36 = direccion36 / 16;
+                    int posicionCache36 = bloque36 % 4;
+                    int direccionBloque36 = bloque36 * 16;
+
+                    int palabra36 = direccion36 - direccionBloque36;
+                    cache_store(procesador, direccion36);
                     switch (procesador)
                     {
                         case 1:
-                            cache_store(procesador, direccion36);
-                            //Guarda en memoria.
-                            memComp1[direccion36] = segundoRegistro;
+                            cache_datos1[posicionCache36 * 4 + palabra36] = segundoRegistro;
                             break;
                         case 2:
-
-                            cache_store(procesador, direccion36);
-                            //Guarda en memoria.
-                            memComp1[direccion36] = segundoRegistro;
+                            cache_datos2[posicionCache36 * 4 + palabra36] = segundoRegistro;
                             break;
                         case 3:
-                            cache_store(procesador, direccion36);
-                            //Guarda en memoria.
-                            memComp1[direccion36] = segundoRegistro;
+                            cache_datos3[posicionCache36 * 4 + palabra36] = segundoRegistro;
                             break;
                     }
                     break;
@@ -1540,7 +1546,6 @@ namespace Proyecto
                     case 1:
                         if (Monitor.TryEnter(cache_datos1) && Monitor.TryEnter(estadoCache1))
                         {
-
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos1[indice] == bloque && estadoCache1[indice] == 'M')
                             {
@@ -3412,6 +3417,42 @@ namespace Proyecto
             imprimirMemoriasyCaches();
             return dt;
         }
+
+        public DataTable resultadosMemoria()
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Procesador");
+            Object[] datos1 = new Object[9];
+            Object[] datos2 = new Object[9];
+            Object[] datos3 = new Object[9];
+            for (int i = 0; i < 8; ++i)
+            {
+                string s = "B";
+                s = s + i.ToString();
+                dt.Columns.Add(s);
+            }
+            /*dt.Columns.Add("B1");
+            dt.Columns.Add("T inicial");
+            dt.Columns.Add("T final");
+            dt.Columns.Add("Procesador en que corrío");
+             * */
+
+            datos1[0] = 1;
+            datos2[0] = 2;
+            datos3[0] = 3;
+            for (int j = 0; j < 8; ++j)
+            {
+                datos1[1 + j] = memComp1[j];
+                datos2[1 + j] = memComp2[j];
+                datos3[1 + j] = memComp3[j];
+            }
+            
+            dt.Rows.Add(datos1);
+            dt.Rows.Add(datos2);
+            dt.Rows.Add(datos3);
+            return dt;
+        }
+
         //Se encarga de hacer la barrera de sincronizacion
         public static void hiloPrincipal()
         {
