@@ -95,9 +95,9 @@
             // GridMemorias
             // 
             this.GridMemorias.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.GridMemorias.Location = new System.Drawing.Point(23, 358);
+            this.GridMemorias.Location = new System.Drawing.Point(108, 370);
             this.GridMemorias.Name = "GridMemorias";
-            this.GridMemorias.Size = new System.Drawing.Size(1095, 150);
+            this.GridMemorias.Size = new System.Drawing.Size(940, 111);
             this.GridMemorias.TabIndex = 7;
             // 
             // Form1
