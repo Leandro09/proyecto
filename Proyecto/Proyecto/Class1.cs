@@ -868,9 +868,24 @@ namespace Proyecto
                     break;
                 case 43: //SW
                     int direccion36 = primerRegistro + ultimaParte;
+                    int bloque36 = direccion36 / 16;
+                    int posicionCache36 = bloque36 % 4;
+                    int direccionBloque36 = bloque36 * 16;
+
+                    int palabra36 = direccion36 - direccionBloque36;
+                    cache_store(procesador, direccion36);
                     switch (procesador)
                     {
                         case 1:
+                            cache_datos1[posicionCache36 * 4 + palabra36] = segundoRegistro;
+                            break;
+                        case 2:
+                            cache_datos2[posicionCache36 * 4 + palabra36] = segundoRegistro;
+                            break;
+                        case 3:
+                            cache_datos3[posicionCache36 * 4 + palabra36] = segundoRegistro;
+                            break;
+                        /*case 1:
                             cache_store(procesador, direccion36);
                             //Guarda en memoria.
                             memComp1[direccion36] = segundoRegistro;
@@ -886,6 +901,7 @@ namespace Proyecto
                             //Guarda en memoria.
                             memComp1[direccion36] = segundoRegistro;
                             break;
+                       */
                     }
                     break;
                 case 63: //FIN
