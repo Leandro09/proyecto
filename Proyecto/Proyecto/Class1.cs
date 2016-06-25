@@ -821,30 +821,6 @@ namespace Proyecto
                             break;
                     }
                     Console.WriteLine("Fin LL");
-                    /*
-                    int direccion1 = primerRegistro + ultimaParte;
-                    int bloque1 = direccion1 / 16;
-                    int posicionCache1 = bloque1 % 4;
-                    int palabra1 = bloque1 % 16;
-                    int direccionBloque1 = bloque1 * 16;
-                    cache_Load(procesador, direccionBloque1, posicionCache1, bloque1, direccion1);
-                    guardarEn = segundoRegistro;
-                    LLactivo[procesador % 3] = true;
-                    switch (procesador)
-                    {
-                        case 1:
-                            procesador1[pos_rl] = direccion1;
-                            resultado = cache_datos1[palabra1];
-                            break;
-                        case 2:
-                            procesador2[pos_rl] = direccion1;
-                            resultado = cache_datos2[palabra1];
-                            break;
-                        case 3:
-                            procesador3[pos_rl] = direccion1;
-                            resultado = cache_datos3[palabra1];
-                            break;
-                    }*/
                     break;
                 case 51: //SC
                     int direccion35 = primerRegistro + ultimaParte;
