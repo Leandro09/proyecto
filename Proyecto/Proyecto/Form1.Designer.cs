@@ -34,12 +34,14 @@
             this.quantumBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.GridResultados = new System.Windows.Forms.DataGridView();
+            this.GridMemorias = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.GridResultados)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GridMemorias)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(783, 39);
+            this.button1.Location = new System.Drawing.Point(1018, 51);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(100, 23);
             this.button1.TabIndex = 0;
@@ -87,14 +89,23 @@
             this.GridResultados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.GridResultados.Location = new System.Drawing.Point(23, 101);
             this.GridResultados.Name = "GridResultados";
-            this.GridResultados.Size = new System.Drawing.Size(860, 230);
+            this.GridResultados.Size = new System.Drawing.Size(1095, 230);
             this.GridResultados.TabIndex = 6;
+            // 
+            // GridMemorias
+            // 
+            this.GridMemorias.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.GridMemorias.Location = new System.Drawing.Point(23, 358);
+            this.GridMemorias.Name = "GridMemorias";
+            this.GridMemorias.Size = new System.Drawing.Size(1095, 150);
+            this.GridMemorias.TabIndex = 7;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(895, 343);
+            this.ClientSize = new System.Drawing.Size(1147, 539);
+            this.Controls.Add(this.GridMemorias);
             this.Controls.Add(this.GridResultados);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.quantumBox);
@@ -104,6 +115,7 @@
             this.Name = "Form1";
             this.Text = "Proyecto Arquitectura";
             ((System.ComponentModel.ISupportInitialize)(this.GridResultados)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GridMemorias)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -117,6 +129,7 @@
         private System.Windows.Forms.TextBox quantumBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView GridResultados;
+        private System.Windows.Forms.DataGridView GridMemorias;
     }
 }
 

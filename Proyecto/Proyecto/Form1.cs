@@ -40,6 +40,8 @@ namespace Proyecto
                     prueba.administradorDeEjecucion();
                     GridResultados.DataSource = prueba.resultadosHilillos();
                     GridResultados.Show();
+                    GridMemorias.DataSource = prueba.resultadosMemoria();
+                    GridMemorias.Show();
                     GC.Collect(GC.MaxGeneration);
                     GC.WaitForPendingFinalizers();
                     button1.Enabled = false;
