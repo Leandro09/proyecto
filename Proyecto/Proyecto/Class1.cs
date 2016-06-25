@@ -1546,7 +1546,6 @@ namespace Proyecto
                     case 1:
                         if (Monitor.TryEnter(cache_datos1) && Monitor.TryEnter(estadoCache1))
                         {
-
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos1[indice] == bloque && estadoCache1[indice] == 'M')
                             {
