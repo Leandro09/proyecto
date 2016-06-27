@@ -1616,13 +1616,10 @@ namespace Proyecto
                             }
                             else
                             {
-                                // bloque victima esta modificado
-
-                                // while (terminoDos)
-                                // {
+                               
                                 if (estadoCache1[indice] == 'M')
                                 {
-                                    solicitudDeBloque = escribirBloqueEnMem(encache_datos1[indice], procesador, procesador, indice, false, true);     //
+                                    solicitudDeBloque = escribirBloqueEnMem(encache_datos1[indice], procesador, procesador, indice, false, true);     
                                     if (solicitudDeBloque)
                                     {
                                         //metodo hacer bifurcacion
@@ -1631,10 +1628,7 @@ namespace Proyecto
                                     else
                                     {
                                         termino = false;
-                                        terminoDos = false;
-                                        Monitor.Exit(cache_datos1);
-                                        //Monitor.Exit(estadoCache1);
-                                        //Monitor.Exit(encache_datos1);
+                                        liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
                                     }
                                 }
@@ -1651,9 +1645,7 @@ namespace Proyecto
                                         {
                                             termino = false;
                                             terminoDos = false;
-                                            Monitor.Exit(cache_datos1);
-                                            //Monitor.Exit(estadoCache1);
-                                            //Monitor.Exit(encache_datos1);
+                                            liberarCache(procesador);
                                             miBarrerita.SignalAndWait();
                                         }
                                     }
@@ -1661,12 +1653,10 @@ namespace Proyecto
                                     {
                                         termino = hacer_bifurcacion(direccion, procesador);
                                     }
+                                  
                                 }
                             }
-                            if (termino)
-                            {
-                                return true;
-                            }
+                           
                         }
                         else
                         {
@@ -1698,9 +1688,7 @@ namespace Proyecto
                                     {
                                         termino = false;
                                         terminoDos = false;
-                                        Monitor.Exit(cache_datos2);
-                                        //Monitor.Exit(estadoCache2);
-                                        //Monitor.Exit(encache_datos2);
+                                        liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
                                     }
                                 }
@@ -1716,10 +1704,7 @@ namespace Proyecto
                                         else
                                         {
                                             termino = false;
-                                            terminoDos = false;
-                                            Monitor.Exit(cache_datos2);
-                                            //Monitor.Exit(estadoCache2);
-                                            //Monitor.Exit(encache_datos2);
+                                            liberarCache(procesador);
                                             miBarrerita.SignalAndWait();
                                         }
                                     }
@@ -1727,12 +1712,10 @@ namespace Proyecto
                                     {
                                         termino = hacer_bifurcacion(direccion, procesador);
                                     }
+                                    
                                 }
                             }
-                            if (termino)
-                            {
-                                return true;
-                            }
+                            
                         }
                         else
                         {
@@ -1766,9 +1749,7 @@ namespace Proyecto
                                     {
                                         termino = false;
                                         terminoDos = false;
-                                        Monitor.Exit(cache_datos3);
-                                        //Monitor.Exit(estadoCache3);
-                                        //Monitor.Exit(encache_datos3);
+                                        liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
                                     }
                                 }
@@ -1785,9 +1766,7 @@ namespace Proyecto
                                         {
                                             termino = false;
                                             terminoDos = false;
-                                            Monitor.Exit(cache_datos3);
-                                            //Monitor.Exit(estadoCache3);
-                                            //Monitor.Exit(encache_datos3);
+                                            liberarCache(procesador);
                                             miBarrerita.SignalAndWait();
                                         }
                                     }
@@ -1797,10 +1776,7 @@ namespace Proyecto
                                     }
                                 }
                             }
-                            if (termino)
-                            {
-                                return true;
-                            }
+                            
                         }
                         else
                         {
@@ -1815,7 +1791,7 @@ namespace Proyecto
 
         public static void liberarCache(int procesador)
         {
-            /*
+            
             switch (procesador)
             {
                 case 1:
@@ -1827,9 +1803,9 @@ namespace Proyecto
                     break;
                 case 2:
 
-                    Monitor.Exit(cache_datos2);
+                   // Monitor.Exit(cache_datos2);
                     //Monitor.Exit(estadoCache2);
-                    //Monitor.Exit(encache_datos2);
+                    //Monitor.Exit(encache_datos2); 
 
                     break;
                 default:
@@ -1840,7 +1816,7 @@ namespace Proyecto
 
                     break;
             }
-            */
+           
         }
 
 
@@ -1889,7 +1865,7 @@ namespace Proyecto
                             int otra_cache = 0;
                             for (int i = 1; i < 4; ++i)
                             {
-                                if (dir1[(temporal[1] * 5) + i + 1]=='1')
+                                if (dir1[(temporal[1] * 5) + i + 1] == '1')
                                 {
                                     otra_cache = i;
                                 }
@@ -1928,11 +1904,12 @@ namespace Proyecto
 
 
                             }
-                            else //----------------------------------------------------------Preguntarle a Luis para que es esto.--------------------------------------------
+                            else 
                             {
                                 int indiceDos = 0;
 
                                 bool[] compartidoCache = new bool[4];
+                                contadorProcesadores = 0;
                                 //Indica cuál caché tiene el bloque
                                 compartidoCache[1] = (dir1[temporal[1] * 5 + 2] == '1');
                                 compartidoCache[2] = (dir1[temporal[1] * 5 + 3] == '1');
@@ -1945,18 +1922,14 @@ namespace Proyecto
                                     }
                                 }
                                 int bien = 0;
-                                /*
-                                if ((contadorProcesadores == 1) ||((contadorProcesadores == 2) && compartidoCache[1]))
-                                {
-                                    */
                                 if (compartidoCache[2])
                                 {
                                     if (Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache2) && Monitor.TryEnter(encache_datos2)*/)
                                     {
                                         encache_datos2[posicionCache] = 'I';
                                         miBarrerita.SignalAndWait();
-                                        //Llamar fallo de caché. Recordar liberar recursos.
                                         bien = bien + 1;
+                                        liberarCache(2);
                                     }
                                 }
                                 if (compartidoCache[3])
@@ -1965,8 +1938,8 @@ namespace Proyecto
                                     {
                                         encache_datos3[posicionCache] = 'I';
                                         miBarrerita.SignalAndWait();
-                                        //Llamar fallo de caché. Recordar liberar recursos.
                                         bien = bien + 1;
+                                        liberarCache(3);
                                     }
                                 }
                                 if (bien == contadorProcesadores)
@@ -2009,7 +1982,7 @@ namespace Proyecto
                     }
                     else
                     {
-                        termino = false;
+                        
                         liberarCache(procesador);
                         miBarrerita.SignalAndWait();
                         return false;
@@ -2048,7 +2021,7 @@ namespace Proyecto
                                     otra_cache = i;
                                 }
                             }
-                            solicitudDeBloque = escribirBloqueEnMem(bloque, otra_cache, procesador, indice, false, false);
+                            //solicitudDeBloque = escribirBloqueEnMem(bloque, otra_cache, procesador, indice, false, false);
                             solicitudDeBloque = escribirBloqueEnMem(bloque, temporal[0], 2, indice, false, false);
                             if (solicitudDeBloque == false)
                             {
@@ -2083,7 +2056,7 @@ namespace Proyecto
 
 
                             }
-                            else //----------------------------------------------------------Preguntarle a Luis para que es esto.--------------------------------------------
+                            else 
                             {
                                 int indiceDos = 0;
 
@@ -2099,17 +2072,13 @@ namespace Proyecto
                                     }
                                 }
                                 int bien = 0;
-                                /*
-                                if ((contadorProcesadores == 1) ||((contadorProcesadores == 2) && compartidoCache[2]))
-                                {
-                                    */
                                 if (compartidoCache[1])
                                 {
                                     if (Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache1) && Monitor.TryEnter(encache_datos1)*/)
                                     {
                                         encache_datos1[posicionCache] = 'I';
                                         miBarrerita.SignalAndWait();
-                                        //Llamar fallo de caché. Recordar liberar recursos.
+                                        liberarCache(1);
                                         bien = bien + 1;
                                     }
                                 }
@@ -2119,7 +2088,7 @@ namespace Proyecto
                                     {
                                         encache_datos3[posicionCache] = 'I';
                                         miBarrerita.SignalAndWait();
-                                        //Llamar fallo de caché. Recordar liberar recursos.
+                                        liberarCache(3);
                                         bien = bien + 1;
                                     }
                                 }
@@ -2237,7 +2206,7 @@ namespace Proyecto
 
 
                             }
-                            else //----------------------------------------------------------Preguntarle a Luis para que es esto.--------------------------------------------
+                            else 
                             {
                                 int indiceDos = 0;
 
@@ -2253,17 +2222,13 @@ namespace Proyecto
                                     }
                                 }
                                 int bien = 0;
-                                /*
-                                if ((contadorProcesadores == 1) ||((contadorProcesadores == 2) && compartidoCache[3]))
-                                {
-                                    */
                                 if (compartidoCache[2])
                                 {
                                     if (Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache2) && Monitor.TryEnter(encache_datos2)*/)
                                     {
                                         encache_datos2[posicionCache] = 'I';
                                         miBarrerita.SignalAndWait();
-                                        //Llamar fallo de caché. Recordar liberar recursos.
+                                        liberarCache(2);
                                         bien = bien + 1;
                                     }
                                 }
@@ -2273,7 +2238,7 @@ namespace Proyecto
                                     {
                                         encache_datos1[posicionCache] = 'I';
                                         miBarrerita.SignalAndWait();
-                                        //Llamar fallo de caché. Recordar liberar recursos.
+                                        liberarCache(1);
                                         bien = bien + 1;
                                     }
                                 }
@@ -2332,8 +2297,6 @@ namespace Proyecto
 
         public static void hacerFalloDeCache(int bloque, int numCache, bool local, int posCache)
         {
-
-
             int[] temporal = obtener_num_estruct(bloque);
 
 
@@ -2408,11 +2371,6 @@ namespace Proyecto
                 }
 
                 Monitor.Exit(cache_datos1);
-                //Monitor.Exit(encache_datos1);
-                //Monitor.Exit(estadoCache1);
-
-
-
             }
             else if (numCache == 2)
             {
@@ -2487,10 +2445,6 @@ namespace Proyecto
                 }
 
                 Monitor.Exit(cache_datos2);
-                //Monitor.Exit(encache_datos2);
-                //Monitor.Exit(estadoCache2);
-
-
 
 
             }
@@ -2565,8 +2519,6 @@ namespace Proyecto
                 }
 
                 Monitor.Exit(cache_datos3);
-                //Monitor.Exit(encache_datos3);
-                //Monitor.Exit(estadoCache3);
             }
         }
 
@@ -2578,288 +2530,240 @@ namespace Proyecto
             int[] temporal = obtener_num_estruct(bloque);
 
 
-            if (numCache == 1)
+            switch (temporal[0])
             {
+                case 1:
 
-                switch (temporal[1])
-                {
-                    case 1:
-                        if (Monitor.TryEnter(dir1))
+                    if (Monitor.TryEnter(dir1))
+                    {
+                        dir1[temporal[1] * 5 + 1 + numCache] = '0';
+
+                        switch (numCache)
                         {
-                            estadoCache1[posicion] = 'I';
-                            dir1[temporal[1] * 5 + 2] = '0';
-                            if (temporal[0] == numCache)
-                            {
-                                for (int i = 0; i < 2; ++i)
+                            case 1:
+                                estadoCache1[posicion] = 'I';
+                                if (temporal[0] == numCache)
                                 {
-                                    miBarrerita.SignalAndWait();
+                                    for (int i = 0; i < 2; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
+
+                                }
+                                else
+                                {
+
+                                    for (int i = 0; i < 4; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
+                                }
+                                break;
+                            case 2:
+                                estadoCache2[posicion] = 'I';
+                                if (temporal[0] == numCache)
+                                {
+                                    for (int i = 0; i < 2; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
+
+                                }
+                                else
+                                {
+
+                                    for (int i = 0; i < 4; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
+                                }
+                                break;
+                            default:
+                                estadoCache3[posicion] = 'I';
+                                if (temporal[0] == numCache)
+                                {
+                                    for (int i = 0; i < 2; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
+
+                                }
+                                else
+                                {
+
+                                    for (int i = 0; i < 4; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
                                 }
 
-                            }
-                            else
-                            {
-
-                                for (int i = 0; i < 4; ++i)
-                                {
-                                    miBarrerita.SignalAndWait();
-                                }
-                            }
+                                break;
                         }
-                        else
+                        Monitor.Exit(dir1);
+
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                    
+                    break;
+                case 2:
+                    if (Monitor.TryEnter(dir2))
+                    {
+                        dir2[temporal[1] * 5 + 1 + numCache] = '0';
+
+                        switch (numCache)
                         {
-                            return false;
-                        }
-                        break;
-                    case 2:
-
-                        if (Monitor.TryEnter(dir2))
-                        {
-                            estadoCache1[posicion] = 'I';
-                            dir2[temporal[1] * 5 + 3] = '0';
-                            if (temporal[0] == numCache)
-                            {
-                                for (int i = 0; i < 2; ++i)
+                            case 1:
+                                estadoCache1[posicion] = 'I';
+                                if (temporal[0] == numCache)
                                 {
-                                    miBarrerita.SignalAndWait();
+                                    for (int i = 0; i < 2; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
+
                                 }
-
-                            }
-                            else
-                            {
-
-                                for (int i = 0; i < 4; ++i)
+                                else
                                 {
-                                    miBarrerita.SignalAndWait();
+
+                                    for (int i = 0; i < 4; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
                                 }
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
-
-                        break;
-                    default:
-
-                        if (Monitor.TryEnter(dir3))
-                        {
-                            estadoCache1[posicion] = 'I';
-                            dir3[temporal[1] * 5 + 4] = '0';
-                            if (temporal[0] == numCache)
-                            {
-                                for (int i = 0; i < 2; ++i)
+                                break;
+                            case 2:
+                                estadoCache2[posicion] = 'I';
+                                if (temporal[0] == numCache)
                                 {
-                                    miBarrerita.SignalAndWait();
+                                    for (int i = 0; i < 2; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
+
                                 }
-
-                            }
-                            else
-                            {
-
-                                for (int i = 0; i < 4; ++i)
+                                else
                                 {
-                                    miBarrerita.SignalAndWait();
+
+                                    for (int i = 0; i < 4; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
                                 }
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
-
-                        break;
-                }
-
-
-
-
-            }
-            else if (numCache == 2)
-            {
-                switch (temporal[1])
-                {
-                    case 1:
-                        if (Monitor.TryEnter(dir1))
-                        {
-                            estadoCache2[posicion] = 'I';
-                            dir1[temporal[1] * 5 + 2] = '0';
-                            if (temporal[0] == numCache)
-                            {
-                                for (int i = 0; i < 2; ++i)
+                                break;
+                            default:
+                                estadoCache3[posicion] = 'I';
+                                if (temporal[0] == numCache)
                                 {
-                                    miBarrerita.SignalAndWait();
+                                    for (int i = 0; i < 2; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
+
                                 }
-
-                            }
-                            else
-                            {
-
-                                for (int i = 0; i < 4; ++i)
+                                else
                                 {
-                                    miBarrerita.SignalAndWait();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                        break;
-                    case 2:
 
-                        if (Monitor.TryEnter(dir2))
+                                    for (int i = 0; i < 4; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
+                                }
+                                break;
+                        }
+
+                        Monitor.Exit(dir2);
+
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                    break;
+                default:
+                    if (Monitor.TryEnter(dir3))
+                    {
+                        dir3[temporal[1] * 5 + 1 + numCache] = '0';
+
+                        switch (numCache)
                         {
-                            estadoCache2[posicion] = 'I';
-                            dir2[temporal[1] * 5 + 3] = '0';
-                            if (temporal[0] == numCache)
-                            {
-                                for (int i = 0; i < 2; ++i)
+                            case 1:
+                                estadoCache1[posicion] = 'I';
+                                if (temporal[0] == numCache)
                                 {
-                                    miBarrerita.SignalAndWait();
+                                    for (int i = 0; i < 2; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
+
                                 }
-
-                            }
-                            else
-                            {
-
-                                for (int i = 0; i < 4; ++i)
+                                else
                                 {
-                                    miBarrerita.SignalAndWait();
+
+                                    for (int i = 0; i < 4; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
                                 }
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
-
-                        break;
-                    default:
-
-                        if (Monitor.TryEnter(dir3))
-                        {
-                            estadoCache2[posicion] = 'I';
-                            dir3[temporal[1] * 5 + 4] = '0';
-                            if (temporal[0] == numCache)
-                            {
-                                for (int i = 0; i < 2; ++i)
+                                break;
+                            case 2:
+                                estadoCache2[posicion] = 'I';
+                                if (temporal[0] == numCache)
                                 {
-                                    miBarrerita.SignalAndWait();
+                                    for (int i = 0; i < 2; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
+
                                 }
-
-                            }
-                            else
-                            {
-
-                                for (int i = 0; i < 4; ++i)
+                                else
                                 {
-                                    miBarrerita.SignalAndWait();
+
+                                    for (int i = 0; i < 4; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
                                 }
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
-
-                        break;
-                }
-
-
-            }
-            else
-            {
-                switch (temporal[1])
-                {
-                    case 1:
-                        if (Monitor.TryEnter(dir1))
-                        {
-                            estadoCache3[posicion] = 'I';
-                            dir1[temporal[1] * 5 + 2] = '0';
-                            if (temporal[0] == numCache)
-                            {
-                                for (int i = 0; i < 2; ++i)
+                                break;
+                            default:
+                                estadoCache3[posicion] = 'I';
+                                if (temporal[0] == numCache)
                                 {
-                                    miBarrerita.SignalAndWait();
+                                    for (int i = 0; i < 2; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
+
                                 }
-
-                            }
-                            else
-                            {
-
-                                for (int i = 0; i < 4; ++i)
+                                else
                                 {
-                                    miBarrerita.SignalAndWait();
+
+                                    for (int i = 0; i < 4; ++i)
+                                    {
+                                        miBarrerita.SignalAndWait();
+                                    }
                                 }
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                        break;
-                    case 2:
-
-                        if (Monitor.TryEnter(dir2))
-                        {
-                            estadoCache3[posicion] = 'I';
-                            dir2[temporal[1] * 5 + 3] = '0';
-                            if (temporal[0] == numCache)
-                            {
-                                for (int i = 0; i < 2; ++i)
-                                {
-                                    miBarrerita.SignalAndWait();
-                                }
-
-                            }
-                            else
-                            {
-
-                                for (int i = 0; i < 4; ++i)
-                                {
-                                    miBarrerita.SignalAndWait();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            return false;
+                                break;
                         }
 
-                        break;
-                    default:
+                        Monitor.Exit(dir3);
 
-                        if (Monitor.TryEnter(dir3))
-                        {
-                            estadoCache3[posicion] = 'I';
-                            dir3[temporal[1] * 5 + 4] = '0';
-                            if (temporal[0] == numCache)
-                            {
-                                for (int i = 0; i < 2; ++i)
-                                {
-                                    miBarrerita.SignalAndWait();
-                                }
+                    }
+                    else
+                    {
+                        return false;
+                    }
 
-                            }
-                            else
-                            {
-
-                                for (int i = 0; i < 4; ++i)
-                                {
-                                    miBarrerita.SignalAndWait();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
-
-                        break;
-                }
-
+                    break;
             }
 
+
+
+    
             return true;
         }
 
