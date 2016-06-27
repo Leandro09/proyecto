@@ -149,7 +149,12 @@ namespace Proyecto
         }
         public static void imprimirMemoriasyCaches()
         {
-            
+            imprimirMemCom();
+            imprimirCaches();
+            imprimirDirs();
+        }
+        public static void imprimirMemCom()
+        {
             Console.WriteLine("Memorias compartidas ");
             Console.WriteLine("Proc        b0          b1          b2          b3          b4          b5          b6          b7");
             Console.Write("1       ");
@@ -185,63 +190,88 @@ namespace Proyecto
                 }
             }
             Console.WriteLine("");
-            Console.WriteLine("Cache1");
-            //Console.WriteLine("Proc              B0              B1              B2              B3");
-            Console.WriteLine("B0   B1   B2   B3");
-            //Console.Write(" 1  ");
-            for (int i = 0; i < 4; ++i)
-            {
-                for (int j = 0; j < 4; ++j)
-                {
-                    Console.Write(cache_datos1[j * 4 + i]);
-                    Console.Write("    ");
-                }
-                Console.WriteLine("");
-            }
-            for (int i = 0; i < 4; ++i)
-            {
-                Console.Write(encache_datos1[i]);
-                Console.Write("   ");
-                //Console.WriteLine("");
-            }
-            Console.WriteLine("");
-            for (int i = 0; i < 4; ++i)
-            {
-                Console.Write(estadoCache1[i]);
-                Console.Write("    ");
-                //Console.WriteLine("");
-            }
-            Console.WriteLine("");
-            // ------------------------------
-            Console.WriteLine("Cache2");
-            //Console.WriteLine("Proc              B0              B1              B2              B3");
-            Console.WriteLine("B0   B1   B2   B3");
-            //Console.Write(" 1  ");
-            for (int i = 0; i < 4; ++i)
-            {
-                for (int j = 0; j < 4; ++j)
-                {
-                    Console.Write(cache_datos2[j * 4 + i]);
-                    Console.Write("    ");
-                }
-                Console.WriteLine("");
-            }
-            for (int i = 0; i < 4; ++i)
-            {
-                Console.Write(encache_datos2[i]);
-                Console.Write("   ");
-                //Console.WriteLine("");
-            }
-            Console.WriteLine("");
-            for (int i = 0; i < 4; ++i)
-            {
-                Console.Write(estadoCache2[i]);
-                Console.Write("    ");
-                //Console.WriteLine("");
-            }
-            Console.WriteLine("");
         }
-
+        public static void imprimirCaches()
+        {
+            string caches = "";
+            Console.WriteLine("Cache1\t\t\t\t\t\tCache2\t\t\t\t\t\tCache3");
+            Console.WriteLine("B0\t B1\t B2\t B3\t\t\t\tB0\t B1\t B2\t B3\t\t\t\tB0\t B1\t B2\t B3");
+            for (int i = 0; i < 4; ++i)
+            {
+                for (int j = 0; j < 4; ++j)
+                {
+                    caches = caches + Convert.ToString(cache_datos1[j * 4 + i]) + "\t ";
+                }
+                caches = caches + "\t\t\t";
+                for (int j = 0; j < 4; ++j)
+                {
+                    caches = caches + Convert.ToString(cache_datos2[j * 4 + i]) + "\t ";
+                }
+                caches = caches + "\t\t\t";
+                for (int j = 0; j < 4; ++j)
+                {
+                    caches = caches + Convert.ToString(cache_datos3[j * 4 + i]) + "\t ";
+                }
+                caches = caches + "\n";
+            }
+            for (int i = 0; i < 4; ++i)
+            {
+                caches = caches + Convert.ToString(encache_datos1[i]) + "\t ";
+            }
+            caches = caches + "\t\t\t";
+            for (int i = 0; i < 4; ++i)
+            {
+                caches = caches + Convert.ToString(encache_datos2[i]) + "\t ";
+            }
+            caches = caches + "\t\t\t";
+            for (int i = 0; i < 4; ++i)
+            {
+                caches = caches + Convert.ToString(encache_datos3[i]) + "\t ";
+            }
+            caches = caches + "\n";
+            for (int i = 0; i < 4; ++i)
+            {
+                caches = caches + Convert.ToString(estadoCache1[i]) + "\t ";
+            }
+            caches = caches + "\t\t\t";
+            for (int i = 0; i < 4; ++i)
+            {
+                caches = caches + Convert.ToString(estadoCache2[i]) + "\t ";
+            }
+            caches = caches + "\t\t\t";
+            for (int i = 0; i < 4; ++i)
+            {
+                caches = caches + Convert.ToString(estadoCache3[i]) + "\t ";
+            }
+            Console.WriteLine(caches);
+        }
+        public static void imprimirDirs()
+        {
+            string dirs = "";
+            //Console.WriteLine("Dir1\t\t\t\t\t\tDir2\t\t\t\t\t\tDir3");
+            //Console.WriteLine("B\t E\t P1\t P2\t P3\t\t\tB\t E\t P1\t P2\t P3\t\t\tB\t E\t P1\t P2\t P3");
+            dirs = "Dir1\t\t\t\t\t\tDir2\t\t\t\t\t\tDir3\n";
+            dirs = dirs + "B\t E\t P1\t P2\t P3\t\t\tB\t E\t P1\t P2\t P3\t\t\tB\t E\t P1\t P2\t P3\n";
+            for (int i = 0; i < 8; ++i)
+            {
+                for (int j = 0; j < 5; ++j)
+                {
+                    dirs = dirs + Convert.ToString(dir1[i * 5 + j]) + "\t ";
+                }
+                dirs = dirs + "\t\t";
+                for (int j = 0; j < 5; ++j)
+                {
+                    dirs = dirs + Convert.ToString(dir2[i * 5 + j]) + "\t ";
+                }
+                dirs = dirs + "\t\t";
+                for (int j = 0; j < 5; ++j)
+                {
+                    dirs = dirs + Convert.ToString(dir3[i * 5 + j]) + "\t ";
+                }
+                dirs = dirs + "\n";
+            }
+            Console.WriteLine(dirs);
+        }
         public static void verDir()
         {
             String s = "";
@@ -519,9 +549,9 @@ namespace Proyecto
             for (int i = 0; i < 8; ++i)//cant_bloques_directorio; ++i)
             {
                 int g = i * 5;
-                dir1[g] = Convert.ToChar(i);
-                dir2[g] = Convert.ToChar(i + 8);
-                dir3[g] = Convert.ToChar(i + 16);
+                dir1[g] = '.';//Convert.ToChar(i);
+                dir2[g] = '.';//Convert.ToChar(i + 8);
+                dir3[g] = '.';//Convert.ToChar(i + 16);
                 dir1[g + 1] = 'U';
                 dir2[g + 1] = 'U';
                 dir3[g + 1] = 'U';
