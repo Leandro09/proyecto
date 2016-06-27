@@ -857,7 +857,9 @@ namespace Proyecto
                     guardarEn = pos_pc;
                     break;
                 case 35: //LW
-                    //Console.WriteLine("Corriendo un LW");
+                    Console.WriteLine("Entra LW P"+Thread.CurrentThread.Name);
+                    imprimirCaches();
+                    imprimirDirs();
                     //imprimirMemoriasyCaches();
                     //verDir();
                     int direccion = primerRegistro + ultimaParte;
@@ -885,7 +887,7 @@ namespace Proyecto
                             resultado = cache_datos3[posicionCache * 4 + palabra];
                             break;
                     }
-                    //Console.WriteLine("Fin LW");
+                    Console.WriteLine("Fin LW P" + Thread.CurrentThread.Name);
                     //Lee de la cache
                     break;
                 case 50: //LL
@@ -924,7 +926,7 @@ namespace Proyecto
                     //Console.WriteLine("Fin LL");
                     break;
                 case 51: //SC
-        
+                    
                     int direccion35 = primerRegistro + ultimaParte;
                     int bloque35 = direccion35 / 16;
                     int posicionCache35 = bloque35 % 4;
@@ -963,8 +965,9 @@ namespace Proyecto
 
                     break;
                 case 43: //SW
+                    
+                    Console.WriteLine("Entra SW P"+Thread.CurrentThread.Name);
                     imprimirMemoriasyCaches();
-                    Console.WriteLine("Entra SW");
                     int direccion36 = primerRegistro + ultimaParte;
                     int bloque36 = direccion36 / 16;
                     int posicionCache36 = bloque36 % 4;
@@ -987,7 +990,7 @@ namespace Proyecto
 
                             break;
                     }
-                    Console.WriteLine("Sale SW");
+                    Console.WriteLine("Sale SW P" + Thread.CurrentThread.Name);
                     break;
                 case 63: //FIN
                     resultadoFinal = false;
@@ -3960,7 +3963,7 @@ namespace Proyecto
                 //sincronizacion de los ciclos de reloj con barreras y sumandole 1 al reloj
                 miBarrerita.SignalAndWait();
                 reloj = reloj + 1;
-
+                Console.WriteLine("reloj= " + reloj);
 
                 //Para ver y controlar mejor lo que le queda de quantum a cada procesador. 
                 contadorProcesador1 = contadorProcesador1 + 1;
