@@ -856,45 +856,7 @@ namespace Proyecto
                     //Console.WriteLine("Fin LL");
                     break;
                 case 51: //SC
-                    /*int direccion35 = primerRegistro + ultimaParte;
-                    LLactivo[procesador % 3] = false;//No necesitan consultarlo antes de ponerlo en falso????
-                    switch (procesador)
-                    {
-                        case 1:
-                            if (procesador1[pos_rl] == direccion35)
-                            {
-                                cache_store(procesador, direccion35);
-                                //Guarda en memoria.
-                                memComp1[direccion35] = segundoRegistro;
-                            }
-                            else
-                            {
-                                procesador1[primerRegistro] = 0;
-                            }
-                            break;
-                        case 2:
-                            if (procesador2[pos_rl] == direccion35)
-                            {
-                                cache_store(procesador, direccion35);
-                                //Guarda en memoria.
-                                memComp1[direccion35] = segundoRegistro;
-                            }
-                            else
-                            {
-                                procesador2[primerRegistro] = 0;
-                            }
-                            break;
-                        case 3:
-                            if (procesador3[pos_rl] == direccion35)
-                            {
-                                cache_store(procesador, direccion35);
-                                //Guarda en memoria.
-                                memComp1[direccion35] = segundoRegistro;
-                            }
-                            else
-                            {
-                                procesador3[primerRegistro] = 0;
-                            }*/
+        
                     int direccion35 = primerRegistro + ultimaParte;
                     int bloque35 = direccion35 / 16;
                     int posicionCache35 = bloque35 % 4;
@@ -946,18 +908,15 @@ namespace Proyecto
                     {
                         case 1:
                             cache_datos1[(posicionCache36 * 4 + palabra36)] = segundoRegistro;
-                            //encache_datos1[posicionCache36] = bloque36;
-                            //estadoCache1[posicionCache36] = 'M';
+
                             break;
                         case 2:
                             cache_datos2[(posicionCache36 * 4 + palabra36)] = segundoRegistro;
-                            //encache_datos2[posicionCache36] = bloque36;
-                            //estadoCache2[posicionCache36] = 'M';
+
                             break;
                         case 3:
                             cache_datos3[(posicionCache36 * 4 + palabra36)] = segundoRegistro;
-                            //encache_datos3[posicionCache36] = bloque36;
-                            //estadoCache3[posicionCache36] = 'M';
+
                             break;
                     }
                     Console.WriteLine("Sale SW");
@@ -999,7 +958,6 @@ namespace Proyecto
             bool r = false;
             while (!r)
             {
-                r = true;
                 switch (procesador)
                 {
                     case 1:
@@ -1012,9 +970,10 @@ namespace Proyecto
                         r = Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/;
                         break;
                 }
-                if (!r)//trylock de mi cache
+                if (r == false)//trylock de mi cache
                 {
                     miBarrerita.SignalAndWait();
+                    
                 }
                 else
                 {
@@ -1029,11 +988,11 @@ namespace Proyecto
                             {
                                 if (estadoCache1[posicionCache] == 'M')
                                 {
-                                    r = escribirBloqueEnMem(encache_datos1[posicionCache], 1, 1, posicionCache, true, true);
+                                    r = escribirBloqueEnMem(encache_datos1[posicionCache], 1, 1, posicionCache, false, true);
                                 }
                                 else if (estadoCache1[posicionCache] == 'C')
                                 {
-                                    r = reemplazarBloqueCompartido(encache_datos1[posicionCache], procesador, direccion);
+                                    r = reemplazarBloqueCompartido(encache_datos1[posicionCache], procesador, posicionCache);
                                 }
                                 if (r)
                                 {
@@ -1085,6 +1044,11 @@ namespace Proyecto
                                                         i = 3;
                                                     }
                                                     r = escribirBloqueEnMem(bloque, i, 1, posicionCache, true, false);
+                                                    if (r == false)
+                                                    {
+                                                        liberarCache(procesador);
+                                                        Monitor.Exit(dir1);
+                                                    }
                                                 }
                                                 else if (((dir1[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
@@ -1095,7 +1059,9 @@ namespace Proyecto
 
                                                     //subir bloque a mi cache
                                                     encache_datos1[posicionCache] = bloque;
+                                                    estadoCache1[posicionCache] = 'C';
                                                     posicionCache = posicionCache * 4;
+
                                                     for (int i = 0; i < 4; ++i)
                                                     {
                                                         //pasa las 4 palabras MIPS a la cache_inst
@@ -1123,6 +1089,13 @@ namespace Proyecto
                                                         i = 3;
                                                     }
                                                     r = escribirBloqueEnMem(bloque, i, 1, posicionCache, true, false);
+
+                                                    if (r == false)
+                                                    {
+                                                        liberarCache(procesador);
+                                                        Monitor.Exit(dir2);
+                                                    }
+
                                                 }
                                                 else if (((dir2[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
@@ -1134,6 +1107,7 @@ namespace Proyecto
 
                                                     //subir bloque a mi cache
                                                     encache_datos1[posicionCache] = bloque;
+                                                    estadoCache1[posicionCache] = 'C';
                                                     posicionCache = posicionCache * 4;
                                                     for (int i = 0; i < 4; ++i)
                                                     {
@@ -1162,6 +1136,12 @@ namespace Proyecto
                                                         i = 3;
                                                     }
                                                     r = escribirBloqueEnMem(bloque, i, 1, posicionCache, true, false);
+                                                    if (r == false)
+                                                    {
+                                                        liberarCache(procesador);
+                                                        Monitor.Exit(dir3);
+                                                    }
+
                                                 }
                                                 else if (((dir3[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
@@ -1173,6 +1153,7 @@ namespace Proyecto
 
                                                     //subir bloque a mi cache
                                                     encache_datos1[posicionCache] = bloque;
+                                                    estadoCache1[posicionCache] = 'C';
                                                     posicionCache = posicionCache * 4;
                                                     for (int i = 0; i < 4; ++i)
                                                     {
@@ -1185,13 +1166,12 @@ namespace Proyecto
                                                 }
                                                 break;
                                         }
-                                        //soltar directorio
-                                        //soltar cache
-                                        Monitor.Exit(cache_datos1);
+
+                                        //Monitor.Exit(cache_datos1);
                                     }
                                     else
                                     {
-                                        ///////////////////LIBERAR CACHE y signal and wait EN CASO QUE NO DEN DIRECTORIO
+
                                         liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
                                     }
@@ -1263,6 +1243,11 @@ namespace Proyecto
                                                         i = 3;
                                                     }
                                                     r = escribirBloqueEnMem(bloque, i, 2, posicionCache, true, false);
+                                                    if (r == false)
+                                                    {
+                                                        liberarCache(procesador);
+                                                        Monitor.Exit(dir1);
+                                                    }
                                                 }
                                                 else if (((dir1[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
@@ -1273,6 +1258,7 @@ namespace Proyecto
 
                                                     //subir bloque a mi cache
                                                     encache_datos2[posicionCache] = bloque;
+                                                    estadoCache2[posicionCache] = 'C';
                                                     posicionCache = posicionCache * 4;
                                                     for (int i = 0; i < 4; ++i)
                                                     {
@@ -1301,6 +1287,11 @@ namespace Proyecto
                                                         i = 3;
                                                     }
                                                     r = escribirBloqueEnMem(bloque, i, 2, posicionCache, true, false);
+                                                    if (r == false)
+                                                    {
+                                                        liberarCache(procesador);
+                                                        Monitor.Exit(dir2);
+                                                    }
                                                 }
                                                 else if (((dir2[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
@@ -1312,6 +1303,7 @@ namespace Proyecto
 
                                                     //subir bloque a mi cache
                                                     encache_datos2[posicionCache] = bloque;
+                                                    estadoCache2[posicionCache] = 'C';
                                                     posicionCache = posicionCache * 4;
                                                     for (int i = 0; i < 4; ++i)
                                                     {
@@ -1340,6 +1332,11 @@ namespace Proyecto
                                                         i = 3;
                                                     }
                                                     r = escribirBloqueEnMem(bloque, i, 2, posicionCache, true, false);
+                                                    if (r == false)
+                                                    {
+                                                        liberarCache(procesador);
+                                                        Monitor.Exit(dir3);
+                                                    }
                                                 }
                                                 else if (((dir3[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
@@ -1351,6 +1348,7 @@ namespace Proyecto
 
                                                     //subir bloque a mi cache
                                                     encache_datos2[posicionCache] = bloque;
+                                                    estadoCache2[posicionCache] = 'C';
                                                     posicionCache = posicionCache * 4;
                                                     for (int i = 0; i < 4; ++i)
                                                     {
@@ -1365,7 +1363,7 @@ namespace Proyecto
                                         }
                                         //soltar directorio
                                         //soltar cache
-                                        Monitor.Exit(cache_datos2);
+                                        //Monitor.Exit(cache_datos2);
                                     }
                                     else
                                     {
@@ -1440,6 +1438,11 @@ namespace Proyecto
                                                         i = 3;
                                                     }
                                                     r = escribirBloqueEnMem(bloque, i, 3, posicionCache, true, false);
+                                                    if (r == false)
+                                                    {
+                                                        liberarCache(procesador);
+                                                        Monitor.Exit(dir1);
+                                                    }
                                                 }
                                                 else if (((dir1[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
@@ -1450,6 +1453,7 @@ namespace Proyecto
 
                                                     //subir bloque a mi cache
                                                     encache_datos3[posicionCache] = bloque;
+                                                    estadoCache3[posicionCache] = 'C';
                                                     posicionCache = posicionCache * 4;
                                                     for (int i = 0; i < 4; ++i)
                                                     {
@@ -1465,19 +1469,24 @@ namespace Proyecto
                                                 if ((dir2[posicionDir * 5 + 1]) == 'M')
                                                 {
                                                     int i = 0;
-                                                    if ((dir1[posicionDir * 5 + 2] == '1'))
+                                                    if ((dir2[posicionDir * 5 + 2] == '1'))
                                                     {
                                                         i = 1;
                                                     }
-                                                    else if (dir1[posicionDir * 5 + 3] == '1')
+                                                    else if (dir2[posicionDir * 5 + 3] == '1')
                                                     {
                                                         i = 2;
                                                     }
-                                                    else if (dir1[posicionDir * 5 + 4] == '1')
+                                                    else if (dir2[posicionDir * 5 + 4] == '1')
                                                     {
                                                         i = 3;
                                                     }
                                                     r = escribirBloqueEnMem(bloque, i, 3, posicionCache, true, false);
+                                                    if (r == false)
+                                                    {
+                                                        liberarCache(procesador);
+                                                        Monitor.Exit(dir2);
+                                                    }
                                                 }
                                                 else if (((dir2[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
@@ -1489,6 +1498,7 @@ namespace Proyecto
 
                                                     //subir bloque a mi cache
                                                     encache_datos3[posicionCache] = bloque;
+                                                    estadoCache3[posicionCache] = 'C';
                                                     posicionCache = posicionCache * 4;
                                                     for (int i = 0; i < 4; ++i)
                                                     {
@@ -1504,19 +1514,24 @@ namespace Proyecto
                                                 if ((dir3[posicionDir * 5 + 1]) == 'M')
                                                 {
                                                     int i = 0;
-                                                    if ((dir1[posicionDir * 5 + 2] == '1'))
+                                                    if ((dir3[posicionDir * 5 + 2] == '1'))
                                                     {
                                                         i = 1;
                                                     }
-                                                    else if (dir1[posicionDir * 5 + 3] == '1')
+                                                    else if (dir3[posicionDir * 5 + 3] == '1')
                                                     {
                                                         i = 2;
                                                     }
-                                                    else if (dir1[posicionDir * 5 + 4] == '1')
+                                                    else if (dir3[posicionDir * 5 + 4] == '1')
                                                     {
                                                         i = 3;
                                                     }
                                                     r = escribirBloqueEnMem(bloque, i, 3, posicionCache, true, false);
+                                                    if (r == false)
+                                                    {
+                                                        liberarCache(procesador);
+                                                        Monitor.Exit(dir3);
+                                                    }
                                                 }
                                                 else if (((dir3[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
@@ -1528,6 +1543,7 @@ namespace Proyecto
 
                                                     //subir bloque a mi cache
                                                     encache_datos3[posicionCache] = bloque;
+                                                    estadoCache3[posicionCache] = 'C';
                                                     posicionCache = posicionCache * 4;
                                                     for (int i = 0; i < 4; ++i)
                                                     {
@@ -1542,7 +1558,7 @@ namespace Proyecto
                                         }
                                         //soltar directorio
                                         //soltar cache
-                                        Monitor.Exit(cache_datos3);
+                                        //Monitor.Exit(cache_datos3);
                                     }
                                     else
                                     {
@@ -1555,7 +1571,7 @@ namespace Proyecto
                     }
                 }
             }
-            return false;
+            return true;
         }
 
 
@@ -1594,10 +1610,6 @@ namespace Proyecto
             bool termino = false;                               //Controla si se logró acceder al directorio de la caché.
             int indice = 0;
             bool solicitudDeBloque = false;
-            bool terminoDos = false;
-            //int numDir = bloque / 8;
-            int[] temporalDos;
-
 
             indice = bloque % cant_bytes_palabra;
 
@@ -1644,7 +1656,6 @@ namespace Proyecto
                                         else
                                         {
                                             termino = false;
-                                            terminoDos = false;
                                             liberarCache(procesador);
                                             miBarrerita.SignalAndWait();
                                         }
@@ -1687,7 +1698,6 @@ namespace Proyecto
                                     else
                                     {
                                         termino = false;
-                                        terminoDos = false;
                                         liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
                                     }
@@ -1748,7 +1758,7 @@ namespace Proyecto
                                     else
                                     {
                                         termino = false;
-                                        terminoDos = false;
+                                       
                                         liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
                                     }
@@ -1765,7 +1775,7 @@ namespace Proyecto
                                         else
                                         {
                                             termino = false;
-                                            terminoDos = false;
+                                           
                                             liberarCache(procesador);
                                             miBarrerita.SignalAndWait();
                                         }
@@ -1797,22 +1807,17 @@ namespace Proyecto
                 case 1:
 
                     Monitor.Exit(cache_datos1);
-                    //Monitor.Exit(estadoCache1);
-                    //Monitor.Exit(encache_datos1);
 
                     break;
                 case 2:
 
-                   // Monitor.Exit(cache_datos2);
-                    //Monitor.Exit(estadoCache2);
-                    //Monitor.Exit(encache_datos2); 
+                    Monitor.Exit(cache_datos2);
+
 
                     break;
                 default:
 
                     Monitor.Exit(cache_datos3);
-                    //Monitor.Exit(estadoCache3);
-                    //Monitor.Exit(encache_datos3);
 
                     break;
             }
@@ -1829,7 +1834,6 @@ namespace Proyecto
             int[] temporal = obtener_num_estruct(bloque);       //Almacena temporalmente el número de bloque del directorio a utilizar.
             int posicionDir = temporal[1] * 5;
             bool termino = false;                               //Controla si se logró acceder al directorio de la caché.
-            int indice = 0;
             bool solicitudDeBloque = false;
             char[] procesadores = new char[3];
             int contadorProcesadores = 0;
@@ -1870,7 +1874,7 @@ namespace Proyecto
                                     otra_cache = i;
                                 }
                             }
-                            solicitudDeBloque = escribirBloqueEnMem(bloque, otra_cache, procesador, indice, false, false);
+                            solicitudDeBloque = escribirBloqueEnMem(bloque, otra_cache, procesador, posicionCache, false, false);
                             if (solicitudDeBloque == false)
                             {
                                 Monitor.Exit(dir1);
@@ -1881,6 +1885,18 @@ namespace Proyecto
                             else
                             {
                                 dir1[temporal[1] * 5 + 1] = 'M';
+                                switch (procesador)
+                                {
+                                    case 1:
+                                        encache_datos1[posicionCache] = 'M';
+                                        break;
+                                    case 2:
+                                        encache_datos2[posicionCache] = 'M';
+                                        break;
+                                    default:
+                                        encache_datos3[posicionCache] = 'M';
+                                        break;
+                                }
                                 Monitor.Exit(dir1);
                                 liberarCache(procesador);
                                 return true;
@@ -1895,11 +1911,11 @@ namespace Proyecto
 
                                 if (temporal[0] != procesador)
                                 {
-                                    hacerFalloDeCache(bloque, procesador, false, indice);
+                                    hacerFalloDeCache(bloque, procesador, false, posicionCache);
                                 }
                                 else
                                 {
-                                    hacerFalloDeCache(bloque, procesador, true, indice);
+                                    hacerFalloDeCache(bloque, procesador, true, posicionCache);
                                 }
 
 
@@ -1946,11 +1962,11 @@ namespace Proyecto
                                 {
                                     if (temporal[0] != procesador)
                                     {
-                                        hacerFalloDeCache(bloque, procesador, false, indice);
+                                        hacerFalloDeCache(bloque, procesador, false, posicionCache);
                                     }
                                     else
                                     {
-                                        hacerFalloDeCache(bloque, procesador, true, indice);
+                                        hacerFalloDeCache(bloque, procesador, true, posicionCache);
                                     }
                                 }
                                 else
@@ -2022,7 +2038,7 @@ namespace Proyecto
                                 }
                             }
                             //solicitudDeBloque = escribirBloqueEnMem(bloque, otra_cache, procesador, indice, false, false);
-                            solicitudDeBloque = escribirBloqueEnMem(bloque, temporal[0], 2, indice, false, false);
+                            solicitudDeBloque = escribirBloqueEnMem(bloque, temporal[0], 2, posicionCache, false, false);
                             if (solicitudDeBloque == false)
                             {
                                 Monitor.Exit(dir2);
@@ -2033,6 +2049,18 @@ namespace Proyecto
                             else
                             {
                                 dir2[temporal[1] * 5 + 1] = 'M';
+                                switch (procesador)
+                                {
+                                    case 1:
+                                        encache_datos1[posicionCache] = 'M';
+                                        break;
+                                    case 2:
+                                        encache_datos2[posicionCache] = 'M';
+                                        break;
+                                    default:
+                                        encache_datos3[posicionCache] = 'M';
+                                        break;
+                                }
                                 Monitor.Exit(dir2);
                                 liberarCache(procesador);
                                 return true;
@@ -2047,11 +2075,11 @@ namespace Proyecto
 
                                 if (temporal[0] != procesador)
                                 {
-                                    hacerFalloDeCache(bloque, procesador, false, indice);
+                                    hacerFalloDeCache(bloque, procesador, false, posicionCache);
                                 }
                                 else
                                 {
-                                    hacerFalloDeCache(bloque, procesador, true, indice);
+                                    hacerFalloDeCache(bloque, procesador, true, posicionCache);
                                 }
 
 
@@ -2096,11 +2124,11 @@ namespace Proyecto
                                 {
                                     if (temporal[0] != procesador)
                                     {
-                                        hacerFalloDeCache(bloque, procesador, false, indice);
+                                        hacerFalloDeCache(bloque, procesador, false, posicionCache);
                                     }
                                     else
                                     {
-                                        hacerFalloDeCache(bloque, procesador, true, indice);
+                                        hacerFalloDeCache(bloque, procesador, true, posicionCache);
                                     }
                                 }
                                 else
@@ -2171,8 +2199,7 @@ namespace Proyecto
                                     otra_cache = i;
                                 }
                             }
-                            solicitudDeBloque = escribirBloqueEnMem(bloque, otra_cache, procesador, indice, false, false);
-                            solicitudDeBloque = escribirBloqueEnMem(bloque, temporal[0], procesador, indice, false, false);
+                            solicitudDeBloque = escribirBloqueEnMem(bloque, otra_cache, procesador, posicionCache, false, false);
                             if (solicitudDeBloque == false)
                             {
                                 Monitor.Exit(dir3);
@@ -2183,6 +2210,18 @@ namespace Proyecto
                             else
                             {
                                 dir3[temporal[1] * 5 + 1] = 'M';
+                                switch (procesador)
+                                {
+                                    case 1:
+                                        encache_datos1[posicionCache] = 'M';
+                                        break;
+                                    case 2:
+                                        encache_datos2[posicionCache] = 'M';
+                                        break;
+                                    default:
+                                        encache_datos3[posicionCache] = 'M';
+                                        break;
+                                }
                                 Monitor.Exit(dir3);
                                 liberarCache(procesador);
                                 return true;
@@ -2197,11 +2236,11 @@ namespace Proyecto
 
                                 if (temporal[0] != procesador)
                                 {
-                                    hacerFalloDeCache(bloque, procesador, false, indice);
+                                    hacerFalloDeCache(bloque, procesador, false, posicionCache);
                                 }
                                 else
                                 {
-                                    hacerFalloDeCache(bloque, procesador, true, indice);
+                                    hacerFalloDeCache(bloque, procesador, true, posicionCache);
                                 }
 
 
@@ -2246,11 +2285,11 @@ namespace Proyecto
                                 {
                                     if (temporal[0] != procesador)
                                     {
-                                        hacerFalloDeCache(bloque, procesador, false, indice);
+                                        hacerFalloDeCache(bloque, procesador, false, posicionCache);
                                     }
                                     else
                                     {
-                                        hacerFalloDeCache(bloque, procesador, true, indice);
+                                        hacerFalloDeCache(bloque, procesador, true, posicionCache);
                                     }
                                 }
                                 else
