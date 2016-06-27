@@ -288,7 +288,43 @@ namespace Proyecto
             //Console.WriteLine(s.ToString());
            // Console.WriteLine(Convert.ToString(s));
         }
+        public static void impSol(bool cache,int numSol, bool entro)
+        {
+            string numHilillo = Thread.CurrentThread.Name;
+            string mensaje = "Proc #" + numHilillo + " pidio "; 
+            
+            if (cache)
+            {
+                mensaje = mensaje + "Cache";
+            } else
+            {
+                mensaje = mensaje + "Dir";
+            }
+            mensaje = mensaje + Convert.ToString(numSol);
+            if (entro)
+            {
+                mensaje = mensaje + " la tiene";
+            }
+            else
+            {
+                mensaje = mensaje + " no ";
+            }
+        }
+        public static void impSoltar(bool cache, int numSol)
+        {
+            string numHilillo = Thread.CurrentThread.Name;
+            string mensaje = "Proc #" + numHilillo + " solto ";
 
+            if (cache)
+            {
+                mensaje = mensaje + "Cache";
+            }
+            else
+            {
+                mensaje = mensaje + "Dir";
+            }
+            mensaje = mensaje + Convert.ToString(numSol);
+        }
         public static void guardarCambios(int procesador)
         {
             switch (procesador)
@@ -991,22 +1027,24 @@ namespace Proyecto
                 switch (procesador)
                 {
                     case 1:
-                        r = Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache1) && Monitor.TryEnter(encache_datos1)*/;
+                        r = Monitor.TryEnter(cache_datos1);
                         break;//Esto esta bien pero como las estamos manejando como una sola igual bastaria con la primera (siempre que en todo el programa hagamos en tryEnter en la misma estructura y antes de tocar alguna de las 3). 
                     case 2:
-                        r = Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache2) && Monitor.TryEnter(encache_datos2)*/;
+                        r = Monitor.TryEnter(cache_datos2);
                         break;
                     case 3:
-                        r = Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/;
+                        r = Monitor.TryEnter(cache_datos3);
                         break;
                 }
                 if (r == false)//trylock de mi cache
                 {
                     miBarrerita.SignalAndWait();
-                    
+
+                    impSol(true, procesador, false);
                 }
                 else
                 {
+                    impSol(true, procesador, true);
                     switch (procesador)
                     {
                         case 1:
@@ -1038,6 +1076,14 @@ namespace Proyecto
                                         case 3:
                                             r = Monitor.TryEnter(dir3);
                                             break;
+                                    }
+                                    if (r)
+                                    {
+                                        impSol(false, numDir, true);
+                                    }
+                                    else
+                                    {
+                                        impSol(false, numDir, false);
                                     }
                                     if (r)
                                     {
@@ -1240,6 +1286,14 @@ namespace Proyecto
                                     }
                                     if (r)
                                     {
+                                        impSol(false, numDir, true);
+                                    }
+                                    else
+                                    {
+                                        impSol(false, numDir, false);
+                                    }
+                                    if (r)
+                                    {
                                         if ((numDir) == 2)
                                         {
                                             for (int i = 0; i < 2; ++i)
@@ -1432,6 +1486,14 @@ namespace Proyecto
                                         case 3:
                                             r = Monitor.TryEnter(dir3);
                                             break;
+                                    }
+                                    if (r)
+                                    {
+                                        impSol(false, numDir, true);
+                                    }
+                                    else
+                                    {
+                                        impSol(false, numDir, false);
                                     }
                                     if (r)
                                     {
@@ -1651,6 +1713,7 @@ namespace Proyecto
                     case 1:
                         if (Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache1) && Monitor.TryEnter(encache_datos1)*/)
                         {
+                            impSol(true, procesador, true);
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos1[indice] == bloque && estadoCache1[indice] == 'M')
                             {
@@ -1701,6 +1764,7 @@ namespace Proyecto
                         }
                         else
                         {
+                            impSol(true, procesador, false);
                             miBarrerita.SignalAndWait();
                             termino = false;
                         }
@@ -1708,6 +1772,7 @@ namespace Proyecto
                     case 2:
                         if (Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache2) && Monitor.TryEnter(encache_datos2)*/)
                         {
+                            impSol(true, procesador, true);
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos2[indice] == bloque && estadoCache2[indice] == 'M')
                             {
@@ -1759,6 +1824,7 @@ namespace Proyecto
                         }
                         else
                         {
+                            impSol(true, procesador, false);
                             miBarrerita.SignalAndWait();
                             termino = false;
                         }
@@ -1768,6 +1834,8 @@ namespace Proyecto
 
                         if (Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
                         {
+
+                            impSol(true, procesador, true);
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos3[indice] == bloque && estadoCache3[indice] == 'M')
                             {
@@ -1820,6 +1888,7 @@ namespace Proyecto
                         }
                         else
                         {
+                            impSol(true, procesador, false);
                             miBarrerita.SignalAndWait();
                             termino = false;
                         }
@@ -1875,6 +1944,7 @@ namespace Proyecto
                     //solicitud del directorio correspondiente que contiene el bloque objetivo
                     if (Monitor.TryEnter(dir1))
                     {
+                        impSol(false, 1, true);
                         if (temporal[0] != procesador) //remoto
                         {
                             //contadorProcesador1 = contadorProcesador1 + 4;
@@ -2028,7 +2098,7 @@ namespace Proyecto
                     }
                     else
                     {
-                        
+                        impSol(false, 1, false);
                         liberarCache(procesador);
                         miBarrerita.SignalAndWait();
                         return false;
@@ -2038,6 +2108,7 @@ namespace Proyecto
                     //solicitud del directorio correspondiente que contiene el bloque objetivo
                     if (Monitor.TryEnter(dir2))
                     {
+                        impSol(true, 2, true);
                         if (temporal[0] != procesador) //remoto
                         {
                             //contadorProcesador2 = contadorProcesador2 + 4;
@@ -2190,6 +2261,7 @@ namespace Proyecto
                     }
                     else
                     {
+                        impSol(false, 2, false);
                         termino = false;
                         liberarCache(procesador);
                         miBarrerita.SignalAndWait();
@@ -2200,6 +2272,7 @@ namespace Proyecto
                     //solicitud del directorio correspondiente que contiene el bloque objetivo
                     if (Monitor.TryEnter(dir3))
                     {
+                        impSol(false, 3, true);
                         if (temporal[0] != procesador) //remoto
                         {
                             //contadorProcesador1 = contadorProcesador1 + 4;
@@ -2351,6 +2424,7 @@ namespace Proyecto
                     }
                     else
                     {
+                        impSol(false,3, false);
                         termino = false;
                         liberarCache(procesador);
                         miBarrerita.SignalAndWait();
@@ -2605,6 +2679,7 @@ namespace Proyecto
 
                     if (Monitor.TryEnter(dir1))
                     {
+                        impSol(false, temporal[0], true);
                         dir1[temporal[1] * 5 + 1 + numCache] = '0';
 
                         switch (numCache)
@@ -2673,6 +2748,7 @@ namespace Proyecto
                     }
                     else
                     {
+                        impSol(false, temporal[0], false);
                         return false;
                     }
 
@@ -2681,6 +2757,7 @@ namespace Proyecto
                 case 2:
                     if (Monitor.TryEnter(dir2))
                     {
+                        impSol(false, temporal[0], true);
                         dir2[temporal[1] * 5 + 1 + numCache] = '0';
 
                         switch (numCache)
@@ -2749,6 +2826,7 @@ namespace Proyecto
                     }
                     else
                     {
+                        impSol(false, temporal[0], false);
                         return false;
                     }
 
@@ -2756,6 +2834,7 @@ namespace Proyecto
                 default:
                     if (Monitor.TryEnter(dir3))
                     {
+                        impSol(false, temporal[0], true);
                         dir3[temporal[1] * 5 + 1 + numCache] = '0';
 
                         switch (numCache)
@@ -2824,15 +2903,13 @@ namespace Proyecto
                     }
                     else
                     {
+                        impSol(false, temporal[0], false);
                         return false;
                     }
 
                     break;
             }
 
-
-
-    
             return true;
         }
 
@@ -2855,28 +2932,41 @@ namespace Proyecto
                         //Intenta entrar al directorio correspondiente
                         if (Monitor.TryEnter(dir1))
                         {
+                            impSol(false, temporal[0], true);
+
                             guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
                         }
                         else
+                        {
+                            impSol(false, temporal[0], false);
                             return false;
+                        }
                         Monitor.Exit(dir1);
                         break;
                     case 2:
                         if (Monitor.TryEnter(dir2))
                         {
+                            impSol(false, temporal[0], true);
                             guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
                         }
                         else
+                        {
+                            impSol(false, temporal[0], false);
                             return false;
+                        }
                         Monitor.Exit(dir2);
                         break;
                     case 3:
                         if (Monitor.TryEnter(dir3))
                         {
+                            impSol(false, temporal[0], true);
                             guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
                         }
                         else
+                        {
+                            impSol(false, temporal[0], true);
                             return false;
+                        }
                         Monitor.Exit(dir3);
                         break;
                 }
@@ -2890,6 +2980,7 @@ namespace Proyecto
                         //Intenta entrar a la caché correspondiente
                         if (Monitor.TryEnter(cache_datos1))
                         {
+                            impSol(true, 1, true);
                             //Si es un store
                             if (!esLoad)
                             {
@@ -2901,12 +2992,17 @@ namespace Proyecto
                             }
                         }
                         else
+                        {
+                            impSol(true, 1, false);
                             return false;
+                        }
                         Monitor.Exit(cache_datos1);
                         break;
                     case 2:
                         if (Monitor.TryEnter(cache_datos2))
                         {
+                            impSol(true, 2, true);
+
                             //Si es un store
                             if (!esLoad)
                             {
@@ -2918,12 +3014,17 @@ namespace Proyecto
                             }
                         }
                         else
+                        {
+                            impSol(true, 2, false);
                             return false;
+                        }
                         Monitor.Exit(cache_datos2);
                         break;
                     case 3:
                         if (Monitor.TryEnter(cache_datos3))
                         {
+                            impSol(true, 3, true);
+                            //impSol(true, temporal[0], false);
                             //Si es un store
                             if (!esLoad)
                             {
@@ -2935,7 +3036,10 @@ namespace Proyecto
                             }
                         }
                         else
+                        {
+                            impSol(true, 3, false);
                             return false;
+                        }
                         Monitor.Exit(cache_datos3);
                         break;
                 }
