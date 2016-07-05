@@ -1045,11 +1045,11 @@ namespace Proyecto
                 {
                     miBarrerita.SignalAndWait();
 
-                    impSol(true, procesador, false);
+                    ////impSol(true, procesador, false);
                 }
                 else
                 {
-                    impSol(true, procesador, true);
+                    //impSol(true, procesador, true);
                     switch (procesador)
                     {
                         case 1:
@@ -1084,11 +1084,11 @@ namespace Proyecto
                                     }
                                     if (r)
                                     {
-                                        impSol(false, numDir, true);
+                                        //impSol(false, numDir, true);
                                     }
                                     else
                                     {
-                                        impSol(false, numDir, false);
+                                        //impSol(false, numDir, false);
                                     }
                                     if (r)
                                     {
@@ -1130,7 +1130,7 @@ namespace Proyecto
                                                         liberarCache(procesador);
                                                         //miBarrerita.SignalAndWait();
                                                         Monitor.Exit(dir1);
-                                                        impSoltar(false, 1);
+                                                        //impSoltar(false, 1);
                                                     }
                                                 }
                                                 else if (((dir1[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
@@ -1154,7 +1154,7 @@ namespace Proyecto
                                                 dir1[posicionDir * 5 + 1] = 'C';
                                                 dir1[posicionDir * 5 + 2] = '1';
                                                 Monitor.Exit(dir1);
-                                                impSoltar(false, 1);
+                                                //impSoltar(false, 1);
                                                 break;
                                             case 2:
                                                 if ((dir2[posicionDir * 5 + 1]) == 'M')
@@ -1178,7 +1178,7 @@ namespace Proyecto
                                                     {
                                                         liberarCache(procesador);
                                                         Monitor.Exit(dir2);
-                                                        impSoltar(false, 2);
+                                                        //impSoltar(false, 2);
                                                     }
 
                                                 }
@@ -1202,7 +1202,7 @@ namespace Proyecto
                                                     dir2[posicionDir * 5 + 1] = 'C';
                                                     dir2[posicionDir * 5 + 2] = '1';
                                                     Monitor.Exit(dir2);
-                                                    impSoltar(false, 2);
+                                                    //impSoltar(false, 2);
                                                 }
                                                 break;
                                             case 3:
@@ -1226,7 +1226,7 @@ namespace Proyecto
                                                     {
                                                         liberarCache(procesador);
                                                         Monitor.Exit(dir3);
-                                                        impSoltar(false, 3);
+                                                        //impSoltar(false, 3);
                                                     }
 
                                                 }
@@ -1250,7 +1250,7 @@ namespace Proyecto
                                                     dir3[posicionDir * 5 + 1] = 'C';
                                                     dir3[posicionDir * 5 + 2] = '1';
                                                     Monitor.Exit(dir3);
-                                                    impSoltar(false, 3);
+                                                    //impSoltar(false, 3);
                                                 }
                                                 break;
                                         }
@@ -1298,11 +1298,11 @@ namespace Proyecto
                                     }
                                     if (r)
                                     {
-                                        impSol(false, numDir, true);
+                                        //impSol(false, numDir, true);
                                     }
                                     else
                                     {
-                                        impSol(false, numDir, false);
+                                        //impSol(false, numDir, false);
                                     }
                                     if (r)
                                     {
@@ -1343,7 +1343,7 @@ namespace Proyecto
                                                     {
                                                         liberarCache(procesador);
                                                         Monitor.Exit(dir1);
-                                                        impSoltar(false, 1);
+                                                        //impSoltar(false, 1);
                                                     }
                                                 }
                                                 else if (((dir1[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
@@ -1366,7 +1366,7 @@ namespace Proyecto
                                                 dir1[posicionDir * 5 + 1] = 'C';
                                                 dir1[posicionDir * 5 + 3] = '1';
                                                 Monitor.Exit(dir1);
-                                                impSoltar(false, 1);
+                                                //impSoltar(false, 1);
                                                 break;
                                             case 2:
                                                 if ((dir2[posicionDir * 5 + 1]) == 'M')
@@ -1389,7 +1389,7 @@ namespace Proyecto
                                                     {
                                                         liberarCache(procesador);
                                                         Monitor.Exit(dir2);
-                                                        impSoltar(false, 2);
+                                                        //impSoltar(false, 2);
                                                     }
                                                 }
                                                 else if (((dir2[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
@@ -1412,7 +1412,7 @@ namespace Proyecto
                                                     dir2[posicionDir * 5 + 1] = 'C';
                                                     dir2[posicionDir * 5 + 3] = '1';
                                                     Monitor.Exit(dir2);
-                                                    impSoltar(false, 2);
+                                                    //impSoltar(false, 2);
                                                 }
                                                 break;
                                             case 3:
@@ -1436,7 +1436,7 @@ namespace Proyecto
                                                     {
                                                         liberarCache(procesador);
                                                         Monitor.Exit(dir3);
-                                                        impSoltar(false, 3);
+                                                        //impSoltar(false, 3);
                                                     }
                                                 }
                                                 else if (((dir3[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
@@ -1459,7 +1459,7 @@ namespace Proyecto
                                                     dir3[posicionDir * 5 + 1] = 'C';
                                                     dir3[posicionDir * 5 + 3] = '1';
                                                     Monitor.Exit(dir3);
-                                                    impSoltar(false, 3);
+                                                    //impSoltar(false, 3);
                                                 }
                                                 break;
                                         }
@@ -1507,11 +1507,11 @@ namespace Proyecto
                                     }
                                     if (r)
                                     {
-                                        impSol(false, numDir, true);
+                                        //impSol(false, numDir, true);
                                     }
                                     else
                                     {
-                                        impSol(false, numDir, false);
+                                        //impSol(false, numDir, false);
                                     }
                                     if (r)
                                     {
@@ -1552,7 +1552,7 @@ namespace Proyecto
                                                     {
                                                         liberarCache(procesador);
                                                         Monitor.Exit(dir1);
-                                                        impSoltar(false, 1);
+                                                        //impSoltar(false, 1);
                                                     }
                                                 }
                                                 else if (((dir1[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
@@ -1575,7 +1575,7 @@ namespace Proyecto
                                                 dir1[posicionDir * 5 + 1] = 'C';
                                                 dir1[posicionDir * 5 + 4] = '1';
                                                 Monitor.Exit(dir1);
-                                                impSoltar(false, 1);
+                                                //impSoltar(false, 1);
                                                 break;
                                             case 2:
                                                 if ((dir2[posicionDir * 5 + 1]) == 'M')
@@ -1598,7 +1598,7 @@ namespace Proyecto
                                                     {
                                                         liberarCache(procesador);
                                                         Monitor.Exit(dir2);
-                                                        impSoltar(false, 2);
+                                                        //impSoltar(false, 2);
                                                     }
                                                 }
                                                 else if (((dir2[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
@@ -1621,7 +1621,7 @@ namespace Proyecto
                                                     dir2[posicionDir * 5 + 1] = 'C';
                                                     dir2[posicionDir * 5 + 4] = '1';
                                                     Monitor.Exit(dir2);
-                                                    impSoltar(false, 2);
+                                                    //impSoltar(false, 2);
                                                 }
                                                 break;
                                             case 3:
@@ -1645,7 +1645,7 @@ namespace Proyecto
                                                     {
                                                         liberarCache(procesador);
                                                         Monitor.Exit(dir3);
-                                                        impSoltar(false, 3);
+                                                        //impSoltar(false, 3);
                                                     }
                                                 }
                                                 else if (((dir3[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
@@ -1668,7 +1668,7 @@ namespace Proyecto
                                                     dir3[posicionDir * 5 + 1] = 'C';
                                                     dir3[posicionDir * 5 + 4] = '1';
                                                     Monitor.Exit(dir3);
-                                                    impSoltar(false, 3);
+                                                    //impSoltar(false, 3);
                                                 }
                                                 break;
                                         }
@@ -1727,19 +1727,21 @@ namespace Proyecto
             bool termino = false;                               //Controla si se logró acceder al directorio de la caché.
             int indice = 0;
             bool solicitudDeBloque = false;
+            int hace_ciclo = 0;
 
             indice = bloque % cant_bytes_palabra;
 
             while (termino == false)
             {
-                miBarrerita.SignalAndWait();
+                if (hace_ciclo > 0)
+                    miBarrerita.SignalAndWait();
                 //Busca acceder a la cache correspondiente
                 switch (procesador)
                 {
                     case 1:
                         if (Monitor.TryEnter(cache_datos1))
                         {
-                            impSol(true, procesador, true);
+                            //impSol(true, procesador, true);
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos1[indice] == bloque && estadoCache1[indice] == 'M')
                             {
@@ -1755,10 +1757,13 @@ namespace Proyecto
                                     {
                                         //metodo hacer bifurcacion
                                         termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                        if (!termino)
+                                            ++hace_ciclo;
                                     }
                                     else
                                     {
                                         termino = false;
+                                        ++hace_ciclo;
                                         liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
                                     }
@@ -1771,10 +1776,13 @@ namespace Proyecto
                                         if (reemplazarBloqueCompartido(encache_datos1[indice], procesador, indice))
                                         {
                                             termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                            if (!termino)
+                                                ++hace_ciclo;
                                         }
                                         else
                                         {
                                             termino = false;
+                                            ++hace_ciclo;
                                             liberarCache(procesador);
                                             miBarrerita.SignalAndWait();
                                         }
@@ -1782,6 +1790,8 @@ namespace Proyecto
                                     else
                                     {
                                         termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                        if (!termino)
+                                            ++hace_ciclo;
                                     }
                                   
                                 }
@@ -1790,15 +1800,16 @@ namespace Proyecto
                         }
                         else
                         {
-                            impSol(true, procesador, false);
+                            //impSol(true, procesador, false);
                             miBarrerita.SignalAndWait();
                             termino = false;
+                            ++hace_ciclo;
                         }
                         break;
                     case 2:
                         if (Monitor.TryEnter(cache_datos2) )
                         {
-                            impSol(true, procesador, true);
+                            //impSol(true, procesador, true);
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos2[indice] == bloque && estadoCache2[indice] == 'M')
                             {
@@ -1815,10 +1826,13 @@ namespace Proyecto
 
                                         //metodo hacer bifurcacion
                                         termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                        if (!termino)
+                                            ++hace_ciclo;
                                     }
                                     else
                                     {
                                         termino = false;
+                                        ++hace_ciclo;
                                         liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
                                     }
@@ -1831,10 +1845,13 @@ namespace Proyecto
                                         if (reemplazarBloqueCompartido(encache_datos2[indice], procesador, indice))
                                         {
                                             termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                            if (!termino)
+                                                ++hace_ciclo;
                                         }
                                         else
                                         {
                                             termino = false;
+                                            ++hace_ciclo;
                                             liberarCache(procesador);
                                             miBarrerita.SignalAndWait();
                                         }
@@ -1842,6 +1859,8 @@ namespace Proyecto
                                     else
                                     {
                                         termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                        if (!termino)
+                                            ++hace_ciclo;
                                     }
                                     
                                 }
@@ -1850,9 +1869,10 @@ namespace Proyecto
                         }
                         else
                         {
-                            impSol(true, procesador, false);
+                            //impSol(true, procesador, false);
                             miBarrerita.SignalAndWait();
                             termino = false;
+                            ++hace_ciclo;
                         }
                         break;
                     case 3:
@@ -1861,7 +1881,7 @@ namespace Proyecto
                         if (Monitor.TryEnter(cache_datos3) )
                         {
 
-                            impSol(true, procesador, true);
+                            //impSol(true, procesador, true);
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos3[indice] == bloque && estadoCache3[indice] == 'M')
                             {
@@ -1878,11 +1898,13 @@ namespace Proyecto
                                     {
                                         //metodo hacer bifurcacion
                                         termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                        if (!termino)
+                                            ++hace_ciclo;
                                     }
                                     else
                                     {
                                         termino = false;
-                                       
+                                        ++hace_ciclo;
                                         liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
                                     }
@@ -1895,11 +1917,13 @@ namespace Proyecto
                                         if (reemplazarBloqueCompartido(estadoCache3[indice], procesador, indice))
                                         {
                                             termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                            if (!termino)
+                                                ++hace_ciclo;
                                         }
                                         else
                                         {
                                             termino = false;
-                                           
+                                            ++hace_ciclo;
                                             liberarCache(procesador);
                                             miBarrerita.SignalAndWait();
                                         }
@@ -1907,6 +1931,8 @@ namespace Proyecto
                                     else
                                     {
                                         termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                        if (!termino)
+                                            ++hace_ciclo;
                                     }
                                 }
                             }
@@ -1914,9 +1940,10 @@ namespace Proyecto
                         }
                         else
                         {
-                            impSol(true, procesador, false);
+                            //impSol(true, procesador, false);
                             miBarrerita.SignalAndWait();
                             termino = false;
+                            ++hace_ciclo;
                         }
                         break;
                 }
@@ -1932,19 +1959,19 @@ namespace Proyecto
                 case 1:
 
                     Monitor.Exit(cache_datos1);
-                    impSoltar(true, 1);
+                    //impSoltar(true, 1);
 
                     break;
                 case 2:
 
                     Monitor.Exit(cache_datos2);
-                    impSoltar(true, 2);
+                    //impSoltar(true, 2);
 
                     break;
                 default:
 
                     Monitor.Exit(cache_datos3);
-                    impSoltar(true, 3);
+                    //impSoltar(true, 3);
                     break;
             }
            
@@ -1970,7 +1997,7 @@ namespace Proyecto
                     //solicitud del directorio correspondiente que contiene el bloque objetivo
                     if (Monitor.TryEnter(dir1))
                     {
-                        impSol(false, 1, true);
+                        //impSol(false, 1, true);
                         if (temporal[0] != procesador) //remoto
                         {
                             //contadorProcesador1 = contadorProcesador1 + 4;
@@ -2004,7 +2031,7 @@ namespace Proyecto
                             if (solicitudDeBloque == false)
                             {
                                 Monitor.Exit(dir1);
-                                impSoltar(false, 1);
+                                //impSoltar(false, 1);
                                 liberarCache(procesador);
                                 miBarrerita.SignalAndWait();
                                 return false;
@@ -2025,7 +2052,7 @@ namespace Proyecto
                                         break;
                                 }
                                 Monitor.Exit(dir1);
-                                impSoltar(false, 1);
+                                //impSoltar(false, 1);
                                 liberarCache(procesador);
                                 return true;
                             }
@@ -2070,7 +2097,7 @@ namespace Proyecto
                                 {
                                     if (Monitor.TryEnter(cache_datos2))
                                     {
-                                        impSol(true, 2, true);
+                                        //impSol(true, 2, true);
                                         
                                         encache_datos2[posicionCache] = 'I';
                                         miBarrerita.SignalAndWait();
@@ -2078,14 +2105,14 @@ namespace Proyecto
                                         liberarCache(2);
                                     }else
                                     {
-                                        impSol(true, 2, false);
+                                        //impSol(true, 2, false);
                                     }
                                 }
                                 if (compartidoCache[3])
                                 {
                                     if (Monitor.TryEnter(cache_datos3))
                                     {
-                                        impSol(true, 3, true);
+                                        //impSol(true, 3, true);
                                         encache_datos3[posicionCache] = 'I';
                                         miBarrerita.SignalAndWait();
                                         bien = bien + 1;
@@ -2093,7 +2120,7 @@ namespace Proyecto
                                     }
                                     else
                                     {
-                                        impSol(true, 3, false);
+                                        //impSol(true, 3, false);
                                     }
                                 }
                                 bool ultimoBool = true;
@@ -2114,7 +2141,7 @@ namespace Proyecto
                                 {
                                     ultimoBool = false;
                                     Monitor.Exit(dir1);
-                                    impSoltar(false, 1);
+                                    //impSoltar(false, 1);
                                     liberarCache(procesador);
                                     return false;
                                 }
@@ -2126,7 +2153,7 @@ namespace Proyecto
                                     dir1[temporal[1] * 5 + 3] = '0';
                                     dir1[temporal[1] * 5 + 4] = '0';
                                     Monitor.Exit(dir1);
-                                    impSoltar(false, 1);
+                                    //impSoltar(false, 1);
                                     liberarCache(procesador);
                                     bien = bien + 1;
                                     return true;
@@ -2137,7 +2164,7 @@ namespace Proyecto
                                     {
                                         Monitor.Exit(dir1);
 
-                                        impSoltar(false, 1);
+                                        //impSoltar(false, 1);
                                     }
                                     liberarCache(procesador);
                                     return false;
@@ -2147,7 +2174,7 @@ namespace Proyecto
                     }
                     else
                     {
-                        impSol(false, 1, false);
+                        //impSol(false, 1, false);
                         liberarCache(procesador);
                         miBarrerita.SignalAndWait();
                         return false;
@@ -2157,7 +2184,7 @@ namespace Proyecto
                     //solicitud del directorio correspondiente que contiene el bloque objetivo
                     if (Monitor.TryEnter(dir2))
                     {
-                        impSol(false, 2, true);
+                        //impSol(false, 2, true);
                         if (temporal[0] != procesador) //remoto
                         {
                             //contadorProcesador2 = contadorProcesador2 + 4;
@@ -2192,7 +2219,7 @@ namespace Proyecto
                             if (solicitudDeBloque == false)
                             {
                                 Monitor.Exit(dir2);
-                                impSoltar(false, 2);
+                                //impSoltar(false, 2);
                                 liberarCache(procesador);
                                 miBarrerita.SignalAndWait();
                                 return false;
@@ -2213,7 +2240,7 @@ namespace Proyecto
                                         break;
                                 }
                                 Monitor.Exit(dir2);
-                                impSoltar(false, 2);
+                                //impSoltar(false, 2);
                                 liberarCache(procesador);
                                 return true;
                             }
@@ -2256,7 +2283,7 @@ namespace Proyecto
                                 {
                                     if (Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache1) && Monitor.TryEnter(encache_datos1)*/)
                                     {
-                                        impSol(true, 1, true);
+                                        //impSol(true, 1, true);
                                         encache_datos1[posicionCache] = 'I';
                                         miBarrerita.SignalAndWait();
                                         liberarCache(1);
@@ -2264,14 +2291,14 @@ namespace Proyecto
                                     }
                                     else
                                     {
-                                        impSol(true, 1, false);
+                                        //impSol(true, 1, false);
                                     }
                                 }
                                 if (compartidoCache[3])
                                 {
                                     if (Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
                                     {
-                                        impSol(true, 3, true);
+                                        //impSol(true, 3, true);
                                         encache_datos3[posicionCache] = 'I';
                                         miBarrerita.SignalAndWait();
                                         liberarCache(3);
@@ -2279,7 +2306,7 @@ namespace Proyecto
                                     }
                                     else
                                     {
-                                        impSol(true, 3, false);
+                                        //impSol(true, 3, false);
                                     }
                                 }
                                 bool ultimoBool = true;
@@ -2299,7 +2326,7 @@ namespace Proyecto
                                 {
                                     ultimoBool = false;
                                     Monitor.Exit(dir2);
-                                    impSoltar(false, 2);
+                                    //impSoltar(false, 2);
                                     liberarCache(procesador);
                                     return false;
                                 }
@@ -2312,7 +2339,7 @@ namespace Proyecto
                                     dir2[temporal[1] * 5 + 3] = '0';
                                     dir2[temporal[1] * 5 + 4] = '0';
                                     Monitor.Exit(dir2);
-                                    impSoltar(false, 2);
+                                    //impSoltar(false, 2);
                                     liberarCache(procesador);
                                     bien = bien + 1;
                                     return true;
@@ -2323,7 +2350,7 @@ namespace Proyecto
                                     {
                                         Monitor.Exit(dir2);
 
-                                        impSoltar(false, 2);
+                                        //impSoltar(false, 2);
                                     }
                                     liberarCache(procesador);
                                     return false;
@@ -2333,7 +2360,7 @@ namespace Proyecto
                     }
                     else
                     {
-                        impSol(false, 2, false);
+                        //impSol(false, 2, false);
                         termino = false;
                         liberarCache(procesador);
                         miBarrerita.SignalAndWait();
@@ -2344,7 +2371,7 @@ namespace Proyecto
                     //solicitud del directorio correspondiente que contiene el bloque objetivo
                     if (Monitor.TryEnter(dir3))
                     {
-                        impSol(false, 3, true);
+                        //impSol(false, 3, true);
                         if (temporal[0] != procesador) //remoto
                         {
                             //contadorProcesador1 = contadorProcesador1 + 4;
@@ -2378,7 +2405,7 @@ namespace Proyecto
                             if (solicitudDeBloque == false)
                             {
                                 Monitor.Exit(dir3);
-                                impSoltar(false, 3);
+                                //impSoltar(false, 3);
                                 liberarCache(procesador);
                                 miBarrerita.SignalAndWait();
                                 return false;
@@ -2399,7 +2426,7 @@ namespace Proyecto
                                         break;
                                 }
                                 Monitor.Exit(dir3);
-                                impSoltar(false, 3);
+                                //impSoltar(false, 3);
                                 liberarCache(procesador);
                                 return true;
                             }
@@ -2442,7 +2469,7 @@ namespace Proyecto
                                 {
                                     if (Monitor.TryEnter(cache_datos2))
                                     {
-                                        impSol(true, 2, true);
+                                        //impSol(true, 2, true);
                                         encache_datos2[posicionCache] = 'I';
                                         miBarrerita.SignalAndWait();
                                         liberarCache(2);
@@ -2450,14 +2477,14 @@ namespace Proyecto
                                     }
                                     else
                                     {
-                                        impSol(true, 2, false);
+                                        //impSol(true, 2, false);
                                     }
                                 }
                                 if (compartidoCache[1])
                                 {
                                     if (Monitor.TryEnter(cache_datos1))
                                     {
-                                        impSol(true, 1, true);
+                                        //impSol(true, 1, true);
                                         encache_datos1[posicionCache] = 'I';
                                         miBarrerita.SignalAndWait();
                                         liberarCache(1);
@@ -2465,7 +2492,7 @@ namespace Proyecto
                                     }
                                     else
                                     {
-                                        impSol(true, 1, false);
+                                        //impSol(true, 1, false);
                                     }
                                 }
                                 bool ultimoBool = true;
@@ -2486,7 +2513,7 @@ namespace Proyecto
                                 {
                                     ultimoBool = false;
                                     Monitor.Exit(dir3);
-                                    impSoltar(false, 3);
+                                    //impSoltar(false, 3);
                                     liberarCache(procesador);
                                     return false;
                                 }
@@ -2498,7 +2525,7 @@ namespace Proyecto
                                     dir3[temporal[1] * 5 + 3] = '0';
                                     dir3[temporal[1] * 5 + 4] = '0';
                                     Monitor.Exit(dir3);
-                                    impSoltar(false, 3);
+                                    //impSoltar(false, 3);
                                     liberarCache(procesador);
                                     bien = bien + 1;
                                     return true;
@@ -2509,7 +2536,7 @@ namespace Proyecto
                                     {
                                         Monitor.Exit(dir3);
 
-                                        impSoltar(false, 3);
+                                        //impSoltar(false, 3);
                                     }
                                     liberarCache(procesador);
                                     return false;
@@ -2519,7 +2546,7 @@ namespace Proyecto
                     }
                     else
                     {
-                        impSol(false,3, false);
+                        //impSol(false,3, false);
                         termino = false;
                         liberarCache(procesador);
                         miBarrerita.SignalAndWait();
@@ -2592,7 +2619,7 @@ namespace Proyecto
                         dir1[temporal[1] * 5 + 3] = '0';
                         dir1[temporal[1] * 5 + 4] = '0';
                         Monitor.Exit(dir1);
-                        impSoltar(false, 1);
+                        //impSoltar(false, 1);
                         break;
                     case 2:
                         dir2[temporal[1] * 5 + 1] = 'M';
@@ -2600,7 +2627,7 @@ namespace Proyecto
                         dir2[temporal[1] * 5 + 3] = '0';
                         dir2[temporal[1] * 5 + 4] = '0';
                         Monitor.Exit(dir2);
-                        impSoltar(false, 2);
+                        //impSoltar(false, 2);
                         break;
                     default:
                         dir3[temporal[1] * 5 + 1] = 'M';
@@ -2608,12 +2635,12 @@ namespace Proyecto
                         dir3[temporal[1] * 5 + 3] = '0';
                         dir3[temporal[1] * 5 + 4] = '0';
                         Monitor.Exit(dir3);
-                        impSoltar(false, 3);
+                        //impSoltar(false, 3);
                         break;
                 }
 
                 Monitor.Exit(cache_datos1);
-                impSoltar(true, 1);
+                //impSoltar(true, 1);
             }
             else if (numCache == 2)
             {
@@ -2670,7 +2697,7 @@ namespace Proyecto
                         dir1[temporal[1] * 5 + 3] = '1';
                         dir1[temporal[1] * 5 + 4] = '0';
                         Monitor.Exit(dir1);
-                        impSoltar(false, 1);
+                        //impSoltar(false, 1);
                         break;
                     case 2:
                         dir2[temporal[1] * 5 + 1] = 'M';
@@ -2678,20 +2705,20 @@ namespace Proyecto
                         dir2[temporal[1] * 5 + 3] = '1';
                         dir2[temporal[1] * 5 + 4] = '0';
                         Monitor.Exit(dir2);
-                        impSoltar(false, 2);
+                        //impSoltar(false, 2);
                         break;
                     default:
                         dir3[temporal[1] * 5 + 1] = 'M';
                         dir3[temporal[1] * 5 + 2] = '0';
                         dir3[temporal[1] * 5 + 3] = '1';
                         dir3[temporal[1] * 5 + 4] = '0';
-                        impSoltar(false, 3);
+                        //impSoltar(false, 3);
                         Monitor.Exit(dir3);
                         break;
                 }
 
                 Monitor.Exit(cache_datos2);
-                impSoltar(true,2);
+                //impSoltar(true,2);
 
 
             }
@@ -2748,7 +2775,7 @@ namespace Proyecto
                         dir1[temporal[1] * 5 + 3] = '0';
                         dir1[temporal[1] * 5 + 4] = '1';
                         Monitor.Exit(dir1);
-                        impSoltar(false, 1);
+                        //impSoltar(false, 1);
                         break;
                     case 2:
                         dir2[temporal[1] * 5 + 1] = 'M';
@@ -2756,7 +2783,7 @@ namespace Proyecto
                         dir2[temporal[1] * 5 + 3] = '0';
                         dir2[temporal[1] * 5 + 4] = '1';
                         Monitor.Exit(dir2);
-                        impSoltar(false, 2);
+                        //impSoltar(false, 2);
                         break;
                     default:
                         dir3[temporal[1] * 5 + 1] = 'M';
@@ -2764,12 +2791,12 @@ namespace Proyecto
                         dir3[temporal[1] * 5 + 3] = '0';
                         dir3[temporal[1] * 5 + 4] = '1';
                         Monitor.Exit(dir3);
-                        impSoltar(false, 3);
+                        //impSoltar(false, 3);
                         break;
                 }
 
                 Monitor.Exit(cache_datos3);
-                impSoltar(true, 3);
+                //impSoltar(true, 3);
             }
         }
 
@@ -2787,7 +2814,7 @@ namespace Proyecto
 
                     if (Monitor.TryEnter(dir1))
                     {
-                        impSol(false, temporal[0], true);
+                        //impSol(false, temporal[0], true);
                         dir1[temporal[1] * 5 + 1 + numCache] = '0';
 
                         switch (numCache)
@@ -2852,12 +2879,12 @@ namespace Proyecto
                                 break;
                         }
                         Monitor.Exit(dir1);
-                        impSoltar(false, 1);
+                        //impSoltar(false, 1);
 
                     }
                     else
                     {
-                        impSol(false, temporal[0], false);
+                        //impSol(false, temporal[0], false);
                         return false;
                     }
 
@@ -2866,7 +2893,7 @@ namespace Proyecto
                 case 2:
                     if (Monitor.TryEnter(dir2))
                     {
-                        impSol(false, temporal[0], true);
+                        //impSol(false, temporal[0], true);
                         dir2[temporal[1] * 5 + 1 + numCache] = '0';
 
                         switch (numCache)
@@ -2931,11 +2958,11 @@ namespace Proyecto
                         }
 
                         Monitor.Exit(dir2);
-                        impSoltar(false, 2);
+                        //impSoltar(false, 2);
                     }
                     else
                     {
-                        impSol(false, temporal[0], false);
+                        //impSol(false, temporal[0], false);
                         return false;
                     }
 
@@ -2943,7 +2970,7 @@ namespace Proyecto
                 default:
                     if (Monitor.TryEnter(dir3))
                     {
-                        impSol(false, temporal[0], true);
+                        //impSol(false, temporal[0], true);
                         dir3[temporal[1] * 5 + 1 + numCache] = '0';
 
                         switch (numCache)
@@ -3008,11 +3035,11 @@ namespace Proyecto
                         }
 
                         Monitor.Exit(dir3);
-                        impSoltar(false, 3);
+                        //impSoltar(false, 3);
                     }
                     else
                     {
-                        impSol(false, temporal[0], false);
+                        //impSol(false, temporal[0], false);
                         return false;
                     }
 
@@ -3042,15 +3069,15 @@ namespace Proyecto
                         //Intenta entrar al directorio correspondiente
                         if (Monitor.TryEnter(dir1))
                         {
-                            impSol(false, temporal[0], true);
+                            //impSol(false, temporal[0], true);
 
                             guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
                             Monitor.Exit(dir1);
-                            impSoltar(false, 1);
+                            //impSoltar(false, 1);
                         }
                         else
                         {
-                            impSol(false, temporal[0], false);
+                            //impSol(false, temporal[0], false);
                             return false;
                         }
                         
@@ -3058,14 +3085,14 @@ namespace Proyecto
                     case 2:
                         if (Monitor.TryEnter(dir2))
                         {
-                            impSol(false, temporal[0], true);
+                            //impSol(false, temporal[0], true);
                             guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
                             Monitor.Exit(dir2);
-                            impSoltar(false, 2);
+                            //impSoltar(false, 2);
                         }
                         else
                         {
-                            impSol(false, temporal[0], false);
+                            //impSol(false, temporal[0], false);
                             return false;
                         }
                         
@@ -3073,14 +3100,14 @@ namespace Proyecto
                     case 3:
                         if (Monitor.TryEnter(dir3))
                         {
-                            impSol(false, temporal[0], true);
+                            //impSol(false, temporal[0], true);
                             guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
                             Monitor.Exit(dir3);
-                            impSoltar(false, 3);
+                            //impSoltar(false, 3);
                         }
                         else
                         {
-                            impSol(false, temporal[0], true);
+                            //impSol(false, temporal[0], true);
                             return false;
                         }
                         
@@ -3096,7 +3123,7 @@ namespace Proyecto
                         //Intenta entrar a la caché correspondiente
                         if (Monitor.TryEnter(cache_datos1))
                         {
-                            impSol(true, 1, true);
+                            //impSol(true, 1, true);
                             //Si es un store
                             if (!esLoad)
                             {
@@ -3109,16 +3136,16 @@ namespace Proyecto
                         }
                         else
                         {
-                            impSol(true, 1, false);
+                            //impSol(true, 1, false);
                             return false;
                         }
                         Monitor.Exit(cache_datos1);
-                        impSoltar(true,1);
+                        //impSoltar(true,1);
                         break;
                     case 2:
                         if (Monitor.TryEnter(cache_datos2))
                         {
-                            impSol(true, 2, true);
+                            //impSol(true, 2, true);
 
                             //Si es un store
                             if (!esLoad)
@@ -3132,17 +3159,17 @@ namespace Proyecto
                         }
                         else
                         {
-                            impSol(true, 2, false);
+                            //impSol(true, 2, false);
                             return false;
                         }
                         Monitor.Exit(cache_datos2);
-                        impSoltar(true,2);
+                        //impSoltar(true,2);
                         break;
                     case 3:
                         if (Monitor.TryEnter(cache_datos3))
                         {
-                            impSol(true, 3, true);
-                            //impSol(true, temporal[0], false);
+                            //impSol(true, 3, true);
+                            ////impSol(true, temporal[0], false);
                             //Si es un store
                             if (!esLoad)
                             {
@@ -3155,11 +3182,11 @@ namespace Proyecto
                         }
                         else
                         {
-                            impSol(true, 3, false);
+                            //impSol(true, 3, false);
                             return false;
                         }
                         Monitor.Exit(cache_datos3);
-                        impSoltar(true, 3);
+                        //impSoltar(true, 3);
                         break;
                 }
             }
