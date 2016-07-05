@@ -1094,14 +1094,14 @@ namespace Proyecto
                                     {
                                         if ((numDir) == 1)
                                         {
-                                            for (int i = 0; i < 2; ++i)
+                                            for (int i = 0; i < 1; ++i)
                                             {
                                                 miBarrerita.SignalAndWait();
                                             }
                                         }
                                         else
                                         {
-                                            for (int i = 0; i < 4; ++i)
+                                            for (int i = 0; i < 1; ++i)
                                             {
                                                 miBarrerita.SignalAndWait();
                                             }
@@ -1134,7 +1134,7 @@ namespace Proyecto
                                                 }
                                                 else if (((dir1[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
-                                                    for (int i = 0; i < 16; ++i)
+                                                    for (int i = 0; i < 2; ++i)
                                                     {
                                                         miBarrerita.SignalAndWait();
                                                     }
@@ -1144,7 +1144,7 @@ namespace Proyecto
                                                     estadoCache1[posicionCache] = 'C';
                                                     posicionCache = posicionCache * 4;
 
-                                                    for (int i = 0; i < 4; ++i)
+                                                    for (int i = 0; i < 1; ++i)
                                                     {
                                                         //pasa las 4 palabras MIPS a la cache_inst
                                                         cache_datos1[posicionCache + i] = memComp1[temporal[1] * 16 + i * 4];
@@ -1184,7 +1184,7 @@ namespace Proyecto
                                                 else if (((dir2[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
 
-                                                    for (int i = 0; i < 20; ++i)
+                                                    for (int i = 0; i < 2; ++i)
                                                     {
                                                         miBarrerita.SignalAndWait();
                                                     }
@@ -1193,7 +1193,7 @@ namespace Proyecto
                                                     encache_datos1[posicionCache] = bloque;
                                                     estadoCache1[posicionCache] = 'C';
                                                     posicionCache = posicionCache * 4;
-                                                    for (int i = 0; i < 4; ++i)
+                                                    for (int i = 0; i < 1; ++i)
                                                     {
                                                         //pasa las 4 palabras MIPS a la cache_inst
                                                         cache_datos1[posicionCache + i] = memComp2[temporal[1] * 16 + i * 4];
@@ -1232,7 +1232,7 @@ namespace Proyecto
                                                 else if (((dir3[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
 
-                                                    for (int i = 0; i < 20; ++i)
+                                                    for (int i = 0; i < 2; ++i)
                                                     {
                                                         miBarrerita.SignalAndWait();
                                                     }
@@ -1241,7 +1241,7 @@ namespace Proyecto
                                                     encache_datos1[posicionCache] = bloque;
                                                     estadoCache1[posicionCache] = 'C';
                                                     posicionCache = posicionCache * 4;
-                                                    for (int i = 0; i < 4; ++i)
+                                                    for (int i = 0; i < 1; ++i)
                                                     {
                                                         //pasa las 4 palabras MIPS a la cache_inst
                                                         cache_datos1[posicionCache + i] = memComp3[temporal[1] * 16 + i * 4];
@@ -1307,14 +1307,14 @@ namespace Proyecto
                                     {
                                         if ((numDir) == 2)
                                         {
-                                            for (int i = 0; i < 2; ++i)
+                                            for (int i = 0; i < 1; ++i)
                                             {
                                                 miBarrerita.SignalAndWait();
                                             }
                                         }
                                         else
                                         {
-                                            for (int i = 0; i < 4; ++i)
+                                            for (int i = 0; i < 1; ++i)
                                             {
                                                 miBarrerita.SignalAndWait();
                                             }
@@ -1347,7 +1347,7 @@ namespace Proyecto
                                                 }
                                                 else if (((dir1[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
-                                                    for (int i = 0; i < 16; ++i)
+                                                    for (int i = 0; i < 2; ++i)
                                                     {
                                                         miBarrerita.SignalAndWait();
                                                     }
@@ -1356,7 +1356,7 @@ namespace Proyecto
                                                     encache_datos2[posicionCache] = bloque;
                                                     estadoCache2[posicionCache] = 'C';
                                                     posicionCache = posicionCache * 4;
-                                                    for (int i = 0; i < 4; ++i)
+                                                    for (int i = 0; i < 1; ++i)
                                                     {
                                                         //pasa las 4 palabras MIPS a la cache_inst
                                                         cache_datos2[posicionCache + i] = memComp1[temporal[1] * 16 + i * 4];
@@ -1394,7 +1394,7 @@ namespace Proyecto
                                                 else if (((dir2[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
 
-                                                    for (int i = 0; i < 20; ++i)
+                                                    for (int i = 0; i < 2; ++i)
                                                     {
                                                         miBarrerita.SignalAndWait();
                                                     }
@@ -1441,7 +1441,7 @@ namespace Proyecto
                                                 else if (((dir3[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
 
-                                                    for (int i = 0; i < 20; ++i)
+                                                    for (int i = 0; i < 2; ++i)
                                                     {
                                                         miBarrerita.SignalAndWait();
                                                     }
@@ -1450,7 +1450,7 @@ namespace Proyecto
                                                     encache_datos2[posicionCache] = bloque;
                                                     estadoCache2[posicionCache] = 'C';
                                                     posicionCache = posicionCache * 4;
-                                                    for (int i = 0; i < 4; ++i)
+                                                    for (int i = 0; i < 1; ++i)
                                                     {
                                                         //pasa las 4 palabras MIPS a la cache_inst
                                                         cache_datos2[posicionCache + i] = memComp3[temporal[1] * 16 + i * 4];
@@ -1516,14 +1516,14 @@ namespace Proyecto
                                     {
                                         if ((numDir) == 3)
                                         {
-                                            for (int i = 0; i < 2; ++i)
+                                            for (int i = 0; i < 1; ++i)
                                             {
                                                 miBarrerita.SignalAndWait();
                                             }
                                         }
                                         else
                                         {
-                                            for (int i = 0; i < 4; ++i)
+                                            for (int i = 0; i < 1; ++i)
                                             {
                                                 miBarrerita.SignalAndWait();
                                             }
@@ -1556,7 +1556,7 @@ namespace Proyecto
                                                 }
                                                 else if (((dir1[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
-                                                    for (int i = 0; i < 16; ++i)
+                                                    for (int i = 0; i < 2; ++i)
                                                     {
                                                         miBarrerita.SignalAndWait();
                                                     }
@@ -1603,7 +1603,7 @@ namespace Proyecto
                                                 else if (((dir2[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
 
-                                                    for (int i = 0; i < 20; ++i)
+                                                    for (int i = 0; i < 2; ++i)
                                                     {
                                                         miBarrerita.SignalAndWait();
                                                     }
@@ -1650,7 +1650,7 @@ namespace Proyecto
                                                 else if (((dir3[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                                 {//Si esta como U o en C en el directorio
 
-                                                    for (int i = 0; i < 20; ++i)
+                                                    for (int i = 0; i < 2; ++i)
                                                     {
                                                         miBarrerita.SignalAndWait();
                                                     }
@@ -1972,7 +1972,7 @@ namespace Proyecto
                         if (temporal[0] != procesador) //remoto
                         {
                             //contadorProcesador1 = contadorProcesador1 + 4;
-                            for (int i = 0; i < 4; ++i)
+                            for (int i = 0; i < 1; ++i)
                             {
                                 miBarrerita.SignalAndWait();
                             }
@@ -1980,7 +1980,7 @@ namespace Proyecto
                         else //local
                         {
                             //contadorProcesador1 = contadorProcesador1 + 2;
-                            for (int i = 0; i < 2; ++i)
+                            for (int i = 0; i < 1; ++i)
                             {
                                 miBarrerita.SignalAndWait();
                             }
@@ -2094,6 +2094,8 @@ namespace Proyecto
                                         impSol(true, 3, false);
                                     }
                                 }
+                                bool ultimoBool = true;
+                                bool s = true;
                                 if (bien == contadorProcesadores)
                                 {
                                     if (temporal[0] != procesador)
@@ -2104,9 +2106,11 @@ namespace Proyecto
                                     {
                                         hacerFalloDeCache(bloque, procesador, true, posicionCache);
                                     }
+                                    s = false;
                                 }
                                 else
                                 {
+                                    ultimoBool = false;
                                     Monitor.Exit(dir1);
                                     impSoltar(false, 1);
                                     liberarCache(procesador);
@@ -2127,8 +2131,12 @@ namespace Proyecto
                                 }
                                 else
                                 {
-                                    Monitor.Exit(dir1);
-                                    impSoltar(false, 1);
+                                    if ((ultimoBool)&&(!s))
+                                    {
+                                        Monitor.Exit(dir1);
+
+                                        impSoltar(false, 1);
+                                    }
                                     liberarCache(procesador);
                                     return false;
                                 }
@@ -2151,7 +2159,7 @@ namespace Proyecto
                         if (temporal[0] != procesador) //remoto
                         {
                             //contadorProcesador2 = contadorProcesador2 + 4;
-                            for (int i = 0; i < 4; ++i)
+                            for (int i = 0; i < 1; ++i)
                             {
                                 miBarrerita.SignalAndWait();
                             }
@@ -2159,7 +2167,7 @@ namespace Proyecto
                         else //local
                         {
                             //contadorProcesador2 = contadorProcesador2 + 2;
-                            for (int i = 0; i < 2; ++i)
+                            for (int i = 0; i < 1; ++i)
                             {
                                 miBarrerita.SignalAndWait();
                             }
@@ -2272,6 +2280,8 @@ namespace Proyecto
                                         impSol(true, 3, false);
                                     }
                                 }
+                                bool ultimoBool = true;
+                                bool s = true;
                                 if (bien == contadorProcesadores)
                                 {
                                     if (temporal[0] != procesador)
@@ -2285,12 +2295,14 @@ namespace Proyecto
                                 }
                                 else
                                 {
+                                    ultimoBool = false;
                                     Monitor.Exit(dir2);
                                     impSoltar(false, 2);
                                     liberarCache(procesador);
                                     return false;
                                 }
                                 bien = bien + 1;
+                                
                                 if ((compartidoCache[2]) && (bien == contadorProcesadores))
                                 {
                                     dir2[temporal[1] * 5 + 1] = 'M';
@@ -2305,8 +2317,12 @@ namespace Proyecto
                                 }
                                 else
                                 {
-                                    Monitor.Exit(dir2);
-                                    impSoltar(false, 2);
+                                    if ((ultimoBool)&&(!s))
+                                    {
+                                        Monitor.Exit(dir2);
+
+                                        impSoltar(false, 2);
+                                    }
                                     liberarCache(procesador);
                                     return false;
                                 }
@@ -2330,7 +2346,7 @@ namespace Proyecto
                         if (temporal[0] != procesador) //remoto
                         {
                             //contadorProcesador1 = contadorProcesador1 + 4;
-                            for (int i = 0; i < 4; ++i)
+                            for (int i = 0; i < 1; ++i)
                             {
                                 miBarrerita.SignalAndWait();
                             }
@@ -2338,7 +2354,7 @@ namespace Proyecto
                         else //local
                         {
                             //contadorProcesador1 = contadorProcesador1 + 2;
-                            for (int i = 0; i < 2; ++i)
+                            for (int i = 0; i < 1; ++i)
                             {
                                 miBarrerita.SignalAndWait();
                             }
@@ -2450,6 +2466,8 @@ namespace Proyecto
                                         impSol(true, 1, false);
                                     }
                                 }
+                                bool ultimoBool = true;
+                                bool s = true;
                                 if (bien == contadorProcesadores)
                                 {
                                     if (temporal[0] != procesador)
@@ -2460,9 +2478,11 @@ namespace Proyecto
                                     {
                                         hacerFalloDeCache(bloque, procesador, true, posicionCache);
                                     }
+                                    s = false;
                                 }
                                 else
                                 {
+                                    ultimoBool = false;
                                     Monitor.Exit(dir3);
                                     impSoltar(false, 3);
                                     liberarCache(procesador);
@@ -2483,8 +2503,12 @@ namespace Proyecto
                                 }
                                 else
                                 {
-                                    Monitor.Exit(dir3);
-                                    impSoltar(false, 3);
+                                    if ((ultimoBool) && (!s))
+                                    {
+                                        Monitor.Exit(dir3);
+
+                                        impSoltar(false, 3);
+                                    }
                                     liberarCache(procesador);
                                     return false;
                                 }
@@ -2507,7 +2531,7 @@ namespace Proyecto
 
 
 
-        public static void hacerFalloDeCache(int bloque, int numCache, bool local, int posCache)
+        public static void hacerFalloDeCache(int bloque, int numCache, bool local, int posCache/*, int []temporal*/)
         {
             int[] temporal = obtener_num_estruct(bloque);
 
@@ -2541,14 +2565,14 @@ namespace Proyecto
 
                 if (temporal[0] == numCache)
                 {
-                    for (int i = 0; i < 16; ++i)
+                    for (int i = 0; i < 2; ++i)
                     {
                         miBarrerita.SignalAndWait();
                     }
                 }
                 else
                 {
-                    for (int i = 0; i < 32; ++i)
+                    for (int i = 0; i < 2; ++i)
                     {
                         miBarrerita.SignalAndWait();
                     }
@@ -2619,14 +2643,14 @@ namespace Proyecto
 
                 if (temporal[0] == numCache)
                 {
-                    for (int i = 0; i < 16; ++i)
+                    for (int i = 0; i < 2; ++i)
                     {
                         miBarrerita.SignalAndWait();
                     }
                 }
                 else
                 {
-                    for (int i = 0; i < 32; ++i)
+                    for (int i = 0; i < 2; ++i)
                     {
                         miBarrerita.SignalAndWait();
                     }
@@ -2697,14 +2721,14 @@ namespace Proyecto
 
                 if (temporal[0] == numCache)
                 {
-                    for (int i = 0; i < 16; ++i)
+                    for (int i = 0; i < 2; ++i)
                     {
                         miBarrerita.SignalAndWait();
                     }
                 }
                 else
                 {
-                    for (int i = 0; i < 32; ++i)
+                    for (int i = 0; i < 2; ++i)
                     {
                         miBarrerita.SignalAndWait();
                     }
@@ -2769,7 +2793,7 @@ namespace Proyecto
                                 estadoCache1[posicion] = 'I';
                                 if (temporal[0] == numCache)
                                 {
-                                    for (int i = 0; i < 2; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2778,7 +2802,7 @@ namespace Proyecto
                                 else
                                 {
 
-                                    for (int i = 0; i < 4; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2788,7 +2812,7 @@ namespace Proyecto
                                 estadoCache2[posicion] = 'I';
                                 if (temporal[0] == numCache)
                                 {
-                                    for (int i = 0; i < 2; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2797,7 +2821,7 @@ namespace Proyecto
                                 else
                                 {
 
-                                    for (int i = 0; i < 4; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2807,7 +2831,7 @@ namespace Proyecto
                                 estadoCache3[posicion] = 'I';
                                 if (temporal[0] == numCache)
                                 {
-                                    for (int i = 0; i < 2; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2816,7 +2840,7 @@ namespace Proyecto
                                 else
                                 {
 
-                                    for (int i = 0; i < 4; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2848,7 +2872,7 @@ namespace Proyecto
                                 estadoCache1[posicion] = 'I';
                                 if (temporal[0] == numCache)
                                 {
-                                    for (int i = 0; i < 2; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2857,7 +2881,7 @@ namespace Proyecto
                                 else
                                 {
 
-                                    for (int i = 0; i < 4; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2867,7 +2891,7 @@ namespace Proyecto
                                 estadoCache2[posicion] = 'I';
                                 if (temporal[0] == numCache)
                                 {
-                                    for (int i = 0; i < 2; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2876,7 +2900,7 @@ namespace Proyecto
                                 else
                                 {
 
-                                    for (int i = 0; i < 4; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2886,7 +2910,7 @@ namespace Proyecto
                                 estadoCache3[posicion] = 'I';
                                 if (temporal[0] == numCache)
                                 {
-                                    for (int i = 0; i < 2; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2895,7 +2919,7 @@ namespace Proyecto
                                 else
                                 {
 
-                                    for (int i = 0; i < 4; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2925,7 +2949,7 @@ namespace Proyecto
                                 estadoCache1[posicion] = 'I';
                                 if (temporal[0] == numCache)
                                 {
-                                    for (int i = 0; i < 2; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2934,7 +2958,7 @@ namespace Proyecto
                                 else
                                 {
 
-                                    for (int i = 0; i < 4; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2944,7 +2968,7 @@ namespace Proyecto
                                 estadoCache2[posicion] = 'I';
                                 if (temporal[0] == numCache)
                                 {
-                                    for (int i = 0; i < 2; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2953,7 +2977,7 @@ namespace Proyecto
                                 else
                                 {
 
-                                    for (int i = 0; i < 4; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2963,7 +2987,7 @@ namespace Proyecto
                                 estadoCache3[posicion] = 'I';
                                 if (temporal[0] == numCache)
                                 {
-                                    for (int i = 0; i < 2; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -2972,7 +2996,7 @@ namespace Proyecto
                                 else
                                 {
 
-                                    for (int i = 0; i < 4; ++i)
+                                    for (int i = 0; i < 1; ++i)
                                     {
                                         miBarrerita.SignalAndWait();
                                     }
@@ -3017,42 +3041,45 @@ namespace Proyecto
                             impSol(false, temporal[0], true);
 
                             guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
+                            Monitor.Exit(dir1);
+                            impSoltar(false, 1);
                         }
                         else
                         {
                             impSol(false, temporal[0], false);
                             return false;
                         }
-                        Monitor.Exit(dir1);
-                        impSoltar(false, 1);
+                        
                         break;
                     case 2:
                         if (Monitor.TryEnter(dir2))
                         {
                             impSol(false, temporal[0], true);
                             guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
+                            Monitor.Exit(dir2);
+                            impSoltar(false, 2);
                         }
                         else
                         {
                             impSol(false, temporal[0], false);
                             return false;
                         }
-                        Monitor.Exit(dir2);
-                        impSoltar(false, 2);
+                        
                         break;
                     case 3:
                         if (Monitor.TryEnter(dir3))
                         {
                             impSol(false, temporal[0], true);
                             guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
+                            Monitor.Exit(dir3);
+                            impSoltar(false, 3);
                         }
                         else
                         {
                             impSol(false, temporal[0], true);
                             return false;
                         }
-                        Monitor.Exit(dir3);
-                        impSoltar(false, 3);
+                        
                         break;
                 }
             }
@@ -3197,7 +3224,7 @@ namespace Proyecto
                 }
 
                 //Sincroniza el ciclo de reloj.
-                for (int i = 0; i < 16; ++i)
+                for (int i = 0; i < 2; ++i)
                 {
                     miBarrerita.SignalAndWait();
                 }
@@ -3341,7 +3368,7 @@ namespace Proyecto
                 }
 
                 //Sincroniza el ciclo de reloj.
-                for (int i = 0; i < 2; ++i)
+                for (int i = 0; i < 1; ++i)
                 {
                     miBarrerita.SignalAndWait();
                 }
@@ -3397,7 +3424,7 @@ namespace Proyecto
                         break;
                 }
                 //Sincroniza el ciclo de reloj.
-                for (int i = 0; i < 32; ++i)
+                for (int i = 0; i < 2; ++i)
                 {
                     miBarrerita.SignalAndWait();
                 }
@@ -3566,7 +3593,7 @@ namespace Proyecto
                 }
 
                 //Sincroniza el ciclo de reloj.
-                for (int i = 0; i < 4; ++i)
+                for (int i = 0; i < 1; ++i)
                 {
                     miBarrerita.SignalAndWait();
                 }
