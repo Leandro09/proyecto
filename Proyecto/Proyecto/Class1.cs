@@ -759,7 +759,7 @@ namespace Proyecto
             int auxiliar = instruccion[1];
 
             //Para que el usuario pueda ver en consola cual es la instruccion que se esta ejecutando en que procesador
-          //  Console.WriteLine("SOY INSTRUCCION " + codigo + " " + primerRegistro + " " + segundoRegistro + " " + ultimaParte + " Procesador " + procesador + " PC " + (PC - 4) + "  ");
+            Console.WriteLine("SOY INSTRUCCION " + codigo + " " + primerRegistro + " " + segundoRegistro + " " + ultimaParte + " Procesador " + procesador + " PC " + (PC - 4) + "  ");
            // Console.WriteLine("");
 
             //Dice cual es el resultado de la operacion
@@ -1128,6 +1128,7 @@ namespace Proyecto
                                                     if (r == false)
                                                     {
                                                         liberarCache(procesador);
+                                                        //miBarrerita.SignalAndWait();
                                                         Monitor.Exit(dir1);
                                                         impSoltar(false, 1);
                                                     }
@@ -1718,6 +1719,7 @@ namespace Proyecto
 
         public static bool cache_store(int procesador, int direccion)
         {
+            string proce = Thread.CurrentThread.Name;
             int bloque = direccion / 16;
             int posicionCache = bloque % 4;
             int[] temporal = obtener_num_estruct(bloque);       //Almacena temporalmente el número de bloque del directorio a utilizar.
@@ -1735,7 +1737,7 @@ namespace Proyecto
                 switch (procesador)
                 {
                     case 1:
-                        if (Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache1) && Monitor.TryEnter(encache_datos1)*/)
+                        if (Monitor.TryEnter(cache_datos1))
                         {
                             impSol(true, procesador, true);
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
@@ -1794,7 +1796,7 @@ namespace Proyecto
                         }
                         break;
                     case 2:
-                        if (Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache2) && Monitor.TryEnter(encache_datos2)*/)
+                        if (Monitor.TryEnter(cache_datos2) )
                         {
                             impSol(true, procesador, true);
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
@@ -1856,7 +1858,7 @@ namespace Proyecto
                     case 3:
 
 
-                        if (Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                        if (Monitor.TryEnter(cache_datos3) )
                         {
 
                             impSol(true, procesador, true);
@@ -1924,7 +1926,7 @@ namespace Proyecto
 
         public static void liberarCache(int procesador)
         {
-            
+            string proce = Thread.CurrentThread.Name;
             switch (procesador)
             {
                 case 1:
@@ -1952,7 +1954,7 @@ namespace Proyecto
 
         public static bool hacer_bifurcacion(int direccion, int procesador, int[] temporal)
         {
-
+            string proce = Thread.CurrentThread.Name;
             int bloque = direccion / 16;
             int posicionCache = bloque % 4;
             int posicionDir = temporal[1] * 5;
@@ -2066,7 +2068,7 @@ namespace Proyecto
                                 int bien = 0;
                                 if (compartidoCache[2])
                                 {
-                                    if (Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache2) && Monitor.TryEnter(encache_datos2)*/)
+                                    if (Monitor.TryEnter(cache_datos2))
                                     {
                                         impSol(true, 2, true);
                                         
@@ -2081,7 +2083,7 @@ namespace Proyecto
                                 }
                                 if (compartidoCache[3])
                                 {
-                                    if (Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                    if (Monitor.TryEnter(cache_datos3))
                                     {
                                         impSol(true, 3, true);
                                         encache_datos3[posicionCache] = 'I';
@@ -2533,6 +2535,7 @@ namespace Proyecto
 
         public static void hacerFalloDeCache(int bloque, int numCache, bool local, int posCache/*, int []temporal*/)
         {
+            string proce = Thread.CurrentThread.Name;
             int[] temporal = obtener_num_estruct(bloque);
 
 
@@ -2774,7 +2777,7 @@ namespace Proyecto
 
         public static bool reemplazarBloqueCompartido(int bloque, int numCache, int posicion)
         {
-
+            string proce = Thread.CurrentThread.Name;
             int[] temporal = obtener_num_estruct(bloque);
 
 
@@ -3027,6 +3030,7 @@ namespace Proyecto
 
         public static bool escribirBloqueEnMem(int bloque, int numOtraCache, int numMiCache, int posicion, bool esLoad, bool reemplazo)
         {
+            string proce = Thread.CurrentThread.Name;
             //Obtiene el directorio a utilizar y el número de bloque de la caché en ese procesador.
             int[] temporal = obtener_num_estruct(bloque);
 
@@ -3166,6 +3170,7 @@ namespace Proyecto
         //Guarda en memoria si es necesario local o remotamente. La variable procesador contiene el número de la caché.
         public static bool guardaEnMemoria(bool reemplazo, char estado_memoria, int bloque, int procesador, bool esLoad, int cache = -1)
         {
+            string proce = Thread.CurrentThread.Name;
             //Obtiene el directorio a utilizar y el número de bloque en el directorio en ese procesador.
             int[] temporal = obtener_num_estruct(bloque);
             int pos_memoria = 0;
@@ -3640,6 +3645,7 @@ namespace Proyecto
         //Se encarga de poner el bloque al que pertence la instruccion solicitada a la cache_inst
         public static bool fallocache_inst(int procesador, int direccion)
         {
+            string proce = Thread.CurrentThread.Name;
             //Una instruccion tiene 1 palabra de MIPS y 4 ints de como lo estamos trabajando
             string name = Thread.CurrentThread.Name;
             int bloque = direccion / 16;//calcula el bloque
