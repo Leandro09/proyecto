@@ -1730,6 +1730,7 @@ namespace Proyecto
 
             while (termino == false)
             {
+                miBarrerita.SignalAndWait();
                 //Busca acceder a la cache correspondiente
                 switch (procesador)
                 {
@@ -1751,7 +1752,7 @@ namespace Proyecto
                                     if (solicitudDeBloque)
                                     {
                                         //metodo hacer bifurcacion
-                                        termino = hacer_bifurcacion(direccion, procesador);
+                                        termino = hacer_bifurcacion(direccion, procesador,temporal);
                                     }
                                     else
                                     {
@@ -1765,9 +1766,9 @@ namespace Proyecto
                                     //Obtiene el procesador y el número del bloque víctima. 
                                     if (estadoCache1[indice] == 'C')
                                     {
-                                        if (reemplazarBloqueCompartido(bloque, procesador, indice))
+                                        if (reemplazarBloqueCompartido(encache_datos1[indice], procesador, indice))
                                         {
-                                            termino = hacer_bifurcacion(direccion, procesador);
+                                            termino = hacer_bifurcacion(direccion, procesador,temporal);
                                         }
                                         else
                                         {
@@ -1778,7 +1779,7 @@ namespace Proyecto
                                     }
                                     else
                                     {
-                                        termino = hacer_bifurcacion(direccion, procesador);
+                                        termino = hacer_bifurcacion(direccion, procesador,temporal);
                                     }
                                   
                                 }
@@ -1811,7 +1812,7 @@ namespace Proyecto
                                     {
 
                                         //metodo hacer bifurcacion
-                                        termino = hacer_bifurcacion(direccion, procesador);
+                                        termino = hacer_bifurcacion(direccion, procesador,temporal);
                                     }
                                     else
                                     {
@@ -1825,9 +1826,9 @@ namespace Proyecto
                                     //Obtiene el procesador y el número del bloque víctima. 
                                     if (estadoCache2[indice] == 'C')
                                     {
-                                        if (reemplazarBloqueCompartido(bloque, procesador, indice))
+                                        if (reemplazarBloqueCompartido(encache_datos2[indice], procesador, indice))
                                         {
-                                            termino = hacer_bifurcacion(direccion, procesador);
+                                            termino = hacer_bifurcacion(direccion, procesador,temporal);
                                         }
                                         else
                                         {
@@ -1838,7 +1839,7 @@ namespace Proyecto
                                     }
                                     else
                                     {
-                                        termino = hacer_bifurcacion(direccion, procesador);
+                                        termino = hacer_bifurcacion(direccion, procesador,temporal);
                                     }
                                     
                                 }
@@ -1874,7 +1875,7 @@ namespace Proyecto
                                     if (solicitudDeBloque)
                                     {
                                         //metodo hacer bifurcacion
-                                        termino = hacer_bifurcacion(direccion, procesador);
+                                        termino = hacer_bifurcacion(direccion, procesador,temporal);
                                     }
                                     else
                                     {
@@ -1889,9 +1890,9 @@ namespace Proyecto
                                     //Obtiene el procesador y el número del bloque víctima. 
                                     if (estadoCache3[indice] == 'C')
                                     {
-                                        if (reemplazarBloqueCompartido(bloque, procesador, indice))
+                                        if (reemplazarBloqueCompartido(estadoCache3[indice], procesador, indice))
                                         {
-                                            termino = hacer_bifurcacion(direccion, procesador);
+                                            termino = hacer_bifurcacion(direccion, procesador,temporal);
                                         }
                                         else
                                         {
@@ -1903,7 +1904,7 @@ namespace Proyecto
                                     }
                                     else
                                     {
-                                        termino = hacer_bifurcacion(direccion, procesador);
+                                        termino = hacer_bifurcacion(direccion, procesador,temporal);
                                     }
                                 }
                             }
@@ -1949,12 +1950,11 @@ namespace Proyecto
 
 
 
-        public static bool hacer_bifurcacion(int direccion, int procesador)
+        public static bool hacer_bifurcacion(int direccion, int procesador, int[] temporal)
         {
 
             int bloque = direccion / 16;
             int posicionCache = bloque % 4;
-            int[] temporal = obtener_num_estruct(bloque);       //Almacena temporalmente el número de bloque del directorio a utilizar.
             int posicionDir = temporal[1] * 5;
             bool termino = false;                               //Controla si se logró acceder al directorio de la caché.
             bool solicitudDeBloque = false;
@@ -2147,7 +2147,7 @@ namespace Proyecto
                     //solicitud del directorio correspondiente que contiene el bloque objetivo
                     if (Monitor.TryEnter(dir2))
                     {
-                        impSol(true, 2, true);
+                        impSol(false, 2, true);
                         if (temporal[0] != procesador) //remoto
                         {
                             //contadorProcesador2 = contadorProcesador2 + 4;
@@ -3906,6 +3906,7 @@ namespace Proyecto
 
         public DataTable resultadosMemoria()
         {
+
             DataTable dt = new DataTable();
             dt.Columns.Add("Procesador");
             Object[] datos1 = new Object[33];
@@ -3933,9 +3934,9 @@ namespace Proyecto
             
             for (int i = 0; i < 32; ++i)
             {
-                datos1[1 + i] = memComp1[i];
-                datos2[1 + i] = memComp2[i];
-                datos3[1 + i] = memComp3[i];
+                datos1[1 + i] = memComp1[i*4];
+                datos2[1 + i] = memComp2[i*4];
+                datos3[1 + i] = memComp3[i*4];
             }
             /*
             for (int i = 0; i < cant_bloques_directorio * 16; i = i + 4)
