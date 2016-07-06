@@ -49,6 +49,7 @@ namespace Proyecto
         static int contadorProcesador1 = 0;
         static int contadorProcesador2 = 0;
         static int contadorProcesador3 = 0;
+        static String[] cacheDue = new String[4];
 
         //Banderas de LL activo de cada procesador.
         //1 es el proc 1, 2 es el proc 2 y 0 es el proc 3.
@@ -286,17 +287,19 @@ namespace Proyecto
             }
             //Console.WriteLine(s);
             //Console.WriteLine(s.ToString());
-           // Console.WriteLine(Convert.ToString(s));
+            // Console.WriteLine(Convert.ToString(s));
         }
-        public static void impSol(bool cache,int numSol, bool entro)
+        public static void impSol(bool cache, int numSol, bool entro)
         {
             string numHilillo = Thread.CurrentThread.Name;
-            string mensaje = "Proc #" + numHilillo + " pidio "; 
-            
+            string mensaje = "Proc #" + numHilillo + " pidio ";
+
             if (cache)
             {
                 mensaje = mensaje + "Cache";
-            } else
+                cacheDue[Convert.ToInt32(numHilillo)] = numHilillo;
+            }
+            else
             {
                 mensaje = mensaje + "Dir";
             }
@@ -319,6 +322,7 @@ namespace Proyecto
             if (cache)
             {
                 mensaje = mensaje + "Cache";
+                cacheDue[Convert.ToInt32(numHilillo)] = numHilillo;
             }
             else
             {
@@ -532,6 +536,10 @@ namespace Proyecto
         //inicializar estructuras
         public void inicializarEstructuras()
         {
+            for (int i = 0; i < 4; ++i)
+            {
+                cacheDue[i] = "0";
+            }
             for (int i = 0; i < cant_cache_inst; ++i)
             {
                 cache_inst1[i] = 0;
@@ -760,7 +768,7 @@ namespace Proyecto
 
             //Para que el usuario pueda ver en consola cual es la instruccion que se esta ejecutando en que procesador
             Console.WriteLine("SOY INSTRUCCION " + codigo + " " + primerRegistro + " " + segundoRegistro + " " + ultimaParte + " Procesador " + procesador + " PC " + (PC - 4) + "  ");
-           // Console.WriteLine("");
+            // Console.WriteLine("");
 
             //Dice cual es el resultado de la operacion
             int resultado = 0;
@@ -857,7 +865,7 @@ namespace Proyecto
                     guardarEn = pos_pc;
                     break;
                 case 35: //LW
-                    Console.WriteLine("Entra LW P"+Thread.CurrentThread.Name);
+                    Console.WriteLine("Entra LW P" + Thread.CurrentThread.Name);
                     imprimirCaches();
                     imprimirDirs();
                     //imprimirMemoriasyCaches();
@@ -926,7 +934,7 @@ namespace Proyecto
                     //Console.WriteLine("Fin LL");
                     break;
                 case 51: //SC
-                    
+
                     int direccion35 = primerRegistro + ultimaParte;
                     int bloque35 = direccion35 / 16;
                     int posicionCache35 = bloque35 % 4;
@@ -965,8 +973,8 @@ namespace Proyecto
 
                     break;
                 case 43: //SW
-                    
-                    Console.WriteLine("Entra SW P"+Thread.CurrentThread.Name);
+
+                    Console.WriteLine("Entra SW P" + Thread.CurrentThread.Name);
                     imprimirMemoriasyCaches();
                     int direccion36 = primerRegistro + ultimaParte;
                     int bloque36 = direccion36 / 16;
@@ -1045,11 +1053,11 @@ namespace Proyecto
                 {
                     miBarrerita.SignalAndWait();
 
-                    ////impSol(true, procesador, false);
+                    impSol(true, procesador, false);
                 }
                 else
                 {
-                    //impSol(true, procesador, true);
+                    impSol(true, procesador, true);
                     switch (procesador)
                     {
                         case 1:
@@ -1084,11 +1092,11 @@ namespace Proyecto
                                     }
                                     if (r)
                                     {
-                                        //impSol(false, numDir, true);
+                                        // //impSol(false, numDir, true);
                                     }
                                     else
                                     {
-                                        //impSol(false, numDir, false);
+                                        ////impSol(false, numDir, false);
                                     }
                                     if (r)
                                     {
@@ -1128,9 +1136,9 @@ namespace Proyecto
                                                     if (r == false)
                                                     {
                                                         liberarCache(procesador);
-                                                        //miBarrerita.SignalAndWait();
+                                                        miBarrerita.SignalAndWait();
                                                         Monitor.Exit(dir1);
-                                                        //impSoltar(false, 1);
+                                                        ////impSoltar(false, 1);
                                                     }
                                                 }
                                                 else if (((dir1[posicionDir * 5 + 1]) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
@@ -1154,7 +1162,7 @@ namespace Proyecto
                                                 dir1[posicionDir * 5 + 1] = 'C';
                                                 dir1[posicionDir * 5 + 2] = '1';
                                                 Monitor.Exit(dir1);
-                                                //impSoltar(false, 1);
+                                                ////impSoltar(false, 1);
                                                 break;
                                             case 2:
                                                 if ((dir2[posicionDir * 5 + 1]) == 'M')
@@ -1741,7 +1749,7 @@ namespace Proyecto
                     case 1:
                         if (Monitor.TryEnter(cache_datos1))
                         {
-                            //impSol(true, procesador, true);
+                            impSol(true, procesador, true);
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos1[indice] == bloque && estadoCache1[indice] == 'M')
                             {
@@ -1749,14 +1757,14 @@ namespace Proyecto
                             }
                             else
                             {
-                               
+
                                 if (estadoCache1[indice] == 'M')
                                 {
-                                    solicitudDeBloque = escribirBloqueEnMem(encache_datos1[indice], procesador, procesador, indice, false, true);     
+                                    solicitudDeBloque = escribirBloqueEnMem(encache_datos1[indice], procesador, procesador, indice, false, true);
                                     if (solicitudDeBloque)
                                     {
                                         //metodo hacer bifurcacion
-                                        termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                        termino = hacer_bifurcacion(direccion, procesador, temporal);
                                         if (!termino)
                                             ++hace_ciclo;
                                     }
@@ -1771,11 +1779,11 @@ namespace Proyecto
                                 else
                                 {
                                     //Obtiene el procesador y el número del bloque víctima. 
-                                    if (estadoCache1[indice] == 'C')
+                                    if ((estadoCache1[indice] == 'C') && (encache_datos1[indice] != bloque))
                                     {
                                         if (reemplazarBloqueCompartido(encache_datos1[indice], procesador, indice))
                                         {
-                                            termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                            termino = hacer_bifurcacion(direccion, procesador, temporal);
                                             if (!termino)
                                                 ++hace_ciclo;
                                         }
@@ -1789,27 +1797,27 @@ namespace Proyecto
                                     }
                                     else
                                     {
-                                        termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                        termino = hacer_bifurcacion(direccion, procesador, temporal);
                                         if (!termino)
                                             ++hace_ciclo;
                                     }
-                                  
+
                                 }
                             }
-                           
+
                         }
                         else
                         {
-                            //impSol(true, procesador, false);
+                            impSol(true, procesador, false);
                             miBarrerita.SignalAndWait();
                             termino = false;
                             ++hace_ciclo;
                         }
                         break;
                     case 2:
-                        if (Monitor.TryEnter(cache_datos2) )
+                        if (Monitor.TryEnter(cache_datos2))
                         {
-                            //impSol(true, procesador, true);
+                            impSol(true, procesador, true);
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos2[indice] == bloque && estadoCache2[indice] == 'M')
                             {
@@ -1825,7 +1833,7 @@ namespace Proyecto
                                     {
 
                                         //metodo hacer bifurcacion
-                                        termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                        termino = hacer_bifurcacion(direccion, procesador, temporal);
                                         if (!termino)
                                             ++hace_ciclo;
                                     }
@@ -1840,11 +1848,11 @@ namespace Proyecto
                                 else
                                 {
                                     //Obtiene el procesador y el número del bloque víctima. 
-                                    if (estadoCache2[indice] == 'C')
+                                    if (estadoCache2[indice] == 'C' && (encache_datos2[indice] != bloque))
                                     {
                                         if (reemplazarBloqueCompartido(encache_datos2[indice], procesador, indice))
                                         {
-                                            termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                            termino = hacer_bifurcacion(direccion, procesador, temporal);
                                             if (!termino)
                                                 ++hace_ciclo;
                                         }
@@ -1858,18 +1866,18 @@ namespace Proyecto
                                     }
                                     else
                                     {
-                                        termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                        termino = hacer_bifurcacion(direccion, procesador, temporal);
                                         if (!termino)
                                             ++hace_ciclo;
                                     }
-                                    
+
                                 }
                             }
-                            
+
                         }
                         else
                         {
-                            //impSol(true, procesador, false);
+                            impSol(true, procesador, false);
                             miBarrerita.SignalAndWait();
                             termino = false;
                             ++hace_ciclo;
@@ -1878,10 +1886,10 @@ namespace Proyecto
                     case 3:
 
 
-                        if (Monitor.TryEnter(cache_datos3) )
+                        if (Monitor.TryEnter(cache_datos3))
                         {
 
-                            //impSol(true, procesador, true);
+                            impSol(true, procesador, true);
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos3[indice] == bloque && estadoCache3[indice] == 'M')
                             {
@@ -1897,7 +1905,7 @@ namespace Proyecto
                                     if (solicitudDeBloque)
                                     {
                                         //metodo hacer bifurcacion
-                                        termino = hacer_bifurcacion(direccion, procesador,temporal);
+                                        termino = hacer_bifurcacion(direccion, procesador, temporal);
                                         if (!termino)
                                             ++hace_ciclo;
                                     }
@@ -1912,38 +1920,33 @@ namespace Proyecto
                                 else
                                 {
                                     //Obtiene el procesador y el número del bloque víctima. 
-                                    if (estadoCache3[indice] == 'C')
+                                    if (estadoCache3[indice] == 'C' && (encache_datos3[indice] != bloque))
                                     {
                                         if (reemplazarBloqueCompartido(estadoCache3[indice], procesador, indice))
                                         {
-                                            termino = hacer_bifurcacion(direccion, procesador,temporal);
-                                            if (!termino)
-                                                ++hace_ciclo;
+                                            termino = hacer_bifurcacion(direccion, procesador, temporal);
                                         }
                                         else
                                         {
                                             termino = false;
-                                            ++hace_ciclo;
+
                                             liberarCache(procesador);
                                             miBarrerita.SignalAndWait();
                                         }
                                     }
                                     else
                                     {
-                                        termino = hacer_bifurcacion(direccion, procesador,temporal);
-                                        if (!termino)
-                                            ++hace_ciclo;
+                                        termino = hacer_bifurcacion(direccion, procesador, temporal);
                                     }
                                 }
                             }
-                            
+
                         }
                         else
                         {
-                            //impSol(true, procesador, false);
+                            impSol(true, procesador, false);
                             miBarrerita.SignalAndWait();
                             termino = false;
-                            ++hace_ciclo;
                         }
                         break;
                 }
@@ -1959,22 +1962,22 @@ namespace Proyecto
                 case 1:
 
                     Monitor.Exit(cache_datos1);
-                    //impSoltar(true, 1);
+                    impSoltar(true, 1);
 
                     break;
                 case 2:
 
                     Monitor.Exit(cache_datos2);
-                    //impSoltar(true, 2);
+                    impSoltar(true, 2);
 
                     break;
                 default:
 
                     Monitor.Exit(cache_datos3);
-                    //impSoltar(true, 3);
+                    impSoltar(true, 3);
                     break;
             }
-           
+
         }
 
 
@@ -1990,7 +1993,8 @@ namespace Proyecto
             char[] procesadores = new char[3];
             int contadorProcesadores = 0;
             bool indicador = false;
-
+            bool ultimoBool = true;
+            bool s = true;
             switch (temporal[0])
             {
                 case 1:
@@ -2042,13 +2046,13 @@ namespace Proyecto
                                 switch (procesador)
                                 {
                                     case 1:
-                                        encache_datos1[posicionCache] = 'M';
+                                        estadoCache1[posicionCache] = 'M';
                                         break;
                                     case 2:
-                                        encache_datos2[posicionCache] = 'M';
+                                        estadoCache2[posicionCache] = 'M';
                                         break;
                                     default:
-                                        encache_datos3[posicionCache] = 'M';
+                                        estadoCache3[posicionCache] = 'M';
                                         break;
                                 }
                                 Monitor.Exit(dir1);
@@ -2075,7 +2079,7 @@ namespace Proyecto
 
 
                             }
-                            else 
+                            else
                             {
                                 int indiceDos = 0;
 
@@ -2093,81 +2097,239 @@ namespace Proyecto
                                     }
                                 }
                                 int bien = 0;
-                                if (compartidoCache[2])
+                                switch (procesador)
                                 {
-                                    if (Monitor.TryEnter(cache_datos2))
-                                    {
-                                        //impSol(true, 2, true);
-                                        
-                                        encache_datos2[posicionCache] = 'I';
-                                        miBarrerita.SignalAndWait();
-                                        bien = bien + 1;
-                                        liberarCache(2);
-                                    }else
-                                    {
-                                        //impSol(true, 2, false);
-                                    }
-                                }
-                                if (compartidoCache[3])
-                                {
-                                    if (Monitor.TryEnter(cache_datos3))
-                                    {
-                                        //impSol(true, 3, true);
-                                        encache_datos3[posicionCache] = 'I';
-                                        miBarrerita.SignalAndWait();
-                                        bien = bien + 1;
-                                        liberarCache(3);
-                                    }
-                                    else
-                                    {
-                                        //impSol(true, 3, false);
-                                    }
-                                }
-                                bool ultimoBool = true;
-                                bool s = true;
-                                if (bien == contadorProcesadores)
-                                {
-                                    if (temporal[0] != procesador)
-                                    {
-                                        hacerFalloDeCache(bloque, procesador, false, posicionCache);
-                                    }
-                                    else
-                                    {
-                                        hacerFalloDeCache(bloque, procesador, true, posicionCache);
-                                    }
-                                    s = false;
-                                }
-                                else
-                                {
-                                    ultimoBool = false;
-                                    Monitor.Exit(dir1);
-                                    //impSoltar(false, 1);
-                                    liberarCache(procesador);
-                                    return false;
-                                }
-                                bien = bien + 1;
-                                if ((compartidoCache[1]) && (bien == contadorProcesadores))
-                                {
-                                    dir1[temporal[1] * 5 + 1] = 'M';
-                                    dir1[temporal[1] * 5 + 2] = '1';
-                                    dir1[temporal[1] * 5 + 3] = '0';
-                                    dir1[temporal[1] * 5 + 4] = '0';
-                                    Monitor.Exit(dir1);
-                                    //impSoltar(false, 1);
-                                    liberarCache(procesador);
-                                    bien = bien + 1;
-                                    return true;
-                                }
-                                else
-                                {
-                                    if ((ultimoBool)&&(!s))
-                                    {
-                                        Monitor.Exit(dir1);
+                                    case 1:
+                                        if (compartidoCache[3])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache1) && Monitor.TryEnter(encache_datos1)*/)
+                                            {
+                                                impSol(true, 3, true);
+                                                estadoCache3[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(3);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 3, false);
+                                            }
+                                        }
+                                        if (compartidoCache[2])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            {
+                                                impSol(true, 2, true);
+                                                estadoCache2[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(2);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 2, false);
+                                            }
+                                        }
 
-                                        //impSoltar(false, 1);
-                                    }
-                                    liberarCache(procesador);
-                                    return false;
+                                        if (bien == contadorProcesadores)
+                                        {
+                                            if (temporal[0] != procesador)
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, false, posicionCache);
+                                            }
+                                            else
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, true, posicionCache);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //ultimoBool = false;
+                                            //Monitor.Exit(dir1);
+                                            //impSoltar(false, 2);
+                                            //liberarCache(procesador);
+                                            //return false;
+                                        }
+                                        bien = bien + 1;
+
+                                        if ((compartidoCache[1]) && (bien == contadorProcesadores))
+                                        {
+                                            dir1[temporal[1] * 5 + 1] = 'M';
+                                            dir1[temporal[1] * 5 + 2] = '1';
+                                            dir1[temporal[1] * 5 + 3] = '0';
+                                            dir1[temporal[1] * 5 + 4] = '0';
+                                            Monitor.Exit(dir1);
+                                            //impSoltar(false, 2);
+                                            liberarCache(procesador);
+                                            bien = bien + 1;
+                                            return true;
+                                        }
+                                        else
+                                        {
+                                            if ((ultimoBool) && (!s))
+                                            {
+                                                Monitor.Exit(dir1);
+
+                                                //impSoltar(false, 2);
+                                            }
+                                            liberarCache(procesador);
+                                            return false;
+                                        }
+                                        break;
+                                    case 2:
+                                        if (compartidoCache[3])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache1) && Monitor.TryEnter(encache_datos1)*/)
+                                            {
+                                                impSol(true, 3, true);
+                                                estadoCache3[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(3);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 3, false);
+                                            }
+                                        }
+                                        if (compartidoCache[1])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            {
+                                                impSol(true, 1, true);
+                                                estadoCache1[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(1);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 1, false);
+                                            }
+                                        }
+
+                                        if (bien == contadorProcesadores)
+                                        {
+                                            if (temporal[0] != procesador)
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, false, posicionCache);
+                                            }
+                                            else
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, true, posicionCache);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //ultimoBool = false;
+                                            //Monitor.Exit(dir1);
+                                            //impSoltar(false, 2);
+                                            //liberarCache(procesador);
+                                            //return false;
+                                        }
+                                        bien = bien + 1;
+
+                                        if ((compartidoCache[2]) && (bien == contadorProcesadores))
+                                        {
+                                            dir1[temporal[1] * 5 + 1] = 'M';
+                                            dir1[temporal[1] * 5 + 2] = '0';
+                                            dir1[temporal[1] * 5 + 3] = '1';
+                                            dir1[temporal[1] * 5 + 4] = '0';
+                                            Monitor.Exit(dir1);
+                                            //impSoltar(false, 2);
+                                            liberarCache(procesador);
+                                            bien = bien + 1;
+                                            return true;
+                                        }
+                                        else
+                                        {
+                                            if ((ultimoBool) && (!s))
+                                            {
+                                                Monitor.Exit(dir1);
+
+                                                //impSoltar(false, 2);
+                                            }
+                                            liberarCache(procesador);
+                                            return false;
+                                        }
+                                        break;
+                                    case 3:
+                                        if (compartidoCache[1])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            {
+                                                impSol(true, 1, true);
+                                                estadoCache1[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(1);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 1, false);
+                                            }
+                                        }
+                                        if (compartidoCache[2])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            {
+                                                impSol(true, 2, true);
+                                                estadoCache2[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(2);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 2, false);
+                                            }
+                                        }
+
+                                        if (bien == contadorProcesadores)
+                                        {
+                                            if (temporal[0] != procesador)
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, false, posicionCache);
+                                            }
+                                            else
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, true, posicionCache);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //ultimoBool = false;
+                                            //Monitor.Exit(dir1);
+                                            //impSoltar(false, 2);
+                                            //liberarCache(procesador);
+                                            //return false;
+                                        }
+                                        bien = bien + 1;
+
+                                        if ((compartidoCache[3]) && (bien == contadorProcesadores))
+                                        {
+                                            dir1[temporal[1] * 5 + 1] = 'M';
+                                            dir1[temporal[1] * 5 + 2] = '0';
+                                            dir1[temporal[1] * 5 + 3] = '0';
+                                            dir1[temporal[1] * 5 + 4] = '1';
+                                            Monitor.Exit(dir1);
+                                            //impSoltar(false, 2);
+                                            liberarCache(procesador);
+                                            bien = bien + 1;
+                                            return true;
+                                        }
+                                        else
+                                        {
+                                            if ((ultimoBool) && (!s))
+                                            {
+                                                Monitor.Exit(dir1);
+
+                                                //impSoltar(false, 2);
+                                            }
+                                            liberarCache(procesador);
+                                            return false;
+                                        }
+                                        break;
                                 }
                             }
                         }
@@ -2214,8 +2376,8 @@ namespace Proyecto
                                     otra_cache = i;
                                 }
                             }
-                            //solicitudDeBloque = escribirBloqueEnMem(bloque, otra_cache, procesador, indice, false, false);
-                            solicitudDeBloque = escribirBloqueEnMem(bloque, temporal[0], 2, posicionCache, false, false);
+                            solicitudDeBloque = escribirBloqueEnMem(bloque, otra_cache, procesador, posicionCache, false, false);
+                            //solicitudDeBloque = escribirBloqueEnMem(bloque, temporal[0], 2, posicionCache, false, false);
                             if (solicitudDeBloque == false)
                             {
                                 Monitor.Exit(dir2);
@@ -2230,13 +2392,13 @@ namespace Proyecto
                                 switch (procesador)
                                 {
                                     case 1:
-                                        encache_datos1[posicionCache] = 'M';
+                                        estadoCache1[posicionCache] = 'M';
                                         break;
                                     case 2:
-                                        encache_datos2[posicionCache] = 'M';
+                                        estadoCache2[posicionCache] = 'M';
                                         break;
                                     default:
-                                        encache_datos3[posicionCache] = 'M';
+                                        estadoCache3[posicionCache] = 'M';
                                         break;
                                 }
                                 Monitor.Exit(dir2);
@@ -2263,7 +2425,7 @@ namespace Proyecto
 
 
                             }
-                            else 
+                            else
                             {
                                 int indiceDos = 0;
 
@@ -2279,85 +2441,247 @@ namespace Proyecto
                                     }
                                 }
                                 int bien = 0;
-                                if (compartidoCache[1])
+                                switch (procesador)
                                 {
-                                    if (Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache1) && Monitor.TryEnter(encache_datos1)*/)
-                                    {
-                                        //impSol(true, 1, true);
-                                        encache_datos1[posicionCache] = 'I';
-                                        miBarrerita.SignalAndWait();
-                                        liberarCache(1);
-                                        bien = bien + 1;
-                                    }
-                                    else
-                                    {
-                                        //impSol(true, 1, false);
-                                    }
-                                }
-                                if (compartidoCache[3])
-                                {
-                                    if (Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
-                                    {
-                                        //impSol(true, 3, true);
-                                        encache_datos3[posicionCache] = 'I';
-                                        miBarrerita.SignalAndWait();
-                                        liberarCache(3);
-                                        bien = bien + 1;
-                                    }
-                                    else
-                                    {
-                                        //impSol(true, 3, false);
-                                    }
-                                }
-                                bool ultimoBool = true;
-                                bool s = true;
-                                if (bien == contadorProcesadores)
-                                {
-                                    if (temporal[0] != procesador)
-                                    {
-                                        hacerFalloDeCache(bloque, procesador, false, posicionCache);
-                                    }
-                                    else
-                                    {
-                                        hacerFalloDeCache(bloque, procesador, true, posicionCache);
-                                    }
-                                }
-                                else
-                                {
-                                    ultimoBool = false;
-                                    Monitor.Exit(dir2);
-                                    //impSoltar(false, 2);
-                                    liberarCache(procesador);
-                                    return false;
-                                }
-                                bien = bien + 1;
-                                
-                                if ((compartidoCache[2]) && (bien == contadorProcesadores))
-                                {
-                                    dir2[temporal[1] * 5 + 1] = 'M';
-                                    dir2[temporal[1] * 5 + 2] = '1';
-                                    dir2[temporal[1] * 5 + 3] = '0';
-                                    dir2[temporal[1] * 5 + 4] = '0';
-                                    Monitor.Exit(dir2);
-                                    //impSoltar(false, 2);
-                                    liberarCache(procesador);
-                                    bien = bien + 1;
-                                    return true;
-                                }
-                                else
-                                {
-                                    if ((ultimoBool)&&(!s))
-                                    {
-                                        Monitor.Exit(dir2);
+                                    case 1:
+                                        if (compartidoCache[3])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache1) && Monitor.TryEnter(encache_datos1)*/)
+                                            {
+                                                impSol(true, 3, true);
+                                                estadoCache3[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(3);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 3, false);
+                                            }
+                                        }
+                                        if (compartidoCache[2])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            {
+                                                impSol(true, 2, true);
+                                                estadoCache2[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(2);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 2, false);
+                                            }
+                                        }
 
-                                        //impSoltar(false, 2);
-                                    }
-                                    liberarCache(procesador);
-                                    return false;
+                                        if (bien == contadorProcesadores)
+                                        {
+                                            if (temporal[0] != procesador)
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, false, posicionCache);
+                                            }
+                                            else
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, true, posicionCache);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //ultimoBool = false;
+                                            //Monitor.Exit(dir2);
+                                            //impSoltar(false, 2);
+                                            //liberarCache(procesador);
+                                            //return false;
+                                        }
+                                        bien = bien + 1;
+
+                                        if ((compartidoCache[1]) && (bien == contadorProcesadores))
+                                        {
+                                            dir2[temporal[1] * 5 + 1] = 'M';
+                                            dir2[temporal[1] * 5 + 2] = '1';
+                                            dir2[temporal[1] * 5 + 3] = '0';
+                                            dir2[temporal[1] * 5 + 4] = '0';
+                                            Monitor.Exit(dir2);
+                                            //impSoltar(false, 2);
+                                            liberarCache(procesador);
+                                            bien = bien + 1;
+                                            return true;
+                                        }
+                                        else
+                                        {
+                                            if ((ultimoBool) && (!s))
+                                            {
+                                                Monitor.Exit(dir2);
+
+                                                //impSoltar(false, 2);
+                                            }
+                                            liberarCache(procesador);
+                                            return false;
+                                        }
+                                        break;
+                                    case 2:
+                                        if (compartidoCache[3])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache1) && Monitor.TryEnter(encache_datos1)*/)
+                                            {
+                                                impSol(true, 3, true);
+                                                estadoCache3[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(3);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 3, false);
+                                            }
+                                        }
+                                        if (compartidoCache[1])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            {
+                                                impSol(true, 1, true);
+                                                estadoCache1[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(1);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 1, false);
+                                            }
+                                        }
+
+                                        if (bien == contadorProcesadores)
+                                        {
+                                            if (temporal[0] != procesador)
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, false, posicionCache);
+                                            }
+                                            else
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, true, posicionCache);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //ultimoBool = false;
+                                            //Monitor.Exit(dir2);
+                                            //impSoltar(false, 2);
+                                            //liberarCache(procesador);
+                                            // return false;
+                                        }
+                                        bien = bien + 1;
+
+                                        if ((compartidoCache[2]) && (bien == contadorProcesadores))
+                                        {
+                                            dir2[temporal[1] * 5 + 1] = 'M';
+                                            dir2[temporal[1] * 5 + 2] = '0';
+                                            dir2[temporal[1] * 5 + 3] = '1';
+                                            dir2[temporal[1] * 5 + 4] = '0';
+                                            Monitor.Exit(dir2);
+                                            //impSoltar(false, 2);
+                                            liberarCache(procesador);
+                                            bien = bien + 1;
+                                            return true;
+                                        }
+                                        else
+                                        {
+                                            if ((ultimoBool) && (!s))
+                                            {
+                                                Monitor.Exit(dir2);
+
+                                                //impSoltar(false, 2);
+                                            }
+                                            liberarCache(procesador);
+                                            return false;
+                                        }
+                                        break;
+                                    case 3:
+                                        if (compartidoCache[1])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            {
+                                                impSol(true, 1, true);
+                                                estadoCache1[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(1);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 1, false);
+                                            }
+                                        }
+                                        if (compartidoCache[2])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            {
+                                                impSol(true, 2, true);
+                                                estadoCache2[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(2);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 2, false);
+                                            }
+                                        }
+
+                                        if (bien == contadorProcesadores)
+                                        {
+                                            if (temporal[0] != procesador)
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, false, posicionCache);
+                                            }
+                                            else
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, true, posicionCache);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //ultimoBool = false;
+                                            //Monitor.Exit(dir2);
+                                            //impSoltar(false, 2);
+                                            //liberarCache(procesador);
+                                            // return false;
+                                        }
+                                        bien = bien + 1;
+
+                                        if ((compartidoCache[3]) && (bien == contadorProcesadores))
+                                        {
+                                            dir2[temporal[1] * 5 + 1] = 'M';
+                                            dir2[temporal[1] * 5 + 2] = '0';
+                                            dir2[temporal[1] * 5 + 3] = '0';
+                                            dir2[temporal[1] * 5 + 4] = '1';
+                                            Monitor.Exit(dir2);
+                                            //impSoltar(false, 2);
+                                            liberarCache(procesador);
+                                            bien = bien + 1;
+                                            return true;
+                                        }
+                                        else
+                                        {
+                                            if ((ultimoBool) && (!s))
+                                            {
+                                                Monitor.Exit(dir2);
+
+                                                //impSoltar(false, 2);
+                                            }
+                                            liberarCache(procesador);
+                                            return false;
+                                        }
+                                        break;
                                 }
+
+
                             }
                         }
+
                     }
+
                     else
                     {
                         //impSol(false, 2, false);
@@ -2366,6 +2690,7 @@ namespace Proyecto
                         miBarrerita.SignalAndWait();
                         return false;
                     }
+
                     break;
                 case 3:
                     //solicitud del directorio correspondiente que contiene el bloque objetivo
@@ -2416,13 +2741,13 @@ namespace Proyecto
                                 switch (procesador)
                                 {
                                     case 1:
-                                        encache_datos1[posicionCache] = 'M';
+                                        estadoCache1[posicionCache] = 'M';
                                         break;
                                     case 2:
-                                        encache_datos2[posicionCache] = 'M';
+                                        estadoCache2[posicionCache] = 'M';
                                         break;
                                     default:
-                                        encache_datos3[posicionCache] = 'M';
+                                        estadoCache3[posicionCache] = 'M';
                                         break;
                                 }
                                 Monitor.Exit(dir3);
@@ -2449,7 +2774,7 @@ namespace Proyecto
 
 
                             }
-                            else 
+                            else
                             {
                                 int indiceDos = 0;
 
@@ -2465,81 +2790,239 @@ namespace Proyecto
                                     }
                                 }
                                 int bien = 0;
-                                if (compartidoCache[2])
+                                switch (procesador)
                                 {
-                                    if (Monitor.TryEnter(cache_datos2))
-                                    {
-                                        //impSol(true, 2, true);
-                                        encache_datos2[posicionCache] = 'I';
-                                        miBarrerita.SignalAndWait();
-                                        liberarCache(2);
-                                        bien = bien + 1;
-                                    }
-                                    else
-                                    {
-                                        //impSol(true, 2, false);
-                                    }
-                                }
-                                if (compartidoCache[1])
-                                {
-                                    if (Monitor.TryEnter(cache_datos1))
-                                    {
-                                        //impSol(true, 1, true);
-                                        encache_datos1[posicionCache] = 'I';
-                                        miBarrerita.SignalAndWait();
-                                        liberarCache(1);
-                                        bien = bien + 1;
-                                    }
-                                    else
-                                    {
-                                        //impSol(true, 1, false);
-                                    }
-                                }
-                                bool ultimoBool = true;
-                                bool s = true;
-                                if (bien == contadorProcesadores)
-                                {
-                                    if (temporal[0] != procesador)
-                                    {
-                                        hacerFalloDeCache(bloque, procesador, false, posicionCache);
-                                    }
-                                    else
-                                    {
-                                        hacerFalloDeCache(bloque, procesador, true, posicionCache);
-                                    }
-                                    s = false;
-                                }
-                                else
-                                {
-                                    ultimoBool = false;
-                                    Monitor.Exit(dir3);
-                                    //impSoltar(false, 3);
-                                    liberarCache(procesador);
-                                    return false;
-                                }
-                                bien = bien + 1;
-                                if ((compartidoCache[3]) && (bien == contadorProcesadores))
-                                {
-                                    dir3[temporal[1] * 5 + 1] = 'M';
-                                    dir3[temporal[1] * 5 + 2] = '1';
-                                    dir3[temporal[1] * 5 + 3] = '0';
-                                    dir3[temporal[1] * 5 + 4] = '0';
-                                    Monitor.Exit(dir3);
-                                    //impSoltar(false, 3);
-                                    liberarCache(procesador);
-                                    bien = bien + 1;
-                                    return true;
-                                }
-                                else
-                                {
-                                    if ((ultimoBool) && (!s))
-                                    {
-                                        Monitor.Exit(dir3);
+                                    case 1:
+                                        if (compartidoCache[3])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache1) && Monitor.TryEnter(encache_datos1)*/)
+                                            {
+                                                impSol(true, 3, true);
+                                                estadoCache3[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(3);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 3, false);
+                                            }
+                                        }
+                                        if (compartidoCache[2])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            {
+                                                impSol(true, 2, true);
+                                                estadoCache2[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(2);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 2, false);
+                                            }
+                                        }
 
-                                        //impSoltar(false, 3);
-                                    }
-                                    liberarCache(procesador);
-                                    return false;
+                                        if (bien == contadorProcesadores)
+                                        {
+                                            if (temporal[0] != procesador)
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, false, posicionCache);
+                                            }
+                                            else
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, true, posicionCache);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //ultimoBool = false;
+                                            //Monitor.Exit(dir3);
+                                            //impSoltar(false, 2);
+                                            //liberarCache(procesador);
+                                            //return false;
+                                        }
+                                        bien = bien + 1;
+
+                                        if ((compartidoCache[1]) && (bien == contadorProcesadores))
+                                        {
+                                            dir3[temporal[1] * 5 + 1] = 'M';
+                                            dir3[temporal[1] * 5 + 2] = '1';
+                                            dir3[temporal[1] * 5 + 3] = '0';
+                                            dir3[temporal[1] * 5 + 4] = '0';
+                                            Monitor.Exit(dir3);
+                                            //impSoltar(false, 2);
+                                            liberarCache(procesador);
+                                            bien = bien + 1;
+                                            return true;
+                                        }
+                                        else
+                                        {
+                                            if ((ultimoBool) && (!s))
+                                            {
+                                                Monitor.Exit(dir3);
+
+                                                //impSoltar(false, 2);
+                                            }
+                                            liberarCache(procesador);
+                                            return false;
+                                        }
+                                        break;
+                                    case 2:
+                                        if (compartidoCache[3])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache1) && Monitor.TryEnter(encache_datos1)*/)
+                                            {
+                                                impSol(true, 3, true);
+                                                estadoCache3[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(3);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 3, false);
+                                            }
+                                        }
+                                        if (compartidoCache[1])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            {
+                                                impSol(true, 1, true);
+                                                estadoCache1[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(1);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 1, false);
+                                            }
+                                        }
+
+                                        if (bien == contadorProcesadores)
+                                        {
+                                            if (temporal[0] != procesador)
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, false, posicionCache);
+                                            }
+                                            else
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, true, posicionCache);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //ultimoBool = false;
+                                            //Monitor.Exit(dir3);
+                                            //impSoltar(false, 2);
+                                            //liberarCache(procesador);
+                                            //return false;
+                                        }
+                                        bien = bien + 1;
+
+                                        if ((compartidoCache[2]) && (bien == contadorProcesadores))
+                                        {
+                                            dir3[temporal[1] * 5 + 1] = 'M';
+                                            dir3[temporal[1] * 5 + 2] = '0';
+                                            dir3[temporal[1] * 5 + 3] = '1';
+                                            dir3[temporal[1] * 5 + 4] = '0';
+                                            Monitor.Exit(dir3);
+                                            //impSoltar(false, 2);
+                                            liberarCache(procesador);
+                                            bien = bien + 1;
+                                            return true;
+                                        }
+                                        else
+                                        {
+                                            if ((ultimoBool) && (!s))
+                                            {
+                                                Monitor.Exit(dir3);
+
+                                                //impSoltar(false, 2);
+                                            }
+                                            liberarCache(procesador);
+                                            return false;
+                                        }
+                                        break;
+                                    case 3:
+                                        if (compartidoCache[1])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            {
+                                                impSol(true, 1, true);
+                                                estadoCache1[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(1);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 1, false);
+                                            }
+                                        }
+                                        if (compartidoCache[2])
+                                        {
+                                            if (Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            {
+                                                impSol(true, 2, true);
+                                                estadoCache2[posicionCache] = 'I';
+                                                miBarrerita.SignalAndWait();
+                                                liberarCache(2);
+                                                bien = bien + 1;
+                                            }
+                                            else
+                                            {
+                                                impSol(true, 2, false);
+                                            }
+                                        }
+
+                                        if (bien == contadorProcesadores)
+                                        {
+                                            if (temporal[0] != procesador)
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, false, posicionCache);
+                                            }
+                                            else
+                                            {
+                                                hacerFalloDeCache(bloque, procesador, true, posicionCache);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //ultimoBool = false;
+                                            //Monitor.Exit(dir3);
+                                            //impSoltar(false, 2);
+                                            //liberarCache(procesador);
+                                            //return false;
+                                        }
+                                        bien = bien + 1;
+
+                                        if ((compartidoCache[3]) && (bien == contadorProcesadores))
+                                        {
+                                            dir3[temporal[1] * 5 + 1] = 'M';
+                                            dir3[temporal[1] * 5 + 2] = '0';
+                                            dir3[temporal[1] * 5 + 3] = '0';
+                                            dir3[temporal[1] * 5 + 4] = '1';
+                                            Monitor.Exit(dir3);
+                                            //impSoltar(false, 2);
+                                            liberarCache(procesador);
+                                            bien = bien + 1;
+                                            return true;
+                                        }
+                                        else
+                                        {
+                                            if ((ultimoBool) && (!s))
+                                            {
+                                                Monitor.Exit(dir3);
+
+                                                //impSoltar(false, 2);
+                                            }
+                                            liberarCache(procesador);
+                                            return false;
+                                        }
+                                        break;
                                 }
                             }
                         }
@@ -2640,7 +3123,7 @@ namespace Proyecto
                 }
 
                 Monitor.Exit(cache_datos1);
-                //impSoltar(true, 1);
+                impSoltar(true, 1);
             }
             else if (numCache == 2)
             {
@@ -2796,7 +3279,7 @@ namespace Proyecto
                 }
 
                 Monitor.Exit(cache_datos3);
-                //impSoltar(true, 3);
+                impSoltar(true, 3);
             }
         }
 
@@ -2888,7 +3371,7 @@ namespace Proyecto
                         return false;
                     }
 
-                    
+
                     break;
                 case 2:
                     if (Monitor.TryEnter(dir2))
@@ -3063,15 +3546,15 @@ namespace Proyecto
 
             if (reemplazo)
             {
-                switch (temporal[0]) 
-                {                  
+                switch (temporal[0])
+                {
                     case 1:
                         //Intenta entrar al directorio correspondiente
                         if (Monitor.TryEnter(dir1))
                         {
                             //impSol(false, temporal[0], true);
 
-                            guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
+                            guardaEnMemoria(reemplazo, 'I', bloque, numMiCache, esLoad);
                             Monitor.Exit(dir1);
                             //impSoltar(false, 1);
                         }
@@ -3080,13 +3563,13 @@ namespace Proyecto
                             //impSol(false, temporal[0], false);
                             return false;
                         }
-                        
+
                         break;
                     case 2:
                         if (Monitor.TryEnter(dir2))
                         {
                             //impSol(false, temporal[0], true);
-                            guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
+                            guardaEnMemoria(reemplazo, 'I', bloque, numMiCache, esLoad);
                             Monitor.Exit(dir2);
                             //impSoltar(false, 2);
                         }
@@ -3095,13 +3578,13 @@ namespace Proyecto
                             //impSol(false, temporal[0], false);
                             return false;
                         }
-                        
+
                         break;
                     case 3:
                         if (Monitor.TryEnter(dir3))
                         {
                             //impSol(false, temporal[0], true);
-                            guardaEnMemoria(true, 'I', bloque, numMiCache, esLoad);
+                            guardaEnMemoria(reemplazo, 'I', bloque, numMiCache, esLoad);
                             Monitor.Exit(dir3);
                             //impSoltar(false, 3);
                         }
@@ -3110,7 +3593,7 @@ namespace Proyecto
                             //impSol(false, temporal[0], true);
                             return false;
                         }
-                        
+
                         break;
                 }
             }
@@ -3123,20 +3606,20 @@ namespace Proyecto
                         //Intenta entrar a la caché correspondiente
                         if (Monitor.TryEnter(cache_datos1))
                         {
-                            //impSol(true, 1, true);
+                            impSol(true, 1, true);
                             //Si es un store
                             if (!esLoad)
                             {
-                                guardaEnMemoria(true, 'I', bloque, numOtraCache, esLoad, numMiCache);
+                                guardaEnMemoria(reemplazo, 'I', bloque, numOtraCache, esLoad, numMiCache);
                             }
                             else
                             {
-                                guardaEnMemoria(true, 'C', bloque, numOtraCache, esLoad, numMiCache);
+                                guardaEnMemoria(reemplazo, 'C', bloque, numOtraCache, esLoad, numMiCache);
                             }
                         }
                         else
                         {
-                            //impSol(true, 1, false);
+                            impSol(true, 1, false);
                             return false;
                         }
                         Monitor.Exit(cache_datos1);
@@ -3145,21 +3628,21 @@ namespace Proyecto
                     case 2:
                         if (Monitor.TryEnter(cache_datos2))
                         {
-                            //impSol(true, 2, true);
+                            impSol(true, 2, true);
 
                             //Si es un store
                             if (!esLoad)
                             {
-                                guardaEnMemoria(true, 'I', bloque, numOtraCache, esLoad, numMiCache);
+                                guardaEnMemoria(reemplazo, 'I', bloque, numOtraCache, esLoad, numMiCache);
                             }
                             else
                             {
-                                guardaEnMemoria(true, 'C', bloque, numOtraCache, esLoad, numMiCache);
+                                guardaEnMemoria(reemplazo, 'C', bloque, numOtraCache, esLoad, numMiCache);
                             }
                         }
                         else
                         {
-                            //impSol(true, 2, false);
+                            impSol(true, 2, false);
                             return false;
                         }
                         Monitor.Exit(cache_datos2);
@@ -3168,25 +3651,25 @@ namespace Proyecto
                     case 3:
                         if (Monitor.TryEnter(cache_datos3))
                         {
-                            //impSol(true, 3, true);
-                            ////impSol(true, temporal[0], false);
+                            impSol(true, 3, true);
+                            //impSol(true, temporal[0], false);
                             //Si es un store
                             if (!esLoad)
                             {
-                                guardaEnMemoria(true, 'I', bloque, numOtraCache, esLoad, numMiCache);
+                                guardaEnMemoria(reemplazo, 'I', bloque, numOtraCache, esLoad, numMiCache);
                             }
                             else
                             {
-                                guardaEnMemoria(true, 'C', bloque, numOtraCache, esLoad, numMiCache);
+                                guardaEnMemoria(reemplazo, 'C', bloque, numOtraCache, esLoad, numMiCache);
                             }
                         }
                         else
                         {
-                            //impSol(true, 3, false);
+                            impSol(true, 3, false);
                             return false;
                         }
                         Monitor.Exit(cache_datos3);
-                        //impSoltar(true, 3);
+                        impSoltar(true, 3);
                         break;
                 }
             }
@@ -3680,7 +4163,7 @@ namespace Proyecto
             int direccionMemNoComp = bloque * 16 - 128;//calcula la direccion en que se ubica dentro de la memoria no compartida
 
             //para sincronizar el ciclo de reloj
-            for (int i = 0; i < 16; ++i)
+            for (int i = 0; i < 2; ++i)
             {
                 miBarrerita.SignalAndWait();
             }
@@ -3980,7 +4463,7 @@ namespace Proyecto
                     s = s + i.ToString();
                     s = s + " P" + j.ToString();
                     dt.Columns.Add(s);
-                }   
+                }
             }
             /*dt.Columns.Add("B1");
             dt.Columns.Add("T inicial");
@@ -3991,12 +4474,12 @@ namespace Proyecto
             datos1[0] = 1;
             datos2[0] = 2;
             datos3[0] = 3;
-            
+
             for (int i = 0; i < 32; ++i)
             {
-                datos1[1 + i] = memComp1[i*4];
-                datos2[1 + i] = memComp2[i*4];
-                datos3[1 + i] = memComp3[i*4];
+                datos1[1 + i] = memComp1[i * 4];
+                datos2[1 + i] = memComp2[i * 4];
+                datos3[1 + i] = memComp3[i * 4];
             }
             /*
             for (int i = 0; i < cant_bloques_directorio * 16; i = i + 4)
