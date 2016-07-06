@@ -4745,7 +4745,192 @@ namespace Proyecto
                 directorio_archivo = "";
             }
         }
+        //Guarda en memoria si es necesario local o remotamente. La variable procesador contiene el número de la caché.
+        public static bool guardaEnMemoria2(bool reemplazo, char estado_memoria, int bloque, int procesador, bool esLoad, int cache = -1)
+        {
+            string proce = Thread.CurrentThread.Name;
+            //Obtiene el directorio a utilizar y el número de bloque en el directorio en ese procesador.
+            int[] temporal = obtener_num_estruct(bloque);
+            //int[] bloqueASubir =new int [4];
+            int pos_memoria = 0;
+            int pos_memoria_2 = 0;
+            int indice = bloque % 4;
+            int proc = temporal[1];
+            pos_memoria = proc;//bloque / 8;
 
+            pos_memoria = pos_memoria * 16;     //Para sacar la dirección en donde comienza el bloque en memoria.
+            int[] bloque_en_cache = new int[4];
+            //pos_memoria = pos_memoria / can;
+            //Para seleccionar la caché que será tratada.
+            switch (procesador)
+            {
+                case 1:
+                    estadoCache1[indice] = estado_memoria;
+                    break;
+                case 2:
+                    estadoCache2[indice] = estado_memoria;
+                    break;
+                case 3:
+                    estadoCache3[indice] = estado_memoria;
+                    break;
+            }
+            switch (procesador)
+            {
+                case 1:
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        //bloqueASubir[i)] = cache_datos1[indice + i];
+                        bloque_en_cache[i] = cache_datos1[indice + i];
+                    }
+                    break;
+                case 2:
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        //memComp2[pos_memoria + (i * 4)] = cache_datos2[indice + i];
+                        bloque_en_cache[i] = cache_datos2[indice + i];
+                    }
+                    break;
+                case 3:
+
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        //memComp3[pos_memoria + (i * 4)] = cache_datos3[indice + i];
+                        bloque_en_cache[i] = cache_datos3[indice + i];
+                    }
+                    break;
+            }
+            switch (temporal[0])
+            {
+                case 1:
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        memComp1[pos_memoria + (i * 4)] = bloque_en_cache[i];
+                    }
+
+                    break;
+                case 2:
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        memComp2[pos_memoria + (i * 4)] = bloque_en_cache[i];
+                    }
+                    break;
+                case 3:
+
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        memComp3[pos_memoria + (i * 4)] = bloque_en_cache[i];
+                    }
+                    break;
+            }
+            if (procesador == temporal[0])
+            {
+                for (int i = 0; i < 2; ++i)
+                {
+                    miBarrerita.SignalAndWait();
+                }
+                for (int i = 0; i < 1; ++i)
+                {
+                    miBarrerita.SignalAndWait();
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 2; ++i)
+                {
+                    miBarrerita.SignalAndWait();
+                }
+                for (int i = 0; i < 1; ++i)
+                {
+                    miBarrerita.SignalAndWait();
+                }
+            }
+            if (!reemplazo)
+            {
+                //Cambia los directorios cuando es local, además verifica si es un load o store para colocar el estado.
+                if (esLoad)
+                {
+                    CambiarValDir(temporal[1] * 5 + 1, temporal[0], 'C');
+                    //dir1[temporal[1] * 5 + 1] = 'C';
+                    CambiarValDir(temporal[1] * 5 + 1 + cache, temporal[0], '1');
+                    /*
+                    if (cache == 1)
+                    {
+                        dir1[temporal[1] * 5 + 2] = '1';
+                    }
+                    else if (cache == 2)
+                    {
+                        dir1[temporal[1] * 5 + 3] = '1';
+                    }
+                    else
+                    {
+                        dir1[temporal[1] * 5 + 4] = '1';
+                    }*/
+                    switch (cache)//revisar lo de las memorias. Lo de las memorias depende de a cual directorio pertence el bloque y no de a cual cache o procesador.
+                    {//Osea se necesita otro switch para el procesador o mas facil usar la informacion que ya habiamos guardado en bloque_en_cache[i] = cache_datos1[indice + i];
+                     //Pero hacerlo al reves
+                        case 1:
+                            for (int i = 0; i < 4; ++i)
+                            {
+                                //cache_datos1[indice * 4 + i] = memComp1[pos_memoria + (i * 4)];
+                                cache_datos1[indice + i] = bloque_en_cache[i];
+                            }
+                            break;
+                        case 2:
+                            for (int i = 0; i < 4; ++i)
+                            {
+                                //cache_datos2[indice * 4 + i] = memComp2[pos_memoria + (i * 4)];
+                                cache_datos2[indice + i] = bloque_en_cache[i];
+                            }
+                            break;
+                        case 3:
+                            for (int i = 0; i < 4; ++i)
+                            {
+                                //cache_datos3[indice * 4 + i] = memComp3[pos_memoria + (i * 4)];
+                                cache_datos3[indice + i] = bloque_en_cache[i];
+                            }
+                            break;
+                    }
+                }
+                else
+                {
+                    /* CambiarValDir(temporal[1] * 5 + 1, temporal[0], 'M');
+                     for (int re = 1; re < 3; ++re)
+                     {
+
+                     }
+                     if (cache == 1)
+                     {
+                         dir1[temporal[1] * 5 + 2] = '1';
+                         dir1[temporal[1] * 5 + 3] = '0';
+                         dir1[temporal[1] * 5 + 4] = '0';
+                     }
+                     else if (cache == 2)
+                     {
+                         dir1[temporal[1] * 5 + 2] = '0';
+                         dir1[temporal[1] * 5 + 3] = '1';
+                         dir1[temporal[1] * 5 + 4] = '0';
+                     }
+                     else
+                     {
+                         dir1[temporal[1] * 5 + 2] = '0';
+                         dir1[temporal[1] * 5 + 3] = '0';
+                         dir1[temporal[1] * 5 + 4] = '1';
+                     }*/
+                    directorioM(cache, temporal);
+                }
+            }
+            else
+            {
+                //Cambia los directorios cuando es local y ninguna caché tendrá el bloque (porque es un reemplazo).
+              /*  dir1[temporal[1] * 5 + 1] = 'U';
+                dir1[temporal[1] * 5 + 2] = '0';
+                dir1[temporal[1] * 5 + 3] = '0';
+                dir1[temporal[1] * 5 + 4] = '0';
+                */
+                directorioU(temporal);
+            }
+            return true;
+        }
         public static void hacerFalloDeCache2(int bloque, int numCache, bool local, int posCache, int[] temporal)
         {
             string proce = Thread.CurrentThread.Name;
@@ -5012,6 +5197,54 @@ namespace Proyecto
                     break;
             }
         }
+
+        public static void directorioU(int[] temporal)
+        {
+            switch (temporal[1])
+            {
+                case 1:
+                    dir1[temporal[1] * 5 + 1] = 'U';
+                    for (int i = 1; i < 4; ++i)
+                    {
+                        dir1[temporal[1] * 5 + 1 + i] = '0';
+                    }
+                    break;
+                case 2:
+                    dir2[temporal[1] * 5 + 1] = 'U';
+                    for (int i = 1; i < 4; ++i)
+                    {
+                        dir2[temporal[1] * 5 + 1 + i] = '0';
+                    }
+                    break;
+                case 3:
+                    dir3[temporal[1] * 5 + 1] = 'U';
+                    for (int i = 1; i < 4; ++i)
+                    {
+                        dir3[temporal[1] * 5 + 1 + i] = '0';
+                    }
+                    break;
+            }
+        }
+
+        public static void CambiarValDir(int posicionCeldaDir, int numDir,char val)
+        {
+            //char ret = '.';
+            switch (numDir)
+            {
+                case 1:
+                    dir1[posicionCeldaDir] = val;
+                    break;
+                case 2:
+                    dir2[posicionCeldaDir] = val;
+                    break;
+                case 3:
+                    dir3[posicionCeldaDir] = val;
+                    break;
+            }
+            //return ret;
+
+        }
+
         public static char valEnDir(int posicionCeldaDir, int numDir)
         {
             char ret = '.';
@@ -5029,6 +5262,43 @@ namespace Proyecto
             }
             return ret;
         
+        }
+
+        public static bool pedirDir(int numDir)
+        {
+            bool r=true;
+            switch (numDir)
+            {
+                case 1:
+                    r = Monitor.TryEnter(dir1);
+                    break;
+                case 2:
+                    r = Monitor.TryEnter(dir2);
+                    break;
+                case 3:
+                    r = Monitor.TryEnter(dir3);
+                    break;
+            }
+            return r;
+
+        }
+        public static void salirDir(int numDir)
+        {
+            //bool r = true;
+            switch (numDir)
+            {
+                case 1:
+                    Monitor.Exit(dir1);
+                    break;
+                case 2:
+                    Monitor.Exit(dir2);
+                    break;
+                case 3:
+                    Monitor.Exit(dir3);
+                    break;
+            }
+            //return r;
+
         }
 
         //Se encarga de verificar si el bloque que se va a leer ya esta en la cache y si no esta lo sube.
@@ -5084,18 +5354,7 @@ namespace Proyecto
                                 if (r)
                                 {
                                     r = true;//trylock directorio del bloque solicitado
-                                    switch (numDir)
-                                    {
-                                        case 1:
-                                            r = Monitor.TryEnter(dir1);
-                                            break;
-                                        case 2:
-                                            r = Monitor.TryEnter(dir2);
-                                            break;
-                                        case 3:
-                                            r = Monitor.TryEnter(dir3);
-                                            break;
-                                    }
+                                    pedirDir(numDir);
                                     ////impSol(false, numDir, r);
                                     if (r)
                                     {
@@ -5163,18 +5422,7 @@ namespace Proyecto
                                             //Monitor.Exit(dir1);
                                             
                                         }
-                                        switch (numDir)
-                                        {
-                                            case 1:
-                                                Monitor.Exit(dir1);
-                                                break;
-                                            case 2:
-                                                Monitor.Exit(dir2);
-                                                break;
-                                            case 3:
-                                                Monitor.Exit(dir3);
-                                                break;
-                                        }
+                                        salirDir(numDir);
                                     }
                                     else
                                     {
@@ -5203,18 +5451,7 @@ namespace Proyecto
                                 if (r)
                                 {
                                     r = true;//trylock directorio del bloque solicitado
-                                    switch (numDir)
-                                    {
-                                        case 1:
-                                            r = Monitor.TryEnter(dir1);
-                                            break;
-                                        case 2:
-                                            r = Monitor.TryEnter(dir2);
-                                            break;
-                                        case 3:
-                                            r = Monitor.TryEnter(dir3);
-                                            break;
-                                    }
+                                    pedirDir(numDir);
                                     ////impSol(false, numDir, r);
                                     if (r)
                                     {
@@ -5284,18 +5521,7 @@ namespace Proyecto
                                             }
                                             //Monitor.Exit(dir1);
                                         }
-                                        switch (numDir)
-                                        {
-                                            case 1:
-                                                Monitor.Exit(dir1);
-                                                break;
-                                            case 2:
-                                                Monitor.Exit(dir2);
-                                                break;
-                                            case 3:
-                                                Monitor.Exit(dir3);
-                                                break;
-                                        }
+                                        salirDir(numDir);
                                     }
                                     else
                                     {
@@ -5324,18 +5550,7 @@ namespace Proyecto
                                 if (r)
                                 {
                                     r = true;//trylock directorio del bloque solicitado
-                                    switch (numDir)
-                                    {
-                                        case 1:
-                                            r = Monitor.TryEnter(dir1);
-                                            break;
-                                        case 2:
-                                            r = Monitor.TryEnter(dir2);
-                                            break;
-                                        case 3:
-                                            r = Monitor.TryEnter(dir3);
-                                            break;
-                                    }
+                                    pedirDir(numDir);
                                     ////impSol(false, numDir, r);
                                     if (r)
                                     {
@@ -5373,19 +5588,6 @@ namespace Proyecto
                                             {
                                                 liberarCache(procesador);
                                                 miBarrerita.SignalAndWait();
-                                             /*   switch (numDir)
-                                                {
-                                                    case 1:
-                                                        Monitor.Exit(dir1);
-                                                        break;
-                                                    case 2:
-                                                        Monitor.Exit(dir2);
-                                                        break;
-                                                    case 3:
-                                                        Monitor.Exit(dir3);
-                                                        break;
-                                                }*/
-                                                ////impSoltar(false, 1);
                                             }
                                         }
                                         else
@@ -5400,23 +5602,9 @@ namespace Proyecto
                                                 //dir1[posicionDir * 5 + 1] = 'C';
                                                 //dir1[posicionDir * 5 + 2] = '1';
                                                 r = invalidarCachesCompartidas(procesador, temporal, posicionCache, bloque);
-                                                ////impSoltar(false, 1);
-                                            }
-                                            //Monitor.Exit(dir1);
-                                            
+                                            }                  
                                         }
-                                        switch (numDir)
-                                        {
-                                            case 1:
-                                                Monitor.Exit(dir1);
-                                                break;
-                                            case 2:
-                                                Monitor.Exit(dir2);
-                                                break;
-                                            case 3:
-                                                Monitor.Exit(dir3);
-                                                break;
-                                        }
+                                        salirDir(numDir);
                                     }
                                     else
                                     {
