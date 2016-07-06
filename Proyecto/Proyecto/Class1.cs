@@ -2256,7 +2256,7 @@ namespace Proyecto
                                     case 3:
                                         if (compartidoCache[1])
                                         {
-                                            if (Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            if (Monitor.TryEnter(cache_datos1))
                                             {
                                                 impSol(true, 1, true);
                                                 estadoCache1[posicionCache] = 'I';
@@ -2271,7 +2271,7 @@ namespace Proyecto
                                         }
                                         if (compartidoCache[2])
                                         {
-                                            if (Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            if (Monitor.TryEnter(cache_datos2))
                                             {
                                                 impSol(true, 2, true);
                                                 estadoCache2[posicionCache] = 'I';
@@ -2446,7 +2446,7 @@ namespace Proyecto
                                     case 1:
                                         if (compartidoCache[3])
                                         {
-                                            if (Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache1) && Monitor.TryEnter(encache_datos1)*/)
+                                            if (Monitor.TryEnter(cache_datos3))
                                             {
                                                 impSol(true, 3, true);
                                                 estadoCache3[posicionCache] = 'I';
@@ -2461,7 +2461,7 @@ namespace Proyecto
                                         }
                                         if (compartidoCache[2])
                                         {
-                                            if (Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            if (Monitor.TryEnter(cache_datos2))
                                             {
                                                 impSol(true, 2, true);
                                                 estadoCache2[posicionCache] = 'I';
@@ -2523,7 +2523,7 @@ namespace Proyecto
                                     case 2:
                                         if (compartidoCache[3])
                                         {
-                                            if (Monitor.TryEnter(cache_datos3) /*&& Monitor.TryEnter(estadoCache1) && Monitor.TryEnter(encache_datos1)*/)
+                                            if (Monitor.TryEnter(cache_datos3))
                                             {
                                                 impSol(true, 3, true);
                                                 estadoCache3[posicionCache] = 'I';
@@ -2538,7 +2538,7 @@ namespace Proyecto
                                         }
                                         if (compartidoCache[1])
                                         {
-                                            if (Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            if (Monitor.TryEnter(cache_datos1))
                                             {
                                                 impSol(true, 1, true);
                                                 estadoCache1[posicionCache] = 'I';
@@ -2600,7 +2600,7 @@ namespace Proyecto
                                     case 3:
                                         if (compartidoCache[1])
                                         {
-                                            if (Monitor.TryEnter(cache_datos1) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            if (Monitor.TryEnter(cache_datos1))
                                             {
                                                 impSol(true, 1, true);
                                                 estadoCache1[posicionCache] = 'I';
@@ -2615,7 +2615,7 @@ namespace Proyecto
                                         }
                                         if (compartidoCache[2])
                                         {
-                                            if (Monitor.TryEnter(cache_datos2) /*&& Monitor.TryEnter(estadoCache3) && Monitor.TryEnter(encache_datos3)*/)
+                                            if (Monitor.TryEnter(cache_datos2))
                                             {
                                                 impSol(true, 2, true);
                                                 estadoCache2[posicionCache] = 'I';
