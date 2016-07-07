@@ -4745,6 +4745,76 @@ namespace Proyecto
                 directorio_archivo = "";
             }
         }
+
+
+        public static bool reemplazarBloqueCompartido2(int bloque, int numCache, int posicion)
+        {
+            string proce = Thread.CurrentThread.Name;
+            int[] temporal = obtener_num_estruct(bloque);
+            bool[] compartidoCache = new bool[4];
+            int contadorProcesadores = 0;
+            bool peDir = pedirDir(temporal[0]);
+            if (peDir)
+            {
+                //Indica cuál caché tiene el bloque
+                compartidoCache[1] = (dir1[temporal[1] * 5 + 2] == '1');
+                compartidoCache[2] = (dir1[temporal[1] * 5 + 3] == '1');
+                compartidoCache[3] = (dir1[temporal[1] * 5 + 4] == '1');
+                for (int i = 1; i < 4; ++i)
+                {
+                    if (compartidoCache[i])
+                    {
+                        contadorProcesadores = contadorProcesadores + 1;
+                    }
+                }
+                if (contadorProcesadores == 1)
+                {
+                    directorioU(temporal);
+                }
+                if (temporal[0] == numCache)
+                {
+                    for (int i = 0; i < 1; ++i)
+                    {
+                        miBarrerita.SignalAndWait();
+                    }
+                }
+                else
+                {
+
+                    for (int i = 0; i < 1; ++i)
+                    {
+                        miBarrerita.SignalAndWait();
+                    }
+                }
+
+                //impSol(false, temporal[0], true);
+                CambiarValDir(temporal[1] * 5 + 1 + numCache, temporal[0], '0');
+                salirDir(temporal[0]);
+                //dir1[temporal[1] * 5 + 1 + numCache] = '0';
+                switch (numCache)
+                {
+                    case 1:
+                        estadoCache1[posicion] = 'I';
+                        break;
+                    case 2:
+                        estadoCache2[posicion] = 'I';
+                        break;
+                    default:
+                        estadoCache3[posicion] = 'I';
+                        break;
+                }
+                //impSoltar(false, 1);
+
+            }
+            else
+            {
+                //impSol(false, temporal[0], false);
+                return false;
+            }
+            return true;
+        }
+
+
         //Guarda en memoria si es necesario local o remotamente. La variable procesador contiene el número de la caché.
         public static bool guardaEnMemoria2(bool reemplazo, char estado_memoria, int bloque, int procesador, bool esLoad, int cache = -1)
         {
@@ -4779,14 +4849,12 @@ namespace Proyecto
                 case 1:
                     for (int i = 0; i < 4; ++i)
                     {
-                        //bloqueASubir[i)] = cache_datos1[indice + i];
                         bloque_en_cache[i] = cache_datos1[indice + i];
                     }
                     break;
                 case 2:
                     for (int i = 0; i < 4; ++i)
                     {
-                        //memComp2[pos_memoria + (i * 4)] = cache_datos2[indice + i];
                         bloque_en_cache[i] = cache_datos2[indice + i];
                     }
                     break;
@@ -4794,7 +4862,6 @@ namespace Proyecto
 
                     for (int i = 0; i < 4; ++i)
                     {
-                        //memComp3[pos_memoria + (i * 4)] = cache_datos3[indice + i];
                         bloque_en_cache[i] = cache_datos3[indice + i];
                     }
                     break;
@@ -4852,40 +4919,24 @@ namespace Proyecto
                     CambiarValDir(temporal[1] * 5 + 1, temporal[0], 'C');
                     //dir1[temporal[1] * 5 + 1] = 'C';
                     CambiarValDir(temporal[1] * 5 + 1 + cache, temporal[0], '1');
-                    /*
-                    if (cache == 1)
-                    {
-                        dir1[temporal[1] * 5 + 2] = '1';
-                    }
-                    else if (cache == 2)
-                    {
-                        dir1[temporal[1] * 5 + 3] = '1';
-                    }
-                    else
-                    {
-                        dir1[temporal[1] * 5 + 4] = '1';
-                    }*/
                     switch (cache)//revisar lo de las memorias. Lo de las memorias depende de a cual directorio pertence el bloque y no de a cual cache o procesador.
                     {//Osea se necesita otro switch para el procesador o mas facil usar la informacion que ya habiamos guardado en bloque_en_cache[i] = cache_datos1[indice + i];
                      //Pero hacerlo al reves
                         case 1:
                             for (int i = 0; i < 4; ++i)
                             {
-                                //cache_datos1[indice * 4 + i] = memComp1[pos_memoria + (i * 4)];
                                 cache_datos1[indice + i] = bloque_en_cache[i];
                             }
                             break;
                         case 2:
                             for (int i = 0; i < 4; ++i)
                             {
-                                //cache_datos2[indice * 4 + i] = memComp2[pos_memoria + (i * 4)];
                                 cache_datos2[indice + i] = bloque_en_cache[i];
                             }
                             break;
                         case 3:
                             for (int i = 0; i < 4; ++i)
                             {
-                                //cache_datos3[indice * 4 + i] = memComp3[pos_memoria + (i * 4)];
                                 cache_datos3[indice + i] = bloque_en_cache[i];
                             }
                             break;
@@ -4893,40 +4944,12 @@ namespace Proyecto
                 }
                 else
                 {
-                    /* CambiarValDir(temporal[1] * 5 + 1, temporal[0], 'M');
-                     for (int re = 1; re < 3; ++re)
-                     {
-
-                     }
-                     if (cache == 1)
-                     {
-                         dir1[temporal[1] * 5 + 2] = '1';
-                         dir1[temporal[1] * 5 + 3] = '0';
-                         dir1[temporal[1] * 5 + 4] = '0';
-                     }
-                     else if (cache == 2)
-                     {
-                         dir1[temporal[1] * 5 + 2] = '0';
-                         dir1[temporal[1] * 5 + 3] = '1';
-                         dir1[temporal[1] * 5 + 4] = '0';
-                     }
-                     else
-                     {
-                         dir1[temporal[1] * 5 + 2] = '0';
-                         dir1[temporal[1] * 5 + 3] = '0';
-                         dir1[temporal[1] * 5 + 4] = '1';
-                     }*/
                     directorioM(cache, temporal);
                 }
             }
             else
             {
                 //Cambia los directorios cuando es local y ninguna caché tendrá el bloque (porque es un reemplazo).
-              /*  dir1[temporal[1] * 5 + 1] = 'U';
-                dir1[temporal[1] * 5 + 2] = '0';
-                dir1[temporal[1] * 5 + 3] = '0';
-                dir1[temporal[1] * 5 + 4] = '0';
-                */
                 directorioU(temporal);
             }
             return true;
@@ -5392,19 +5415,6 @@ namespace Proyecto
                                             {
                                                 liberarCache(procesador);
                                                 miBarrerita.SignalAndWait();
-                                           /*     switch (numDir)
-                                                {
-                                                    case 1:
-                                                        Monitor.Exit(dir1);
-                                                        break;
-                                                    case 2:
-                                                        Monitor.Exit(dir2);
-                                                        break;
-                                                    case 3:
-                                                        Monitor.Exit(dir3);
-                                                        break;
-                                                }*/
-                                                ////impSoltar(false, 1);
                                             }
                                         } else { 
                                             if (((valEnDir(posicionDir * 5 + 1, numDir)) == 'U'))
@@ -5489,20 +5499,6 @@ namespace Proyecto
                                             {
                                                 liberarCache(procesador);
                                                 miBarrerita.SignalAndWait();
-                                                /*
-                                                switch (numDir)
-                                                {
-                                                    case 1:
-                                                        Monitor.Exit(dir1);
-                                                        break;
-                                                    case 2:
-                                                        Monitor.Exit(dir2);
-                                                        break;
-                                                    case 3:
-                                                        Monitor.Exit(dir3);
-                                                        break;
-                                                }*/
-                                                ////impSoltar(false, 1);
                                             }
                                         }
                                         else
