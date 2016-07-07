@@ -5383,7 +5383,6 @@ namespace Proyecto
                     dir3[temporal[1] * 5 + 1 + numCache] = '1';
                     dir3[temporal[1] * 5 + 1] = 'C';
                     break;
-                    
             }
             switch (numCache)
             {
@@ -5476,7 +5475,7 @@ namespace Proyecto
                     estadoCache2[posicionCache] = 'I';
                     miBarrerita.SignalAndWait();
                     bien = bien + 1;
-                    CambiarValDir(temporal[1] * 5 + 3, temporal[0], '0');
+                    CambiarValDir(temporal[1] * 5 + 2, temporal[0], '0');
                     liberarCache(2);
                 }
                 else
@@ -5492,7 +5491,7 @@ namespace Proyecto
                     estadoCache3[posicionCache] = 'I';
                     miBarrerita.SignalAndWait();
                     bien = bien + 1;
-                    CambiarValDir(temporal[1] * 5 + 4, temporal[0], '0');
+                    CambiarValDir(temporal[1] * 5 + 2, temporal[0], '0');
                     liberarCache(3);
                 }
                 else
@@ -5511,7 +5510,6 @@ namespace Proyecto
                 {
                     hacerFalloDeCache2(bloque, procesador, true, posicionCache, temporal);
                 }
-                CambiarValDir(temporal[1] * 5 + 1, temporal[0], 'U');
                 return true;
             }
             else
@@ -5540,7 +5538,7 @@ namespace Proyecto
                     dir1[temporal[1] * 5 + 1] = 'M';
                     for (int i = 1; i < 4; ++i)
                     {
-                        if (procesador == (i - 1))
+                        if (procesador == i)
                         {
                             dir1[temporal[1] * 5 + 1 + i] = '1';
                         } else
@@ -5553,7 +5551,7 @@ namespace Proyecto
                     dir2[temporal[1] * 5 + 1] = 'M';
                     for (int i = 1; i < 4; ++i)
                     {
-                        if (procesador == (i-1))
+                        if (procesador == i)
                         {
                             dir2[temporal[1] * 5 + 1 + i] = '1';
                         }
@@ -5567,7 +5565,7 @@ namespace Proyecto
                     dir3[temporal[1] * 5 + 1] = 'M';
                     for (int i = 1; i < 4; ++i)
                     {
-                        if (procesador == (i-1))
+                        if (procesador == i)
                         {
                             dir3[temporal[1] * 5 + 1 + i] = '1';
                         }
