@@ -5511,6 +5511,7 @@ namespace Proyecto
                 {
                     hacerFalloDeCache2(bloque, procesador, true, posicionCache, temporal);
                 }
+                CambiarValDir(temporal[1] * 5 + 1, temporal[0], 'U');
                 return true;
             }
             else
@@ -5539,7 +5540,7 @@ namespace Proyecto
                     dir1[temporal[1] * 5 + 1] = 'M';
                     for (int i = 1; i < 4; ++i)
                     {
-                        if (procesador == i)
+                        if (procesador == (i - 1))
                         {
                             dir1[temporal[1] * 5 + 1 + i] = '1';
                         } else
@@ -5552,7 +5553,7 @@ namespace Proyecto
                     dir2[temporal[1] * 5 + 1] = 'M';
                     for (int i = 1; i < 4; ++i)
                     {
-                        if (procesador == i)
+                        if (procesador == (i-1))
                         {
                             dir2[temporal[1] * 5 + 1 + i] = '1';
                         }
@@ -5566,7 +5567,7 @@ namespace Proyecto
                     dir3[temporal[1] * 5 + 1] = 'M';
                     for (int i = 1; i < 4; ++i)
                     {
-                        if (procesador == i)
+                        if (procesador == (i-1))
                         {
                             dir3[temporal[1] * 5 + 1 + i] = '1';
                         }
