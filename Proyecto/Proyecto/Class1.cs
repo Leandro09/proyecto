@@ -4836,7 +4836,7 @@ namespace Proyecto
                                                 ////impSoltar(false, 1);
                                             }
                                         }
-                                        else if (((valEnDir(posicionDir * 5 + 1, numDir)) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                        else if (((valEnDir(posicionDir * 5 + 1, numDir)) == 'U'))
                                         {//Si esta como U o en C en el directorio
                                             hacerFalloDeCacheLoad(bloque, procesador, (temporal[0] == procesador), posicionCache, temporal);
                                             
@@ -5433,9 +5433,9 @@ namespace Proyecto
             bool[] compartidoCache = new bool[4];
             int contadorProcesadores = 0;
             //Indica cuál caché tiene el bloque
-            compartidoCache[1] = (dir1[temporal[1] * 5 + 2] == '1');
-            compartidoCache[2] = (dir1[temporal[1] * 5 + 3] == '1');
-            compartidoCache[3] = (dir1[temporal[1] * 5 + 4] == '1');
+            compartidoCache[1] = (valEnDir(temporal[1] * 5 + 2,temporal[0]) == '1');
+            compartidoCache[2] = (valEnDir(temporal[1] * 5 + 3, temporal[0]) == '1');
+            compartidoCache[3] = (valEnDir(temporal[1] * 5 + 4, temporal[0]) == '1');
             for (int i = 1; i < 4; ++i)
             {
                 if (compartidoCache[i])
@@ -5449,14 +5449,15 @@ namespace Proyecto
             //case 1:
             if ((compartidoCache[1]) && (1 != procesador))
             {
-                if (Monitor.TryEnter(cache_datos1))
+                if (pedirCache(1))
                 {
                     impSol(true, 1, true);
                     estadoCache1[posicionCache] = 'I';
                     miBarrerita.SignalAndWait();
-                    liberarCache(1);
                     bien = bien + 1;
-                    dir1[temporal[1] * 5 + 2] = '0';
+                    CambiarValDir(temporal[1] * 5 + 2, temporal[0], '0');
+                    //dir1[temporal[1] * 5 + 2] = '0';
+                    liberarCache(1);
                 }
                 else
                 {
@@ -5465,14 +5466,14 @@ namespace Proyecto
             }
             if ((compartidoCache[2]) && (2 != procesador))
             {
-                if (Monitor.TryEnter(cache_datos2))
+                if (pedirCache(2))
                 {
                     impSol(true, 2, true);
                     estadoCache2[posicionCache] = 'I';
                     miBarrerita.SignalAndWait();
-                    liberarCache(2);
                     bien = bien + 1;
-                    dir1[temporal[1] * 5 + 3] = '0';
+                    CambiarValDir(temporal[1] * 5 + 2, temporal[0], '0');
+                    liberarCache(2);
                 }
                 else
                 {
@@ -5481,14 +5482,14 @@ namespace Proyecto
             }
             if ((compartidoCache[3]) && (3 != procesador))
             {
-                if (Monitor.TryEnter(cache_datos3))
+                if (pedirCache(3))
                 {
                     impSol(true, 3, true);
                     estadoCache3[posicionCache] = 'I';
                     miBarrerita.SignalAndWait();
-                    liberarCache(3);
                     bien = bien + 1;
-                    dir1[temporal[1] * 5 + 4] = '0';
+                    CambiarValDir(temporal[1] * 5 + 2, temporal[0], '0');
+                    liberarCache(3);
                 }
                 else
                 {
