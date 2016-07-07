@@ -4745,7 +4745,48 @@ namespace Proyecto
                 directorio_archivo = "";
             }
         }
+        public static bool escribirBloqueEnMem2(int bloque, int numOtraCache, int numMiCache, int posicion, bool esLoad, bool reemplazo)
+        {
+            string proce = Thread.CurrentThread.Name;
+            //Obtiene el directorio a utilizar y el número de bloque de la caché en ese procesador.
+            int[] temporal = obtener_num_estruct(bloque);
 
+            if (reemplazo)
+            {
+                bool peDir = pedirDir(temporal[0]);
+                if (peDir)
+                {
+                    guardaEnMemoria(reemplazo, 'I', bloque, numMiCache, false);
+                    salirDir(temporal[0]);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                //Accede a la caché que necesita utilizar
+                bool peDir = pedirCache(numOtraCache);
+                if (peDir)
+                {
+                    if (!esLoad)
+                    {
+                        guardaEnMemoria(reemplazo, 'M', bloque, numOtraCache, esLoad, numMiCache);
+                    }
+                    else
+                    {
+                        guardaEnMemoria(reemplazo, 'C', bloque, numOtraCache, esLoad, numMiCache);
+                    }
+                    salirCache(numOtraCache);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         public static bool reemplazarBloqueCompartido2(int bloque, int numCache, int posicion)
         {
@@ -5321,9 +5362,43 @@ namespace Proyecto
                     break;
             }
             //return r;
+        }
+        public static bool pedirCache(int numCache)
+        {
+            bool r = true;
+            switch (numCache)
+            {
+                case 1:
+                    r = Monitor.TryEnter(cache_datos1);
+                    break;
+                case 2:
+                    r = Monitor.TryEnter(cache_datos2);
+                    break;
+                case 3:
+                    r = Monitor.TryEnter(cache_datos3);
+                    break;
+            }
+            return r;
 
         }
+        public static void salirCache(int numCache)
+        {
+            //bool r = true;
+            switch (numCache)
+            {
+                case 1:
+                    Monitor.Exit(cache_datos1);
+                    break;
+                case 2:
+                    Monitor.Exit(cache_datos2);
+                    break;
+                case 3:
+                    Monitor.Exit(cache_datos3);
+                    break;
+            }
+            //return r;
 
+        }
         //Se encarga de verificar si el bloque que se va a leer ya esta en la cache y si no esta lo sube.
         public static bool cache_Store2(int procesador, int direccionBloque, int posicionCache, int bloque, int direccion)
         {
