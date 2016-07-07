@@ -4839,7 +4839,7 @@ namespace Proyecto
                                         else if (((valEnDir(posicionDir * 5 + 1, numDir)) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                         {//Si esta como U o en C en el directorio
                                             hacerFalloDeCacheLoad(bloque, procesador, (temporal[0] == procesador), posicionCache, temporal);
-                                            salirDir(temporal[0]);
+                                            
                                         }
                                         salirDir(temporal[0]);
                                     }
@@ -4917,7 +4917,7 @@ namespace Proyecto
                                         else if (((valEnDir(posicionDir * 5 + 1, numDir)) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                         {//Si esta como U o en C en el directorio
                                             hacerFalloDeCacheLoad(bloque, procesador, (temporal[0] == procesador), posicionCache, temporal);
-                                            salirDir(temporal[0]);
+                                            
                                         }
                                         salirDir(temporal[0]);
                                     }
@@ -4995,7 +4995,7 @@ namespace Proyecto
                                         else if (((valEnDir(posicionDir * 5 + 1, numDir)) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
                                         {//Si esta como U o en C en el directorio
                                             hacerFalloDeCacheLoad(bloque, procesador, (temporal[0] == procesador), posicionCache, temporal);
-                                            salirDir(temporal[0]);
+                                            
                                         }
                                         salirDir(temporal[0]);
                                     }
