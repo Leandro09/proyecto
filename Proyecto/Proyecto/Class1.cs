@@ -850,45 +850,7 @@ namespace Proyecto
                     Console.WriteLine("Fin LL");
                     break;
                 case 51: //SC
-                    /*int direccion35 = primerRegistro + ultimaParte;
-                    LLactivo[procesador % 3] = false;//No necesitan consultarlo antes de ponerlo en falso????
-                    switch (procesador)
-                    {
-                        case 1:
-                            if (procesador1[pos_rl] == direccion35)
-                            {
-                                cache_store(procesador, direccion35);
-                                //Guarda en memoria.
-                                memComp1[direccion35] = segundoRegistro;
-                            }
-                            else
-                            {
-                                procesador1[primerRegistro] = 0;
-                            }
-                            break;
-                        case 2:
-                            if (procesador2[pos_rl] == direccion35)
-                            {
-                                cache_store(procesador, direccion35);
-                                //Guarda en memoria.
-                                memComp1[direccion35] = segundoRegistro;
-                            }
-                            else
-                            {
-                                procesador2[primerRegistro] = 0;
-                            }
-                            break;
-                        case 3:
-                            if (procesador3[pos_rl] == direccion35)
-                            {
-                                cache_store(procesador, direccion35);
-                                //Guarda en memoria.
-                                memComp1[direccion35] = segundoRegistro;
-                            }
-                            else
-                            {
-                                procesador3[primerRegistro] = 0;
-                            }*/
+
                     int direccion35 = primerRegistro + ultimaParte;
                     int bloque35 = direccion35 / 16;
                     int posicionCache35 = bloque35 % 4;
@@ -900,12 +862,15 @@ namespace Proyecto
                     {
                         case 1:
                             e = procesador1[pos_rl] == direccion35;
+                            procesador1[pos_rl] = -1;
                             break;
                         case 2:
                             e = procesador2[pos_rl] == direccion35;
+                            procesador1[pos_rl] = -1;
                             break;
                         case 3:
                             e = procesador3[pos_rl] == direccion35;
+                            procesador1[pos_rl] = -1;
                             break;
                     }
                     if (e)
@@ -921,6 +886,20 @@ namespace Proyecto
                                 break;
                             case 3:
                                 cache_datos3[posicionCache35 * 4 + palabra35] = segundoRegistro;
+                                break;
+                        }
+                    }else
+                    {
+                        switch (procesador)
+                        {
+                            case 1:
+                                cache_datos1[1] = 0;
+                                break;
+                            case 2:
+                                cache_datos2[1] = 0;
+                                break;
+                            case 3:
+                                cache_datos3[1] = 0;
                                 break;
                         }
                     }
