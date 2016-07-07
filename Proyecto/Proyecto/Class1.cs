@@ -880,7 +880,8 @@ namespace Proyecto
                     direccionBloque = direccionBloque % cant_memComp;
                     palabra = palabra / 4;
 
-                    cache_Load(procesador, direccionBloque, posicionCache, bloque, direccion);
+                    cache_Load2(procesador, direccionBloque, posicionCache, bloque, direccion);
+                    //cache_Load(procesador, direccionBloque, posicionCache, bloque, direccion);
 
                     guardarEn = segundoRegistro;
                     //imprimirMemoriasyCaches();
@@ -912,7 +913,7 @@ namespace Proyecto
                     direccionBloque = direccionBloque1 % cant_memComp;
                     palabra1 = palabra1 / 4;
 
-                    cache_Load(procesador, direccionBloque1, posicionCache1, bloque1, direccion1);
+                    //cache_Load(procesador, direccionBloque1, posicionCache1, bloque1, direccion1);
 
                     guardarEn = segundoRegistro;
                     LLactivo[procesador % 3] = true;
@@ -983,7 +984,8 @@ namespace Proyecto
                     int direccionBloque36 = bloque36 * 16;
 
                     int palabra36 = (direccion36 - direccionBloque36) / 4;
-                    cache_store(procesador, direccion36);
+                    cache_Store2(procesador, direccionBloque36, posicionCache36, bloque36, direccion36); 
+                    //cache_store(procesador, direccion36);
                     switch (procesador)
                     {
                         case 1:
