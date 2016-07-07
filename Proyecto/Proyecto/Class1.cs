@@ -3691,7 +3691,7 @@ namespace Proyecto
             }
             return true;
         }
-
+        /*
         public static void hacerFalloDeCache(int bloque, int numCache, bool local, int posCache)
         {
 
@@ -3912,7 +3912,246 @@ namespace Proyecto
 
         }
 
+            */
+        public static void hacerFalloDeCache(int bloque, int numCache, bool local, int posCache)
+        {
+            string proce = Thread.CurrentThread.Name;
+            int[] temporal = obtener_num_estruct(bloque);
 
+
+            if (numCache == 1)
+            {
+                switch (temporal[0])
+                {
+                    case 1:
+                        for (int i = 0; i < cant_encache_datos; ++i)
+                        {
+                            cache_datos1[posCache * 4 + i] = memComp1[temporal[1] * 16 + i * 4];
+
+                        }
+                        break;
+                    case 2:
+                        for (int i = 0; i < cant_encache_datos; ++i)
+                        {
+                            cache_datos1[posCache * 4 + i] = memComp2[temporal[1] * 16 + i * 4];
+
+                        }
+                        break;
+                    case 3:
+                        for (int i = 0; i < cant_encache_datos; ++i)
+                        {
+                            cache_datos1[posCache * 4 + i] = memComp3[temporal[1] * 16 + i * 4];
+
+                        }
+                        break;
+                }
+
+                if (temporal[0] == numCache)
+                {
+                    for (int i = 0; i < 2; ++i)
+                    {
+                        miBarrerita.SignalAndWait();
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 2; ++i)
+                    {
+                        miBarrerita.SignalAndWait();
+                    }
+                }
+
+                encache_datos1[posCache] = bloque;
+                estadoCache1[posCache] = 'M';
+
+                switch (temporal[0])
+                {
+                    case 1:
+                        dir1[temporal[1] * 5 + 1] = 'M';
+                        dir1[temporal[1] * 5 + 2] = '1';
+                        dir1[temporal[1] * 5 + 3] = '0';
+                        dir1[temporal[1] * 5 + 4] = '0';
+                        Monitor.Exit(dir1);
+                        //impSoltar(false, 1);
+                        break;
+                    case 2:
+                        dir2[temporal[1] * 5 + 1] = 'M';
+                        dir2[temporal[1] * 5 + 2] = '1';
+                        dir2[temporal[1] * 5 + 3] = '0';
+                        dir2[temporal[1] * 5 + 4] = '0';
+                        Monitor.Exit(dir2);
+                        //impSoltar(false, 2);
+                        break;
+                    default:
+                        dir3[temporal[1] * 5 + 1] = 'M';
+                        dir3[temporal[1] * 5 + 2] = '1';
+                        dir3[temporal[1] * 5 + 3] = '0';
+                        dir3[temporal[1] * 5 + 4] = '0';
+                        Monitor.Exit(dir3);
+                        //impSoltar(false, 3);
+                        break;
+                }
+
+                Monitor.Exit(cache_datos1);
+                //impSoltar(true, 1);
+            }
+            else if (numCache == 2)
+            {
+
+                switch (temporal[0])
+                {
+                    case 1:
+                        for (int i = 0; i < cant_encache_datos; ++i)
+                        {
+                            cache_datos2[posCache * 4 + i] = memComp1[temporal[1] * 16 + i];
+
+                        }
+                        break;
+                    case 2:
+                        for (int i = 0; i < cant_encache_datos; ++i)
+                        {
+                            cache_datos2[posCache * 4 + i] = memComp2[temporal[1] * 16 + i];
+
+                        }
+                        break;
+                    case 3:
+                        for (int i = 0; i < cant_encache_datos; ++i)
+                        {
+                            cache_datos2[posCache * 4 + i] = memComp3[temporal[1] * 16 + i];
+
+                        }
+                        break;
+                }
+
+
+                if (temporal[0] == numCache)
+                {
+                    for (int i = 0; i < 2; ++i)
+                    {
+                        miBarrerita.SignalAndWait();
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 2; ++i)
+                    {
+                        miBarrerita.SignalAndWait();
+                    }
+                }
+
+                encache_datos2[posCache] = bloque;
+                estadoCache2[posCache] = 'M';
+
+                switch (temporal[0])
+                {
+                    case 1:
+                        dir1[temporal[1] * 5 + 1] = 'M';
+                        dir1[temporal[1] * 5 + 2] = '0';
+                        dir1[temporal[1] * 5 + 3] = '1';
+                        dir1[temporal[1] * 5 + 4] = '0';
+                        Monitor.Exit(dir1);
+                        //impSoltar(false, 1);
+                        break;
+                    case 2:
+                        dir2[temporal[1] * 5 + 1] = 'M';
+                        dir2[temporal[1] * 5 + 2] = '0';
+                        dir2[temporal[1] * 5 + 3] = '1';
+                        dir2[temporal[1] * 5 + 4] = '0';
+                        Monitor.Exit(dir2);
+                        //impSoltar(false, 2);
+                        break;
+                    default:
+                        dir3[temporal[1] * 5 + 1] = 'M';
+                        dir3[temporal[1] * 5 + 2] = '0';
+                        dir3[temporal[1] * 5 + 3] = '1';
+                        dir3[temporal[1] * 5 + 4] = '0';
+                        //impSoltar(false, 3);
+                        Monitor.Exit(dir3);
+                        break;
+                }
+
+                Monitor.Exit(cache_datos2);
+                //impSoltar(true,2);
+
+
+            }
+            else
+            {
+                switch (temporal[0])
+                {
+                    case 1:
+                        for (int i = 0; i < cant_encache_datos; ++i)
+                        {
+                            cache_datos3[posCache * 4 + i] = memComp1[temporal[1] * 16 + i];
+
+                        }
+                        break;
+                    case 2:
+                        for (int i = 0; i < cant_encache_datos; ++i)
+                        {
+                            cache_datos3[posCache * 4 + i] = memComp2[temporal[1] * 16 + i];
+
+                        }
+                        break;
+                    case 3:
+                        for (int i = 0; i < cant_encache_datos; ++i)
+                        {
+                            cache_datos3[posCache * 4 + i] = memComp3[temporal[1] * 16 + i];
+
+                        }
+                        break;
+                }
+
+                if (temporal[0] == numCache)
+                {
+                    for (int i = 0; i < 2; ++i)
+                    {
+                        miBarrerita.SignalAndWait();
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 2; ++i)
+                    {
+                        miBarrerita.SignalAndWait();
+                    }
+                }
+
+                encache_datos3[posCache] = bloque;
+                estadoCache3[posCache] = 'M';
+
+                switch (temporal[0])
+                {
+                    case 1:
+                        dir1[temporal[1] * 5 + 1] = 'M';
+                        dir1[temporal[1] * 5 + 2] = '0';
+                        dir1[temporal[1] * 5 + 3] = '0';
+                        dir1[temporal[1] * 5 + 4] = '1';
+                        Monitor.Exit(dir1);
+                        //impSoltar(false, 1);
+                        break;
+                    case 2:
+                        dir2[temporal[1] * 5 + 1] = 'M';
+                        dir2[temporal[1] * 5 + 2] = '0';
+                        dir2[temporal[1] * 5 + 3] = '0';
+                        dir2[temporal[1] * 5 + 4] = '1';
+                        Monitor.Exit(dir2);
+                        //impSoltar(false, 2);
+                        break;
+                    default:
+                        dir3[temporal[1] * 5 + 1] = 'M';
+                        dir3[temporal[1] * 5 + 2] = '0';
+                        dir3[temporal[1] * 5 + 3] = '0';
+                        dir3[temporal[1] * 5 + 4] = '1';
+                        Monitor.Exit(dir3);
+                        //impSoltar(false, 3);
+                        break;
+                }
+
+                Monitor.Exit(cache_datos3);
+                //impSoltar(true, 3);
+            }
+        }
 
         public static bool reemplazarBloqueCompartido(int bloque, int numCache, int posicion)
         {
