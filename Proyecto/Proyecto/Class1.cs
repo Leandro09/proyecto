@@ -1066,6 +1066,7 @@ namespace Proyecto
                         case 1:
                             if ((encache_datos1[posicionCache] == bloque) && ((estadoCache1[posicionCache] == 'C') || (estadoCache1[posicionCache] == 'M')))
                             {
+                                liberarCache(procesador);
                                 return true;
                             }
                             else
@@ -1280,6 +1281,7 @@ namespace Proyecto
                         case 2:
                             if ((encache_datos2[posicionCache] == bloque) && ((estadoCache2[posicionCache] == 'C') || (estadoCache2[posicionCache] == 'M')))
                             {
+                                liberarCache(procesador);
                                 return true;
                             }
                             else
@@ -1489,6 +1491,7 @@ namespace Proyecto
                         case 3:
                             if ((encache_datos3[posicionCache] == bloque) && ((estadoCache3[posicionCache] == 'C') || (estadoCache3[posicionCache] == 'M')))
                             {
+                                liberarCache(procesador);
                                 return true;
                             }
                             else
@@ -1756,6 +1759,7 @@ namespace Proyecto
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos1[indice] == bloque && estadoCache1[indice] == 'M')
                             {
+                                liberarCache(procesador);
                                 return true;
                             }
                             else
@@ -1824,6 +1828,7 @@ namespace Proyecto
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos2[indice] == bloque && estadoCache2[indice] == 'M')
                             {
+                                liberarCache(procesador);
                                 return true;
                             }
                             else
@@ -1896,6 +1901,7 @@ namespace Proyecto
                             // si esta en mi cache el bloque objetivo y el bloque esta modificado
                             if (encache_datos3[indice] == bloque && estadoCache3[indice] == 'M')
                             {
+                                liberarCache(procesador);
                                 return true;
                             }
                             else
@@ -4778,6 +4784,7 @@ namespace Proyecto
                         case 1:
                             if ((encache_datos1[posicionCache] == bloque) && ((estadoCache1[posicionCache] == 'C') || (estadoCache1[posicionCache] == 'M')))
                             {
+                                liberarCache(procesador);
                                 return true;
                             }
                             else
@@ -4830,7 +4837,7 @@ namespace Proyecto
                                             r = escribirBloqueEnMem2(bloque, i, 1, posicionCache, true, false);
                                             if (r == false)
                                             {
-                                                liberarCache(procesador);
+                                                //liberarCache(procesador);
                                                 miBarrerita.SignalAndWait();
                                             }
                                         }
@@ -4844,16 +4851,18 @@ namespace Proyecto
                                     else
                                     {
 
-                                        liberarCache(procesador);
+                                        //liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
 
                                     }
                                 }
                             }
+                            liberarCache(procesador);
                             break;
                         case 2:
                             if ((encache_datos2[posicionCache] == bloque) && ((estadoCache2[posicionCache] == 'C') || (estadoCache2[posicionCache] == 'M')))
                             {
+                                liberarCache(procesador);
                                 return true;
                             }
                             else
@@ -4906,7 +4915,7 @@ namespace Proyecto
                                             r = escribirBloqueEnMem2(bloque, i, 2, posicionCache, true, false);
                                             if (r == false)
                                             {
-                                                liberarCache(procesador);
+                                                //liberarCache(procesador);
                                                 miBarrerita.SignalAndWait();
                                             }
                                         }
@@ -4920,16 +4929,18 @@ namespace Proyecto
                                     else
                                     {
 
-                                        liberarCache(procesador);
+                                        //liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
 
                                     }
                                 }
                             }
+                            liberarCache(procesador);
                             break;
                         case 3:
                             if ((encache_datos3[posicionCache] == bloque) && ((estadoCache3[posicionCache] == 'C') || (estadoCache3[posicionCache] == 'M')))
                             {
+                                liberarCache(procesador);
                                 return true;
                             }
                             else
@@ -4982,7 +4993,7 @@ namespace Proyecto
                                             r = escribirBloqueEnMem2(bloque, i, 3, posicionCache, true, false);
                                             if (r == false)
                                             {
-                                                liberarCache(procesador);
+                                                //liberarCache(procesador);
                                                 miBarrerita.SignalAndWait();
                                             }
                                         }
@@ -4996,17 +5007,18 @@ namespace Proyecto
                                     else
                                     {
 
-                                        liberarCache(procesador);
+                                        //liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
 
                                     }
                                 }
                             }
+                            liberarCache(procesador);
                             break;
 
                     }
                 }
-                liberarCache(procesador);
+                //liberarCache(procesador);
             }
             return true;
         }
@@ -5045,7 +5057,7 @@ namespace Proyecto
                     {
                         guardaEnMemoria2(reemplazo, 'C', bloque, numOtraCache, esLoad, numMiCache);
                     }
-                    salirCache(numOtraCache);
+                    liberarCache(numOtraCache);
                 }
                 else
                 {
@@ -5371,6 +5383,7 @@ namespace Proyecto
                     dir3[temporal[1] * 5 + 1 + numCache] = '1';
                     dir3[temporal[1] * 5 + 1] = 'C';
                     break;
+                    
             }
             switch (numCache)
             {
@@ -5463,7 +5476,7 @@ namespace Proyecto
                     estadoCache2[posicionCache] = 'I';
                     miBarrerita.SignalAndWait();
                     bien = bien + 1;
-                    CambiarValDir(temporal[1] * 5 + 2, temporal[0], '0');
+                    CambiarValDir(temporal[1] * 5 + 3, temporal[0], '0');
                     liberarCache(2);
                 }
                 else
@@ -5479,7 +5492,7 @@ namespace Proyecto
                     estadoCache3[posicionCache] = 'I';
                     miBarrerita.SignalAndWait();
                     bien = bien + 1;
-                    CambiarValDir(temporal[1] * 5 + 2, temporal[0], '0');
+                    CambiarValDir(temporal[1] * 5 + 4, temporal[0], '0');
                     liberarCache(3);
                 }
                 else
@@ -5514,7 +5527,6 @@ namespace Proyecto
                 {
 
                 }
-                //liberarCache(procesador);
                 return false;
             }
 
@@ -5731,6 +5743,7 @@ namespace Proyecto
                         case 1:
                             if ((encache_datos1[posicionCache] == bloque) && ((estadoCache1[posicionCache] == 'C') || (estadoCache1[posicionCache] == 'M')))
                             {
+                                liberarCache(procesador);
                                 return true;
                             }
                             else
@@ -5782,7 +5795,7 @@ namespace Proyecto
                                             r = escribirBloqueEnMem(bloque, i, 1, posicionCache, true, false);
                                             if (r == false)
                                             {
-                                                liberarCache(procesador);
+                                                //liberarCache(procesador);
                                                 miBarrerita.SignalAndWait();
                                             }
                                         } else { 
@@ -5803,15 +5816,17 @@ namespace Proyecto
                                     else
                                     {
 
-                                        liberarCache(procesador);
+                                        //liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
                                     }
                                 }
                             }
+                            liberarCache(procesador);
                             break;
                         case 2:
                             if ((encache_datos2[posicionCache] == bloque) && ((estadoCache2[posicionCache] == 'C') || (estadoCache2[posicionCache] == 'M')))
                             {
+                                liberarCache(procesador);
                                 return true;
                             }
                             else
@@ -5863,7 +5878,7 @@ namespace Proyecto
                                             r = escribirBloqueEnMem(bloque, i, 2, posicionCache, true, false);
                                             if (r == false)
                                             {
-                                                liberarCache(procesador);
+                                                //liberarCache(procesador);
                                                 miBarrerita.SignalAndWait();
                                             }
                                         }
@@ -5884,15 +5899,17 @@ namespace Proyecto
                                     else
                                     {
 
-                                        liberarCache(procesador);
+                                        //liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
                                     }
                                 }
                             }
+                            liberarCache(procesador);
                             break;
                         case 3:
                             if ((encache_datos3[posicionCache] == bloque) && ((estadoCache3[posicionCache] == 'C') || (estadoCache3[posicionCache] == 'M')))
                             {
+                                liberarCache(procesador);
                                 return true;
                             }
                             else
@@ -5944,7 +5961,7 @@ namespace Proyecto
                                             r = escribirBloqueEnMem(bloque, i, 3, posicionCache, true, false);
                                             if (r == false)
                                             {
-                                                liberarCache(procesador);
+                                                //liberarCache(procesador);
                                                 miBarrerita.SignalAndWait();
                                             }
                                         }
@@ -5965,11 +5982,12 @@ namespace Proyecto
                                     else
                                     {
 
-                                        liberarCache(procesador);
+                                        //liberarCache(procesador);
                                         miBarrerita.SignalAndWait();
                                     }
                                 }
                             }
+                            liberarCache(procesador);
                             break;
                     }
                 }
