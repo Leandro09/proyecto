@@ -863,14 +863,47 @@ namespace Proyecto
                         case 1:
                             e = procesador1[pos_rl] == direccion35;
                             procesador1[pos_rl] = -1;
+                            if (e)
+                            {
+                                if (procesador2[pos_rl] == direccion35)
+                                {
+                                    procesador2[pos_rl] = -1;
+                                }
+                                if (procesador3[pos_rl] == direccion35)
+                                {
+                                    procesador3[pos_rl] = -1;
+                                }
+                            }
                             break;
                         case 2:
                             e = procesador2[pos_rl] == direccion35;
-                            procesador1[pos_rl] = -1;
+                            procesador2[pos_rl] = -1;
+                            if (e)
+                            {
+                                if (procesador1[pos_rl] == direccion35)
+                                {
+                                    procesador1[pos_rl] = -1;
+                                }
+                                if (procesador3[pos_rl] == direccion35)
+                                {
+                                    procesador3[pos_rl] = -1;
+                                }
+                            }
                             break;
                         case 3:
                             e = procesador3[pos_rl] == direccion35;
-                            procesador1[pos_rl] = -1;
+                            procesador3[pos_rl] = -1;
+                            if (e)
+                            {
+                                if (procesador2[pos_rl] == direccion35)
+                                {
+                                    procesador2[pos_rl] = -1;
+                                }
+                                if (procesador1[pos_rl] == direccion35)
+                                {
+                                    procesador1[pos_rl] = -1;
+                                }
+                            }
                             break;
                     }
                     if (e)
