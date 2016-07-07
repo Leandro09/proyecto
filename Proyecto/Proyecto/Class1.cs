@@ -5118,7 +5118,7 @@ namespace Proyecto
                     case 2:
                         estadoCache2[posicion] = 'I';
                         break;
-                    default:
+                    case 3:
                         estadoCache3[posicion] = 'I';
                         break;
                 }
@@ -5383,6 +5383,7 @@ namespace Proyecto
                     dir3[temporal[1] * 5 + 1 + numCache] = '1';
                     dir3[temporal[1] * 5 + 1] = 'C';
                     break;
+                    
             }
             switch (numCache)
             {
@@ -5475,7 +5476,7 @@ namespace Proyecto
                     estadoCache2[posicionCache] = 'I';
                     miBarrerita.SignalAndWait();
                     bien = bien + 1;
-                    CambiarValDir(temporal[1] * 5 + 2, temporal[0], '0');
+                    CambiarValDir(temporal[1] * 5 + 3, temporal[0], '0');
                     liberarCache(2);
                 }
                 else
@@ -5491,7 +5492,7 @@ namespace Proyecto
                     estadoCache3[posicionCache] = 'I';
                     miBarrerita.SignalAndWait();
                     bien = bien + 1;
-                    CambiarValDir(temporal[1] * 5 + 2, temporal[0], '0');
+                    CambiarValDir(temporal[1] * 5 + 4, temporal[0], '0');
                     liberarCache(3);
                 }
                 else
@@ -5510,6 +5511,7 @@ namespace Proyecto
                 {
                     hacerFalloDeCache2(bloque, procesador, true, posicionCache, temporal);
                 }
+                directorioM(procesador, temporal);
                 return true;
             }
             else
@@ -5532,7 +5534,7 @@ namespace Proyecto
         }
         public static void directorioM(int procesador, int[] temporal)
         {
-            switch (temporal[1])
+            switch (temporal[0])
             {
                 case 1:
                     dir1[temporal[1] * 5 + 1] = 'M';
@@ -5580,7 +5582,7 @@ namespace Proyecto
 
         public static void directorioU(int[] temporal)
         {
-            switch (temporal[1])
+            switch (temporal[0])
             {
                 case 1:
                     dir1[temporal[1] * 5 + 1] = 'U';
@@ -5779,15 +5781,15 @@ namespace Proyecto
                                         if (valEnDir(posicionDir * 5 + 1, numDir) == 'M')
                                         {
                                             int i = 0;
-                                            if ((valEnDir(posicionDir * 5 + 2, numDir) == '1'))
+                                            if ((valEnDir((posicionDir * 5 + 2), numDir) == '1'))
                                             {
                                                 i = 1;
                                             }
-                                            else if (valEnDir(posicionDir * 5 + 3, numDir) == '1')
+                                            else if (valEnDir((posicionDir * 5 + 3), numDir) == '1')
                                             {
                                                 i = 2;
                                             }
-                                            else if (valEnDir(posicionDir * 5 + 4, numDir) == '1')
+                                            else if (valEnDir((posicionDir * 5 + 4), numDir) == '1')
                                             {
                                                 i = 3;
                                             }
@@ -5883,7 +5885,7 @@ namespace Proyecto
                                         }
                                         else
                                         {
-                                            if (((valEnDir(posicionDir * 5 + 1, numDir)) == 'U'))
+                                            if (((valEnDir((posicionDir * 5 + 1), numDir)) == 'U'))
                                             {//Si esta como U o en C en el directorio
                                                 hacerFalloDeCache2(bloque, procesador, (numDir) == temporal[0], posicionCache, temporal);
                                                 directorioM(procesador, temporal);
@@ -5945,15 +5947,15 @@ namespace Proyecto
                                         if (valEnDir(posicionDir * 5 + 1, numDir) == 'M')
                                         {
                                             int i = 0;
-                                            if ((valEnDir(posicionDir * 5 + 2, numDir) == '1'))
+                                            if ((valEnDir((posicionDir * 5 + 2), numDir) == '1'))
                                             {
                                                 i = 1;
                                             }
-                                            else if (valEnDir(posicionDir * 5 + 3, numDir) == '1')
+                                            else if (valEnDir((posicionDir * 5 + 3), numDir) == '1')
                                             {
                                                 i = 2;
                                             }
-                                            else if (valEnDir(posicionDir * 5 + 4, numDir) == '1')
+                                            else if (valEnDir((posicionDir * 5 + 4), numDir) == '1')
                                             {
                                                 i = 3;
                                             }
@@ -5966,7 +5968,7 @@ namespace Proyecto
                                         }
                                         else
                                         {
-                                            if (((valEnDir(posicionDir * 5 + 1, numDir)) == 'U'))
+                                            if (((valEnDir((posicionDir * 5 + 1), numDir)) == 'U'))
                                             {//Si esta como U o en C en el directorio
                                                 hacerFalloDeCache2(bloque, procesador, (numDir) == temporal[0], posicionCache, temporal);
                                                 directorioM(procesador, temporal);
