@@ -4745,6 +4745,277 @@ namespace Proyecto
                 directorio_archivo = "";
             }
         }
+
+
+
+
+        //Se encarga de verificar si el bloque que se va a leer ya esta en la cache y si no esta lo sube.
+        public static bool cache_Load2(int procesador, int direccionBloque, int posicionCache, int bloque, int direccion)
+        {
+            //int bloque = direccion / 16;
+            //int posicionCache = bloque % 4;
+            int posicionDir = bloque % 8;
+            int numDir = (bloque / 8) + 1;
+            int[] temporal = obtener_num_estruct(bloque);
+            //int direccionBloque = bloque * 16;
+            bool r = false;
+            while (!r)
+            {
+                r = pedirCache(procesador);
+                if (r == false)//trylock de mi cache
+                {
+                    miBarrerita.SignalAndWait();
+
+                    impSol(true, procesador, false);
+                }
+                else
+                {
+                    impSol(true, procesador, true);
+                    switch (procesador)
+                    {
+                        case 1:
+                            if ((encache_datos1[posicionCache] == bloque) && ((estadoCache1[posicionCache] == 'C') || (estadoCache1[posicionCache] == 'M')))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                if (estadoCache1[posicionCache] == 'M')
+                                {
+                                    r = escribirBloqueEnMem2(encache_datos1[posicionCache], 1, 1, posicionCache, false, true);
+                                }
+                                else if (estadoCache1[posicionCache] == 'C')
+                                {
+                                    r = reemplazarBloqueCompartido2(encache_datos1[posicionCache], procesador, posicionCache);
+                                }
+                                if (r)
+                                {
+                                    //r = true;//trylock directorio del bloque solicitado
+                                    r = pedirDir(temporal[0]);
+                                    ////impSol(false, numDir, r);
+                                    if (r)
+                                    {
+                                        if ((numDir) == procesador)
+                                        {
+                                            for (int i = 0; i < 1; ++i)
+                                            {
+                                                miBarrerita.SignalAndWait();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            for (int i = 0; i < 1; ++i)
+                                            {
+                                                miBarrerita.SignalAndWait();
+                                            }
+                                        }
+                                        //valEnDir(posicionDir * 5 + 1, numDir);
+                                        if ((valEnDir(posicionDir * 5 + 1, numDir)) == 'M')
+                                        {
+                                            int i = 0;
+                                            if ((valEnDir(posicionDir * 5 + 2, numDir) == '1'))
+                                            {
+                                                i = 1;
+                                            }
+                                            else if (valEnDir(posicionDir * 5 + 3, numDir) == '1')
+                                            {
+                                                i = 2;
+                                            }
+                                            else if (valEnDir(posicionDir * 5 + 4, numDir) == '1')
+                                            {
+                                                i = 3;
+                                            }
+                                            r = escribirBloqueEnMem2(bloque, i, 1, posicionCache, true, false);
+                                            if (r == false)
+                                            {
+                                                liberarCache(procesador);
+                                                miBarrerita.SignalAndWait();
+                                                //Monitor.Exit(dir1);
+                                                ////impSoltar(false, 1);
+                                            }
+                                        }
+                                        else if (((valEnDir(posicionDir * 5 + 1, numDir)) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                        {//Si esta como U o en C en el directorio
+                                            hacerFalloDeCacheLoad(bloque, procesador, (temporal[0] == procesador), posicionCache, temporal);
+                                            salirDir(temporal[0]);
+                                        }
+                                        salirDir(temporal[0]);
+                                    }
+                                    else
+                                    {
+
+                                        liberarCache(procesador);
+                                        miBarrerita.SignalAndWait();
+
+                                    }
+                                }
+                            }
+                            break;
+                        case 2:
+                            if ((encache_datos2[posicionCache] == bloque) && ((estadoCache2[posicionCache] == 'C') || (estadoCache2[posicionCache] == 'M')))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                if (estadoCache2[posicionCache] == 'M')
+                                {
+                                    r = escribirBloqueEnMem2(encache_datos2[posicionCache], 2, 2, posicionCache, false, true);
+                                }
+                                else if (estadoCache2[posicionCache] == 'C')
+                                {
+                                    r = reemplazarBloqueCompartido2(encache_datos2[posicionCache], procesador, posicionCache);
+                                }
+                                if (r)
+                                {
+                                    //r = true;//trylock directorio del bloque solicitado
+                                    r = pedirDir(temporal[0]);
+                                    ////impSol(false, numDir, r);
+                                    if (r)
+                                    {
+                                        if ((numDir) == procesador)
+                                        {
+                                            for (int i = 0; i < 1; ++i)
+                                            {
+                                                miBarrerita.SignalAndWait();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            for (int i = 0; i < 1; ++i)
+                                            {
+                                                miBarrerita.SignalAndWait();
+                                            }
+                                        }
+                                        //valEnDir(posicionDir * 5 + 1, numDir);
+                                        if ((valEnDir(posicionDir * 5 + 1, numDir)) == 'M')
+                                        {
+                                            int i = 0;
+                                            if ((valEnDir(posicionDir * 5 + 2, numDir) == '1'))
+                                            {
+                                                i = 1;
+                                            }
+                                            else if (valEnDir(posicionDir * 5 + 3, numDir) == '1')
+                                            {
+                                                i = 2;
+                                            }
+                                            else if (valEnDir(posicionDir * 5 + 4, numDir) == '1')
+                                            {
+                                                i = 3;
+                                            }
+                                            r = escribirBloqueEnMem2(bloque, i, 2, posicionCache, true, false);
+                                            if (r == false)
+                                            {
+                                                liberarCache(procesador);
+                                                miBarrerita.SignalAndWait();
+                                                //Monitor.Exit(dir1);
+                                                ////impSoltar(false, 1);
+                                            }
+                                        }
+                                        else if (((valEnDir(posicionDir * 5 + 1, numDir)) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                        {//Si esta como U o en C en el directorio
+                                            hacerFalloDeCacheLoad(bloque, procesador, (temporal[0] == procesador), posicionCache, temporal);
+                                            salirDir(temporal[0]);
+                                        }
+                                        salirDir(temporal[0]);
+                                    }
+                                    else
+                                    {
+
+                                        liberarCache(procesador);
+                                        miBarrerita.SignalAndWait();
+
+                                    }
+                                }
+                            }
+                            break;
+                        case 3:
+                            if ((encache_datos3[posicionCache] == bloque) && ((estadoCache3[posicionCache] == 'C') || (estadoCache3[posicionCache] == 'M')))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                if (estadoCache3[posicionCache] == 'M')
+                                {
+                                    r = escribirBloqueEnMem2(encache_datos3[posicionCache], 3, 3, posicionCache, false, true);
+                                }
+                                else if (estadoCache3[posicionCache] == 'C')
+                                {
+                                    r = reemplazarBloqueCompartido2(encache_datos3[posicionCache], procesador, posicionCache);
+                                }
+                                if (r)
+                                {
+                                    //r = true;//trylock directorio del bloque solicitado
+                                    r = pedirDir(temporal[0]);
+                                    ////impSol(false, numDir, r);
+                                    if (r)
+                                    {
+                                        if ((numDir) == procesador)
+                                        {
+                                            for (int i = 0; i < 1; ++i)
+                                            {
+                                                miBarrerita.SignalAndWait();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            for (int i = 0; i < 1; ++i)
+                                            {
+                                                miBarrerita.SignalAndWait();
+                                            }
+                                        }
+                                        //valEnDir(posicionDir * 5 + 1, numDir);
+                                        if ((valEnDir(posicionDir * 5 + 1, numDir)) == 'M')
+                                        {
+                                            int i = 0;
+                                            if ((valEnDir(posicionDir * 5 + 2, numDir) == '1'))
+                                            {
+                                                i = 1;
+                                            }
+                                            else if (valEnDir(posicionDir * 5 + 3, numDir) == '1')
+                                            {
+                                                i = 2;
+                                            }
+                                            else if (valEnDir(posicionDir * 5 + 4, numDir) == '1')
+                                            {
+                                                i = 3;
+                                            }
+                                            r = escribirBloqueEnMem2(bloque, i, 3, posicionCache, true, false);
+                                            if (r == false)
+                                            {
+                                                liberarCache(procesador);
+                                                miBarrerita.SignalAndWait();
+                                                //Monitor.Exit(dir1);
+                                                ////impSoltar(false, 1);
+                                            }
+                                        }
+                                        else if (((valEnDir(posicionDir * 5 + 1, numDir)) == 'U'))//|| ((ubicacionDir1[posicionDir*3+numProcesador]) == false)) //esta ultima parte es que debe estar en el metodo del store pero no hace falta aqui
+                                        {//Si esta como U o en C en el directorio
+                                            hacerFalloDeCacheLoad(bloque, procesador, (temporal[0] == procesador), posicionCache, temporal);
+                                            salirDir(temporal[0]);
+                                        }
+                                        salirDir(temporal[0]);
+                                    }
+                                    else
+                                    {
+
+                                        liberarCache(procesador);
+                                        miBarrerita.SignalAndWait();
+
+                                    }
+                                }
+                            }
+                            break;
+
+                    }
+                }
+                liberarCache(procesador);
+            }
+            return true;
+        }
+
+
         public static bool escribirBloqueEnMem2(int bloque, int numOtraCache, int numMiCache, int posicion, bool esLoad, bool reemplazo)
         {
             string proce = Thread.CurrentThread.Name;
@@ -4756,7 +5027,7 @@ namespace Proyecto
                 bool peDir = pedirDir(temporal[0]);
                 if (peDir)
                 {
-                    guardaEnMemoria(reemplazo, 'I', bloque, numMiCache, false);
+                    guardaEnMemoria2(reemplazo, 'I', bloque, numMiCache, false);
                     salirDir(temporal[0]);
                 }
                 else
@@ -4772,11 +5043,11 @@ namespace Proyecto
                 {
                     if (!esLoad)
                     {
-                        guardaEnMemoria(reemplazo, 'M', bloque, numOtraCache, esLoad, numMiCache);
+                        guardaEnMemoria2(reemplazo, 'M', bloque, numOtraCache, esLoad, numMiCache);
                     }
                     else
                     {
-                        guardaEnMemoria(reemplazo, 'C', bloque, numOtraCache, esLoad, numMiCache);
+                        guardaEnMemoria2(reemplazo, 'C', bloque, numOtraCache, esLoad, numMiCache);
                     }
                     salirCache(numOtraCache);
                 }
@@ -5070,42 +5341,89 @@ namespace Proyecto
                     miBarrerita.SignalAndWait();
                 }
             }
+        }
+        public static void hacerFalloDeCacheLoad(int bloque, int numCache, bool local, int posCache, int[] temporal)
+        {
+            string proce = Thread.CurrentThread.Name;
+            int[] bloqueFallo = new int[4];
+            //int[] temporal = obtener_num_estruct(bloque);
 
-            
-            /*
             switch (temporal[0])
             {
                 case 1:
-                    dir1[temporal[1] * 5 + 1] = 'M';
-                    dir1[temporal[1] * 5 + 2] = '1';
-                    dir1[temporal[1] * 5 + 3] = '0';
-                    dir1[temporal[1] * 5 + 4] = '0';
-                    Monitor.Exit(dir1);
-                    //impSoltar(false, 1);
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        bloqueFallo[i] = memComp1[temporal[1] * 16 + i * 4];
+
+                    }
+                    dir1[temporal[1] * 5 + 1 + numCache] = '1';
+                    dir1[temporal[1] * 5 + 1] = 'C';
                     break;
                 case 2:
-                    dir2[temporal[1] * 5 + 1] = 'M';
-                    dir2[temporal[1] * 5 + 2] = '1';
-                    dir2[temporal[1] * 5 + 3] = '0';
-                    dir2[temporal[1] * 5 + 4] = '0';
-                    Monitor.Exit(dir2);
-                    //impSoltar(false, 2);
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        bloqueFallo[i] = memComp2[temporal[1] * 16 + i * 4];
+
+                    }
+                    dir2[temporal[1] * 5 + 1 + numCache] = '1';
+                    dir2[temporal[1] * 5 + 1] = 'C';
                     break;
-                default:
-                    dir3[temporal[1] * 5 + 1] = 'M';
-                    dir3[temporal[1] * 5 + 2] = '1';
-                    dir3[temporal[1] * 5 + 3] = '0';
-                    dir3[temporal[1] * 5 + 4] = '0';
-                    Monitor.Exit(dir3);
-                    //impSoltar(false, 3);
+                case 3:
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        bloqueFallo[i] = memComp3[temporal[1] * 16 + i * 4];
+
+                    }
+                    dir3[temporal[1] * 5 + 1 + numCache] = '1';
+                    dir3[temporal[1] * 5 + 1] = 'C';
+                    break;
+            }
+            switch (numCache)
+            {
+                case 1:
+                    for (int i = 0; i < cant_encache_datos; ++i)
+                    {
+                        cache_datos1[posCache * 4 + i] = bloqueFallo[i];
+
+                    }
+                    encache_datos1[posCache] = bloque;
+                    estadoCache1[posCache] = 'C';
+                    break;
+                case 2:
+                    for (int i = 0; i < cant_encache_datos; ++i)
+                    {
+                        cache_datos1[posCache * 4 + i] = bloqueFallo[i];
+
+                    }
+                    encache_datos2[posCache] = bloque;
+                    estadoCache2[posCache] = 'C';
+                    break;
+                case 3:
+                    for (int i = 0; i < cant_encache_datos; ++i)
+                    {
+                        cache_datos1[posCache * 4 + i] = bloqueFallo[i];
+
+                    }
+                    encache_datos3[posCache] = bloque;
+                    estadoCache3[posCache] = 'C';
                     break;
             }
 
-            Monitor.Exit(cache_datos1);
-            impSoltar(true, 1);
-            */
+            if (temporal[0] == numCache)
+            {
+                for (int i = 0; i < 2; ++i)
+                {
+                    miBarrerita.SignalAndWait();
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 2; ++i)
+                {
+                    miBarrerita.SignalAndWait();
+                }
+            }
         }
-
         public static bool invalidarCachesCompartidas(int procesador, int[] temporal, int posicionCache, int bloque)
         {
             //int indiceDos = 0;
@@ -5411,18 +5729,7 @@ namespace Proyecto
             bool r = false;
             while (!r)
             {
-                switch (procesador)
-                {
-                    case 1:
-                        r = Monitor.TryEnter(cache_datos1);
-                        break;//Esto esta bien pero como las estamos manejando como una sola igual bastaria con la primera (siempre que en todo el programa hagamos en tryEnter en la misma estructura y antes de tocar alguna de las 3). 
-                    case 2:
-                        r = Monitor.TryEnter(cache_datos2);
-                        break;
-                    case 3:
-                        r = Monitor.TryEnter(cache_datos3);
-                        break;
-                }
+                r = pedirCache(procesador);
                 if (r == false)//trylock de mi cache
                 {
                     miBarrerita.SignalAndWait();
@@ -5443,11 +5750,11 @@ namespace Proyecto
                             {
                                 if (estadoCache1[posicionCache] == 'M')
                                 {
-                                    r = escribirBloqueEnMem(encache_datos1[posicionCache], 1, 1, posicionCache, false, true);
+                                    r = escribirBloqueEnMem2(encache_datos1[posicionCache], 1, 1, posicionCache, false, true);
                                 }
                                 else if (estadoCache1[posicionCache] == 'C')
                                 {
-                                    r = reemplazarBloqueCompartido(encache_datos1[posicionCache], procesador, posicionCache);
+                                    r = reemplazarBloqueCompartido2(encache_datos1[posicionCache], procesador, posicionCache);
                                 }
                                 if (r)
                                 {
@@ -5527,11 +5834,11 @@ namespace Proyecto
                             {
                                 if (estadoCache2[posicionCache] == 'M')
                                 {
-                                    r = escribirBloqueEnMem(encache_datos2[posicionCache], 2, 2, posicionCache, false, true);
+                                    r = escribirBloqueEnMem2(encache_datos2[posicionCache], 2, 2, posicionCache, false, true);
                                 }
                                 else if (estadoCache2[posicionCache] == 'C')
                                 {
-                                    r = reemplazarBloqueCompartido(encache_datos2[posicionCache], procesador, posicionCache);
+                                    r = reemplazarBloqueCompartido2(encache_datos2[posicionCache], procesador, posicionCache);
                                 }
                                 if (r)
                                 {
@@ -5612,11 +5919,11 @@ namespace Proyecto
                             {
                                 if (estadoCache3[posicionCache] == 'M')
                                 {
-                                    r = escribirBloqueEnMem(encache_datos3[posicionCache], 3, 3, posicionCache, false, true);
+                                    r = escribirBloqueEnMem2(encache_datos3[posicionCache], 3, 3, posicionCache, false, true);
                                 }
                                 else if (estadoCache3[posicionCache] == 'C')
                                 {
-                                    r = reemplazarBloqueCompartido(encache_datos3[posicionCache], procesador, posicionCache);
+                                    r = reemplazarBloqueCompartido2(encache_datos3[posicionCache], procesador, posicionCache);
                                 }
                                 if (r)
                                 {
